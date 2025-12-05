@@ -12,6 +12,8 @@
     <!-- UI Elements -->
     <div id="ui-layer">
         <div class="score-box">SCORE: <span id="score-val">0</span></div>
+        <!-- Added total game timer display -->
+        <div class="timer-box">TIME LEFT: <span id="total-timer">01:00</span></div>
     </div>
 
     <!-- Streak Bar -->
@@ -41,12 +43,22 @@
 
     <!-- Start/Pause Overlay -->
     <div id="overlay">
-        <h1>Pinyin</h1>
-        <p>Type the Pinyin with tone numbers.<br>
-           e.g., "你好" = <strong>ni3hao3</strong><br>
-           Neutral tone = 5, 0, or blank.<br>
-           Don't let the timer run out!</p>
-        <button id="start-btn">Start Game</button>
+        <!-- start screen -->
+        <div id="start-screen">
+            <h1>Pinyin</h1>
+            <p>Type the Pinyin with tone numbers.<br>
+               e.g., "你好" = <strong>ni3hao3</strong><br>
+               Neutral tone = 5, 0, or blank.<br>
+               Don't let the timer run out!</p>
+            <button id="start-btn">Start Game</button>
+        </div>
+
+        <!-- end screen (hidden initially) -->
+        <div id="end-screen" style="display:none; text-align:center;">
+            <h1>Game Over</h1>
+            <p>Your Score: <span id="final-score">0</span></p>
+            <button id="play-again-btn">Play Again</button>
+        </div>
     </div>
 
     <!-- Link to the external JavaScript file -->

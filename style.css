@@ -43,6 +43,14 @@ body {
     z-index: 10;
 }
 
+.timer-box {
+    font-size: 1.2rem;
+    align-self: center;
+    pointer-events: none;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+}
+
 .score-box {
     font-size: 1.5rem;
     text-shadow: 0 2px 4px rgba(0,0,0,0.5);
@@ -270,3 +278,24 @@ button {
 }
 button:hover { transform: scale(1.1); }
 .hidden { display: none !important; }
+
+/* Center and constrain start/end screens inside the overlay */
+#start-screen,
+#end-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;      /* ensure text is centered */
+    gap: 16px;
+    max-width: 720px;        /* keep lines from getting too long */
+    width: calc(100% - 40px);
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+/* Slightly reduce paragraph width for readability on large screens */
+#start-screen p,
+#end-screen p {
+    max-width: 640px;
+}

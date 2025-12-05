@@ -101,6 +101,11 @@ const vocabList = [
 // Config
 const ITEMS_PER_LEVEL = 5; 
 
+const TOTAL_GAME_TIME = 2 * 60 * 1000; // 60000 ms
+let gameTimerTimeout = null;
+let gameTimerInterval = null;
+let gameEndTimestamp = null;
+
 // Colors
 const LEVEL_CONFIG = [
     { bg: '#444', fill: 'linear-gradient(to top, #ff8c00, #ffd700)' }, 
@@ -134,20 +139,91 @@ const multText = document.getElementById('mult-text');
 const overlay = document.getElementById('overlay');
 const startBtn = document.getElementById('start-btn');
 
+// NEW DOM refs for total timer + end screen
+const totalTimerEl = document.getElementById('total-timer');
+const startScreen = document.getElementById('start-screen');
+const endScreen = document.getElementById('end-screen');
+const finalScoreEl = document.getElementById('final-score');
+const playAgainBtn = document.getElementById('play-again-btn');
+
 startBtn.addEventListener('click', startGame);
 
+// NEW: play again wiring
+if (playAgainBtn) {
+    playAgainBtn.addEventListener('click', () => {
+        // hide overlay and restart
+        overlay.classList.add('hidden');
+        startGame();
+    });
+}
+
 function startGame() {
+    // clear previous timers
+    clearTimeout(gameTimerTimeout);
+    clearInterval(gameTimerInterval);
+    clearInterval(timerInterval);
+    clearInterval(particleInterval);
+
     score = 0;
     resetCombo();
     updateScore();
+
+    // ensure overlay state
+    if (startScreen) startScreen.style.display = 'none';
+    if (endScreen) endScreen.style.display = 'none';
     overlay.classList.add('hidden');
+
     inputField.value = '';
     inputField.focus();
     isGameActive = true;
     nextWord();
-    
+
     clearInterval(particleInterval);
     particleInterval = setInterval(emitContinuousParticles, 100);
+
+    // start overall game timer
+    gameEndTimestamp = Date.now() + TOTAL_GAME_TIME;
+    gameTimerTimeout = setTimeout(() => endGame(), TOTAL_GAME_TIME);
+
+    // update visible timer immediately and regularly
+    updateTotalTimerDisplay();
+    gameTimerInterval = setInterval(updateTotalTimerDisplay, 250);
+}
+
+// NEW: update MM:SS display
+function updateTotalTimerDisplay() {
+    if (!totalTimerEl || !gameEndTimestamp) return;
+    const remaining = Math.max(0, gameEndTimestamp - Date.now());
+    const seconds = Math.ceil(remaining / 1000);
+    const mm = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const ss = String(seconds % 60).padStart(2, '0');
+    totalTimerEl.innerText = `${mm}:${ss}`;
+}
+
+// NEW: end game and show end-screen
+function endGame() {
+    isGameActive = false;
+    isTransitioning = false;
+
+    clearInterval(timerInterval);
+    clearInterval(particleInterval);
+    clearTimeout(gameTimerTimeout);
+    clearInterval(gameTimerInterval);
+
+    // ensure top timer shows 00:00
+    if (totalTimerEl) totalTimerEl.innerText = '00:00';
+
+    // clear active tile effects
+    const tiles = document.querySelectorAll('.majong-tile');
+    tiles.forEach(t => t.classList.remove('explode-effect', 'shake-effect'));
+
+    // show overlay end-screen
+    if (finalScoreEl) finalScoreEl.innerText = score;
+    if (startScreen) startScreen.style.display = 'none';
+    if (endScreen) endScreen.style.display = 'block';
+    overlay.classList.remove('hidden');
+
+    inputField.blur();
 }
 
 function resetCombo() {
