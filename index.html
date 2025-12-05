@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahjong Pinyin Rush</title>
+    <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- UI Elements -->
+    <div id="ui-layer">
+        <div class="score-box">SCORE: <span id="score-val">0</span></div>
+    </div>
+
+    <!-- Streak Bar -->
+    <div id="streak-wrapper">
+        <div id="streak-container">
+            <div id="streak-inner">
+                <div id="streak-fill"></div>
+            </div>
+        </div>
+        <div class="multiplier-text" id="mult-text">1x</div>
+    </div>
+
+    <!-- Main Game Area -->
+    <div id="game-area">
+        <div id="tiles-wrapper">
+            <!-- Tiles injected by JS -->
+        </div>
+        <div class="input-wrapper">
+            <input type="text" id="pinyin-input" placeholder="type pinyin..." autocomplete="off">
+        </div>
+    </div>
+
+    <!-- Timer -->
+    <div id="timer-container">
+        <div id="timer-bar"></div>
+    </div>
+
+    <!-- Start/Pause Overlay -->
+    <div id="overlay">
+        <h1>Mahjong Rush</h1>
+        <p>Type the Pinyin with tone numbers.<br>
+           e.g., "你好" = <strong>ni3hao3</strong><br>
+           Neutral tone = 5, 0, or blank.<br>
+           Don't let the timer run out!</p>
+        <button id="start-btn">Start Game</button>
+    </div>
+
+    <!-- Link to the external JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>
