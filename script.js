@@ -451,7 +451,7 @@ function buildOnscreenKeyboard() {
     const row1 = ['q','w','e','r','t','y','u','i','o','p'];
     const row2 = ['a','s','d','f','g','h','j','k','l'];
     // last row: delete at left, letters, enter at right
-    const row3 = ['⌫','z','x','c','v','b','n','m','✅'];
+    const row3 = ['⌫','z','x','c','v','b','n','m'];
 
     function makeRow(keys, cls) {
         const row = document.createElement('div');
@@ -460,7 +460,6 @@ function buildOnscreenKeyboard() {
             const btn = document.createElement('div');
             btn.className = 'key';
             if (k === '⌫' || k === 'BZD') btn.classList.add('special');
-            if (k === '✅') btn.classList.add('enter');
             btn.textContent = k;
             btn.dataset.key = k;
             btn.addEventListener('click', () => handleOnscreenKey(k));

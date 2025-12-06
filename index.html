@@ -1,79 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pinyin</title>
     <!-- Link to the external CSS file -->
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <!-- UI Elements -->
     <div id="ui-layer">
-        <div class="score-box">SCORE: <span id="score-val">0</span></div>
-        <!-- Added total game timer display -->
-        <div class="timer-box">TIME LEFT: <span id="total-timer">01:00</span></div>
+      <div class="score-box">SCORE: <span id="score-val">0</span></div>
+      <!-- Added total game timer display -->
+      <div class="timer-box">
+        TIME LEFT: <span id="total-timer">01:00</span>
+      </div>
     </div>
 
     <!-- Streak Bar -->
     <div id="streak-wrapper">
-        <div id="streak-container">
-            <div id="streak-inner">
-                <div id="streak-fill"></div>
-            </div>
+      <div id="streak-container">
+        <div id="streak-inner">
+          <div id="streak-fill"></div>
         </div>
-        <div class="multiplier-text" id="mult-text">1x</div>
+      </div>
+      <div class="multiplier-text" id="mult-text">1x</div>
     </div>
 
     <!-- Main Game Area -->
     <div id="game-area">
-        <div id="tiles-wrapper">
-            <!-- Tiles injected by JS -->
-        </div>
-        <div class="input-wrapper">
-            <input type="text" id="pinyin-input" placeholder="type pinyin..." autocomplete="off">
-            <!-- Mobile display for on-screen keyboard input (shown only on small screens) -->
-            <div id="mobile-input-display" class="mobile-input-display" aria-hidden="true"></div>
-            <!-- On-screen keyboard container (buttons injected by JS) -->
-            <div id="onscreen-keyboard" class="onscreen-keyboard" aria-hidden="true"></div>
-        </div>
+      <div id="tiles-wrapper">
+        <!-- Tiles injected by JS -->
+      </div>
+      <div class="input-wrapper">
+        <input
+          type="text"
+          id="pinyin-input"
+          placeholder="type pinyin..."
+          autocomplete="off"
+        />
+        <!-- Mobile display for on-screen keyboard input (shown only on small screens) -->
+        <div
+          id="mobile-input-display"
+          class="mobile-input-display"
+          aria-hidden="true"
+        ></div>
+      </div>
     </div>
+
+    <!-- On-screen keyboard container (buttons injected by JS) -->
+    <div
+      id="onscreen-keyboard"
+      class="onscreen-keyboard"
+      aria-hidden="true"
+    ></div>
 
     <!-- Timer -->
     <div id="timer-container">
-        <div id="timer-bar"></div>
+      <div id="timer-bar"></div>
     </div>
 
     <!-- Start/Pause Overlay -->
     <div id="overlay">
-        <!-- start screen -->
-        <div id="start-screen">
-            <h1>Pinyin</h1>
-            <p class="start-instructions">Type the Pinyin with tone numbers (use 1-4 for tones). Neutral tone can be left blank.<br>
-               e.g., "你好" = <strong>ni3hao3</strong></p>
-            <p class="start-instructions">If you don't know a word, type <strong>bzd</strong> or <strong>buzhidao</strong> to skip it.</p>
+      <!-- start screen -->
+      <div id="start-screen">
+        <h1>Pinyin</h1>
+        <p class="start-instructions">
+          Type the Pinyin with tone numbers (use 1-4 for tones). Neutral tone
+          can be left blank.<br />
+          e.g., "你好" = <strong>ni3hao3</strong>
+        </p>
+        <p class="start-instructions">
+          If you don't know a word, type <strong>bzd</strong> or
+          <strong>buzhidao</strong> to skip it.
+        </p>
 
-            <div class="vocab-select-row">
-                <label for="vocab-select">Choose vocabulary list:</label>
-                <select id="vocab-select">
-                    <option value="hsk1">HSK Level 1 (default)</option>
-                    <option value="hsk2">HSK Level 2</option>
-                </select>
-            </div>
-
-            <button id="start-btn">Start Game</button>
+        <div class="vocab-select-row">
+          <label for="vocab-select">Choose vocabulary list:</label>
+          <select id="vocab-select">
+            <option value="hsk1">HSK Level 1 (default)</option>
+            <option value="hsk2">HSK Level 2</option>
+          </select>
         </div>
 
-        <!-- end screen (hidden initially) -->
-        <div id="end-screen" style="display:none; text-align:center;">
-            <h1>Game Over</h1>
-            <p>Your Score: <span id="final-score">0</span></p>
-            <button id="play-again-btn">Play Again</button>
-        </div>
+        <button id="start-btn">Start Game</button>
+      </div>
+
+      <!-- end screen (hidden initially) -->
+      <div id="end-screen" style="display: none; text-align: center">
+        <h1>Game Over</h1>
+        <p>Your Score: <span id="final-score">0</span></p>
+        <button id="play-again-btn">Play Again</button>
+      </div>
     </div>
 
     <!-- Link to the external JavaScript file -->
     <script src="script.js"></script>
-</body>
+  </body>
 </html>

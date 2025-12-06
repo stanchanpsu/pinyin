@@ -172,6 +172,7 @@ body {
         width: calc(100% - 24px);
         max-width: 420px;
         box-sizing: border-box;
+        padding-bottom: 260px; /* reserve space for fixed keyboard */
     }
 
     .majong-tile {
@@ -200,30 +201,34 @@ body {
         font-family: 'Roboto Mono', monospace;
         font-size: 1.25rem;
         box-shadow: 0 4px 18px rgba(0,0,0,0.5);
-        margin: 6px 0 10px 0;
+        margin: 0px 0 10px 0;
     }
 
 
     .onscreen-keyboard {
-        width: calc(100%);
-        max-width: auto;
-        margin: 0 0;
+        /* fixed full-width keyboard anchored to screen bottom */
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 20px;
+        width: 100vw;
+        max-width: 100vw;
+        margin: 0;
         display: flex;
         flex-direction: column;
         gap: 6px;
-        padding: 10px;
+        padding: 12px 10px;
         box-sizing: border-box;
-        background: linear-gradient(180deg, rgba(0,0,0,0.38), rgba(0,0,0,0.22));
-        border-radius: 14px;
-        margin-top: 8px;
-        overflow: au;
+        background: linear-gradient(180deg, rgba(0,0,0,0.92), rgba(0,0,0,0.72));
+        border-radius: 12px 12px 0 0;
         -webkit-overflow-scrolling: touch;
+        z-index: 60;
     }
 
     /* center keys in each row by using auto-sized columns and centering the grid */
     .onscreen-keyboard .row {
         display: grid;
-        gap: 4px;
+        gap: 6px;
         justify-content: center; /* center the whole grid within the keyboard */
         justify-items: center;   /* center items inside each grid cell */
         grid-auto-flow: column;
@@ -243,13 +248,12 @@ body {
         cursor: pointer;
         user-select: none;
         box-shadow: 0 4px 12px rgba(0,0,0,0.35);
-        min-width: 26px; 
+        min-width: 34px; 
         box-sizing: border-box;
     }
 
     /* Slightly smaller delete/enter keys for better fit */
     .onscreen-keyboard .key.special { background: rgba(255,90,120,0.18); font-size: 0.88rem; padding: 7px 6px; }
-    .onscreen-keyboard .key.enter { background:  #9bf495; font-size: 0.88rem; padding: 7px 6px; }
     /* no wide-span keys by default; keep sizing consistent */
 
     #ui-layer { left: 12px; right: 12px; top: 12px; }
