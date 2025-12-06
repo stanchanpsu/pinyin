@@ -106,18 +106,51 @@ let gameTimerTimeout = null;
 let gameTimerInterval = null;
 let gameEndTimestamp = null;
 
-// Colors
-const LEVEL_CONFIG = [
-    { bg: '#444', fill: 'linear-gradient(to top, #ff8c00, #ffd700)' }, 
-    { bg: '#ff4500', fill: 'linear-gradient(to top, #00f3ff, #0088ff)' }, 
-    { bg: '#0088ff', fill: 'linear-gradient(to top, #ff0055, #ff00aa)' }, 
-    { bg: '#ff0055', fill: 'linear-gradient(to top, #ffd700, #fff)' }     
+// Level color handling (infinitely scalable)
+const LEVEL_PALETTE = [
+    '#ffd700', // 1 - gold
+    '#ff4500', // 2 - orange
+    '#00f3ff', // 3 - neon blue
+    '#ff0055', // 4 - neon pink
+    '#8a2be2', // 5 - purple
+    '#00ff7f', // 6 - spring green
+    '#ff69b4'  // 7 - hot pink
 ];
+
+function getLevelColor(level) {
+    if (!level || level < 1) return LEVEL_PALETTE[0];
+    if (level <= LEVEL_PALETTE.length) return LEVEL_PALETTE[level - 1];
+    // generate a hue-based color for larger levels
+    const hue = (level * 47) % 360;
+    return `hsl(${hue}, 85%, 55%)`;
+}
+
+function hexToRgb(hex) {
+    hex = hex.replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+    const num = parseInt(hex, 16);
+    return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+}
+
+function colorToRgba(color, alpha = 1) {
+    if (color.startsWith('#')) {
+        const { r, g, b } = hexToRgb(color);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+    if (color.startsWith('hsl')) {
+        // turn hsl(...) into hsla(..., alpha)
+        return color.replace('hsl(', 'hsla(').replace(')', `, ${alpha})`);
+    }
+    // fallback: return the color unchanged (alpha won't be applied)
+    return color;
+}
 
 let currentWordIndex = 0;
 let score = 0;
 let multiplier = 1;
 let streakInLevel = 0; 
+
+let holdingFull = false; // when true, keep the bar visually full until we clear it
 
 let timeLeft = 0;
 let timerInterval;
@@ -309,19 +342,55 @@ function handleCorrect() {
     score += 10 * multiplier;
     streakInLevel++;
 
+    // If completing the streak level, briefly show a full bar + glow,
+    // then increment multiplier and reset the streak.
     if (streakInLevel >= ITEMS_PER_LEVEL) {
-        streakInLevel = 0;
-        multiplier++;
+        // show and hold full visual state so color + glow persist
+        streakInLevel = ITEMS_PER_LEVEL;
+        holdingFull = true;
+        updateScore();
+        updateComboVisuals();
+
         streakContainer.style.transform = "scale(1.3)";
-        setTimeout(() => streakContainer.style.transform = "scale(1)", 200);
+        // after a short display, clear the hold, bump multiplier and continue
+        setTimeout(() => {
+            holdingFull = false; // allow visuals to update normally
+            streakInLevel = 0;
+            multiplier++;
+            streakContainer.style.transform = "scale(1)";
+
+            // compute and apply the new base color BEFORE collapsing the fill
+            const newBase = (multiplier >= 2) ? getLevelColor(multiplier - 1) : 'rgba(0,0,0,0.35)';
+            streakInner.style.backgroundColor = newBase;
+
+            // Prevent the fill from animating downward visibly by collapsing
+            // the fill instantly (disable transition briefly), then restore.
+            try {
+                const useHorizontal = window.matchMedia('(max-width: 800px)').matches;
+                // store current inline transition so we can restore it
+                const prevTransition = streakFill.style.transition;
+                // disable transition and set size to 0 immediately
+                streakFill.style.transition = 'none';
+                if (useHorizontal) streakFill.style.width = '0%';
+                else streakFill.style.height = '0%';
+                // force reflow so the collapse paints without transition
+                void streakFill.offsetWidth;
+                // restore previous transition (or empty string)
+                streakFill.style.transition = prevTransition || '';
+            } catch (e) {
+                // ignore if something goes wrong with transitions
+            }
+
+            // update visuals now that multiplier/reset happened
+            updateComboVisuals();
+            // continue to next word shortly after
+            setTimeout(() => nextWord(), 160);
+        }, 420); // slightly longer so user sees the filled color + glow
+    } else {
+        updateScore();
+        updateComboVisuals();
+        setTimeout(() => nextWord(), 300);
     }
-
-    updateScore();
-    updateComboVisuals();
-
-    setTimeout(() => {
-        nextWord();
-    }, 300); // Faster turnaround
 }
 
 function handleIncorrect(isTimeout = false) {
@@ -351,12 +420,35 @@ function updateScore() {
 function updateComboVisuals() {
     multText.innerText = multiplier + "x";
     multText.style.color = getMultColor(multiplier);
-    const pct = (streakInLevel / ITEMS_PER_LEVEL) * 100;
-    streakFill.style.height = `${pct}%`;
+    // If we're holding the full visual (completed streak), force pct to 100 so
+    // the bar stays filled with the current level color until we release it.
+    const pct = holdingFull ? 100 : (streakInLevel / ITEMS_PER_LEVEL) * 100;
+    // Support horizontal layout on narrow screens: use width instead of height
+    const useHorizontal = window.matchMedia('(max-width: 800px)').matches;
+    if (useHorizontal) {
+        streakFill.style.width = `${pct}%`;
+        streakFill.style.height = '100%';
+    } else {
+        streakFill.style.height = `${pct}%`;
+        streakFill.style.width = '100%';
+    }
 
-    let styleIndex = Math.min(multiplier - 1, LEVEL_CONFIG.length - 1);
-    streakInner.style.backgroundColor = LEVEL_CONFIG[styleIndex].bg;
-    streakFill.style.background = LEVEL_CONFIG[styleIndex].fill;
+    // color for this level (single solid color)
+    const fillColor = getLevelColor(multiplier); // color for the progressing fill (current level)
+    // base color should show the previous level so the next level "paints over" it
+    const baseColor = (multiplier >= 2) ? getLevelColor(multiplier - 1) : 'rgba(0,0,0,0.35)';
+    streakFill.style.background = fillColor;
+    // set the inner/base to previous level (or neutral for level 1)
+    streakInner.style.backgroundColor = baseColor;
+
+    // If the bar is full, add a glow of the level color around the container
+    if (pct >= 100) {
+        // when full, glow using the fill (current level) color
+        streakFill.style.background = fillColor;
+        streakContainer.style.boxShadow = `0 0 18px ${colorToRgba(fillColor, 0.95)}, 0 0 36px ${colorToRgba(fillColor, 0.4)}`;
+        streakContainer.style.borderColor = fillColor;
+        streakInner.style.boxShadow = `inset 0 0 8px ${colorToRgba(fillColor, 0.25)}`;
+    }
 
     streakContainer.classList.remove('shake-lvl-1', 'shake-lvl-2', 'shake-lvl-3');
     let shakeIntensity = 0;
