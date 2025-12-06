@@ -46,10 +46,18 @@
         <!-- start screen -->
         <div id="start-screen">
             <h1>Pinyin</h1>
-            <p>Type the Pinyin with tone numbers.<br>
-               e.g., "你好" = <strong>ni3hao3</strong><br>
-               Neutral tone = 5, 0, or blank.<br>
-               Don't let the timer run out!</p>
+            <p class="start-instructions">Type the Pinyin with tone numbers (use 1-4 for tones). Neutral tone can be 5, 0, or left blank.<br>
+               e.g., "你好" = <strong>ni3hao3</strong></p>
+            <p class="start-instructions">If you don't know a word, type <strong>bzd</strong> or <strong>buzhidao</strong> to skip it.</p>
+
+            <div class="vocab-select-row">
+                <label for="vocab-select">Choose vocabulary list:</label>
+                <select id="vocab-select">
+                    <option value="hsk1">HSK Level 1 (default)</option>
+                    <option value="hsk2">HSK Level 2</option>
+                </select>
+            </div>
+
             <button id="start-btn">Start Game</button>
         </div>
 

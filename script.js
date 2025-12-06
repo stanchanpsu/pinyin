@@ -23,7 +23,7 @@ const vocabList = [
     { char: "不好", pinyin: "bu4hao3" },
     { char: "老", pinyin: "lao3" },
     { char: "新", pinyin: "xin1" },
-    { char: "长", pinyin: "chang2" },
+    { char: "长", pinyin: "chang2|zhang1" },
     { char: "短", pinyin: "duan3" },
     { char: "高", pinyin: "gao1" },
     { char: "矮", pinyin: "ai3" },
@@ -98,6 +98,102 @@ const vocabList = [
     { char: "不是", pinyin: "bu4shi4" }
 ];
 
+// HSK Level 2 vocabulary (expanded list)
+const vocabListHSK2 = [
+    { char: "哥哥", pinyin: "ge1ge5" },
+    { char: "姐姐", pinyin: "jie3jie5" },
+    { char: "弟弟", pinyin: "di4di5" },
+    { char: "妹妹", pinyin: "mei4mei5" },
+    { char: "儿子", pinyin: "er2zi5" },
+    { char: "女儿", pinyin: "nv3er2" },
+    { char: "生日", pinyin: "sheng1ri4" },
+    { char: "快乐", pinyin: "kuai4le5" },
+    { char: "礼物", pinyin: "li3wu4" },
+    { char: "礼貌", pinyin: "li3mao4" },
+    { char: "电影", pinyin: "dian4ying3" },
+    { char: "音乐", pinyin: "yin1yue4" },
+    { char: "老师", pinyin: "lao3shi1" },
+    { char: "学生", pinyin: "xue2sheng1" },
+    { char: "同学", pinyin: "tong2xue2" },
+    { char: "学校", pinyin: "xue2xiao4" },
+    { char: "考试", pinyin: "kao3shi4" },
+    { char: "成绩", pinyin: "cheng2ji4" },
+    { char: "练习", pinyin: "lian4xi2" },
+    { char: "问题", pinyin: "wen4ti2" },
+    { char: "回答", pinyin: "hui2da2" },
+    { char: "准备", pinyin: "zhun3bei4" },
+    { char: "帮助", pinyin: "bang1zhu4" },
+    { char: "觉得", pinyin: "jue2de5" },
+    { char: "想要", pinyin: "xiang3yao4" },
+    { char: "需要", pinyin: "xu1yao4" },
+    { char: "可以", pinyin: "ke3yi3" },
+    { char: "应该", pinyin: "ying1gai1" },
+    { char: "知道", pinyin: "zhi1dao4" },
+    { char: "认识", pinyin: "ren4shi5" },
+    { char: "喜欢", pinyin: "xi3huan1" },
+    { char: "爱", pinyin: "ai4" },
+    { char: "听说", pinyin: "ting1shuo1" },
+    { char: "看见", pinyin: "kan4jian4" },
+    { char: "觉得", pinyin: "jue2de5" },
+    { char: "运动", pinyin: "yun4dong4" },
+    { char: "跑步", pinyin: "pao3bu4" },
+    { char: "游泳", pinyin: "you2yong3" },
+    { char: "跳舞", pinyin: "tiao4wu3" },
+    { char: "唱歌", pinyin: "chang4ge1" },
+    { char: "足球", pinyin: "zu2qiu2" },
+    { char: "篮球", pinyin: "lan2qiu2" },
+    { char: "工作", pinyin: "gong1zuo4" },
+    { char: "公司", pinyin: "gong1si1" },
+    { char: "同事", pinyin: "tong2shi4" },
+    { char: "经理", pinyin: "jing1li3" },
+    { char: "休息", pinyin: "xiu1xi5" },
+    { char: "旅行", pinyin: "lv3xing2" },
+    { char: "酒店", pinyin: "jiu3dian4" },
+    { char: "飞机", pinyin: "fei1ji1" },
+    { char: "火车", pinyin: "huo3che1" },
+    { char: "火车站", pinyin: "huo3che1zhan4" },
+    { char: "机场", pinyin: "ji1chang3" },
+    { char: "车站", pinyin: "che1zhan4" },
+    { char: "公共汽车", pinyin: "gong1gong4qi4che1" },
+    { char: "地铁", pinyin: "di4tie3" },
+    { char: "商店", pinyin: "shang1dian4" },
+    { char: "超市", pinyin: "chao1shi4" },
+    { char: "饭馆", pinyin: "fan4guan3" },
+    { char: "餐厅", pinyin: "can1ting1" },
+    { char: "买单", pinyin: "mai3dan1" },
+    { char: "厕所", pinyin: "ce4suo3" },
+    { char: "医院", pinyin: "yi1yuan4" },
+    { char: "医生", pinyin: "yi1sheng1" },
+    { char: "病人", pinyin: "bing4ren2" },
+    { char: "感冒", pinyin: "gan3mao4" },
+    { char: "药店", pinyin: "yao4dian4" },
+    { char: "药", pinyin: "yao4" },
+    { char: "健康", pinyin: "jian4kang1" },
+    { char: "水果", pinyin: "shui3guo3" },
+    { char: "苹果", pinyin: "ping2guo3" },
+    { char: "香蕉", pinyin: "xiang1jiao1" },
+    { char: "西瓜", pinyin: "xi1gua1" },
+    { char: "米饭", pinyin: "mi3fan4" },
+    { char: "面条", pinyin: "mian4tiao2" },
+    { char: "包子", pinyin: "bao1zi5" },
+    { char: "鸡蛋", pinyin: "ji1dan4" },
+    { char: "牛奶", pinyin: "niu2nai3" },
+    { char: "茶", pinyin: "cha2" },
+    { char: "咖啡", pinyin: "ka1fei1" },
+    { char: "电影票", pinyin: "dian4ying3piao4" },
+    { char: "舒服", pinyin: "shu1fu2" },
+    { char: "开心", pinyin: "kai1xin1" },
+    { char: "生气", pinyin: "sheng1qi4" },
+    { char: "累", pinyin: "lei4" },
+    { char: "饿", pinyin: "e4" },
+    { char: "渴", pinyin: "ke3" },
+    { char: "忙", pinyin: "mang2" },
+    { char: "觉得", pinyin: "jue2de5" }
+];
+
+// activeVocab points to the current vocabulary list (HSK1 or HSK2)
+let activeVocab = vocabList;
+
 // Config
 const ITEMS_PER_LEVEL = 5; 
 
@@ -157,6 +253,8 @@ let timerInterval;
 let particleInterval; 
 let isGameActive = false;
 let isTransitioning = false;
+// Track which vocab indices the player has already answered correctly this game
+let answeredSet = new Set();
 
 // DOM Elements
 const tilesWrapper = document.getElementById('tiles-wrapper');
@@ -171,6 +269,7 @@ const streakFill = document.getElementById('streak-fill');
 const multText = document.getElementById('mult-text');
 const overlay = document.getElementById('overlay');
 const startBtn = document.getElementById('start-btn');
+const vocabSelect = document.getElementById('vocab-select');
 
 // NEW DOM refs for total timer + end screen
 const totalTimerEl = document.getElementById('total-timer');
@@ -200,6 +299,12 @@ function startGame() {
     score = 0;
     resetCombo();
     updateScore();
+    // pick the active vocab list from the start-screen selector
+    if (vocabSelect && vocabSelect.value === 'hsk2') activeVocab = vocabListHSK2;
+    else activeVocab = vocabList;
+
+    // reset answered tracker for this new game
+    answeredSet = new Set();
 
     // ensure overlay state
     if (startScreen) startScreen.style.display = 'none';
@@ -268,8 +373,18 @@ function resetCombo() {
 function nextWord() {
     if (!isGameActive) return;
     isTransitioning = false;
-    currentWordIndex = Math.floor(Math.random() * vocabList.length);
-    const wordObj = vocabList[currentWordIndex];
+    // choose a random vocab index that hasn't been answered correctly yet
+    const available = [];
+    for (let i = 0; i < activeVocab.length; i++) {
+        if (!answeredSet.has(i)) available.push(i);
+    }
+    // if nothing left to show, end the game early
+    if (available.length === 0) {
+        endGame();
+        return;
+    }
+    currentWordIndex = available[Math.floor(Math.random() * available.length)];
+    const wordObj = activeVocab[currentWordIndex];
 
     // Render Tiles
     tilesWrapper.innerHTML = '';
@@ -314,18 +429,49 @@ inputField.addEventListener('input', (e) => {
 });
 
 function checkAnswer(input) {
-    const targetPinyin = vocabList[currentWordIndex].pinyin;
-    const cleanInput = input.replace(/[05]/g, '');
-    const cleanTarget = targetPinyin.replace(/[05]/g, '');
-
-    if (cleanInput === cleanTarget) {
-        handleCorrect();
+    // allow skipping: 'bzd' or 'buzhidao' (buzhidao = I don't know)
+    if (input === 'bzd' || input === 'buzhidao') {
+        skipWord();
+        return;
     }
+
+    const targetPinyin = activeVocab[currentWordIndex].pinyin;
+    const cleanInput = input.replace(/[05]/g, '');
+
+    // Support multiple pinyin variants. The `pinyin` field may be:
+    // - a single string ("chang2")
+    // - a pipe-separated string ("chang2|zhang3")
+    // - an array of strings
+    const targets = Array.isArray(targetPinyin)
+        ? targetPinyin
+        : String(targetPinyin).split('|').map(s => s.trim());
+
+    for (const t of targets) {
+        const cleanTarget = String(t).replace(/[05]/g, '');
+        if (cleanInput === cleanTarget) {
+            handleCorrect();
+            return;
+        }
+    }
+}
+
+function skipWord() {
+    if (!isGameActive || isTransitioning) return;
+    // skip doesn't mark the word as known; just move to the next word
+    isTransitioning = true;
+    clearInterval(timerInterval);
+    inputField.value = '';
+    setTimeout(() => {
+        isTransitioning = false;
+        nextWord();
+    }, 200);
 }
 
 function handleCorrect() {
     clearInterval(timerInterval);
     isTransitioning = true;
+    // mark this vocab index as answered so we won't show it again this game
+    answeredSet.add(currentWordIndex);
     
     // 1. IMPACT SHAKE
     gameArea.style.transform = "scale(1.02)";
@@ -381,7 +527,6 @@ function handleCorrect() {
                 // ignore if something goes wrong with transitions
             }
 
-            // update visuals now that multiplier/reset happened
             updateComboVisuals();
             // continue to next word shortly after
             setTimeout(() => nextWord(), 160);
@@ -406,6 +551,14 @@ function handleIncorrect(isTimeout = false) {
     });
 
     resetCombo();
+    // explicitly clear any glow/inline styles so the streak bar immediately loses its glow
+    try {
+        streakContainer.style.boxShadow = '';
+        streakContainer.style.borderColor = '';
+        streakInner.style.boxShadow = '';
+    } catch (e) {
+        // ignore if elements not present
+    }
     
     setTimeout(() => {
         inputField.value = '';
@@ -443,11 +596,21 @@ function updateComboVisuals() {
 
     // If the bar is full, add a glow of the level color around the container
     if (pct >= 100) {
-        // when full, glow using the fill (current level) color
+        // when full, strong glow using the fill (current level) color
         streakFill.style.background = fillColor;
         streakContainer.style.boxShadow = `0 0 18px ${colorToRgba(fillColor, 0.95)}, 0 0 36px ${colorToRgba(fillColor, 0.4)}`;
         streakContainer.style.borderColor = fillColor;
         streakInner.style.boxShadow = `inset 0 0 8px ${colorToRgba(fillColor, 0.25)}`;
+    } else if (streakInLevel > 0 || holdingFull) {
+        // subtle persistent glow while the player still has a streak
+        streakContainer.style.boxShadow = `0 0 10px ${colorToRgba(fillColor, 0.6)}`;
+        streakContainer.style.borderColor = colorToRgba(fillColor, 0.6);
+        streakInner.style.boxShadow = `inset 0 0 6px ${colorToRgba(fillColor, 0.16)}`;
+    } else {
+        // clear any glow/inline styles when there's no streak
+        streakContainer.style.boxShadow = '';
+        streakContainer.style.borderColor = '';
+        streakInner.style.boxShadow = '';
     }
 
     streakContainer.classList.remove('shake-lvl-1', 'shake-lvl-2', 'shake-lvl-3');

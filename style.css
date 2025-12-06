@@ -354,6 +354,28 @@ input:focus {
 h1 { font-size: 3rem; color: var(--neon-gold); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 5px; }
 p { color: #ccc; font-size: 1.2rem; margin-bottom: 30px; text-align: center; line-height: 1.6; }
 
+.start-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+}
+
+.start-instructions { 
+    color: #e8e8e8;
+    font-size: 1rem;
+    max-width: 640px;
+    margin: 6px 0 12px 0;
+}
+
+/* make start button a bit larger & with a subtle gradient */
+#start-btn {
+    background: linear-gradient(135deg, var(--neon-pink), #ff7aa6);
+    padding: 16px 48px;
+    border-radius: 10px;
+    box-shadow: 0 6px 30px rgba(255, 20, 100, 0.18);
+}
+
 button {
     padding: 15px 40px; font-size: 1.5rem; background: var(--neon-pink); border: none; color: white;
     border-radius: 5px; cursor: pointer; text-transform: uppercase; font-weight: bold;
