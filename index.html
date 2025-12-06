@@ -33,6 +33,10 @@
         </div>
         <div class="input-wrapper">
             <input type="text" id="pinyin-input" placeholder="type pinyin..." autocomplete="off">
+            <!-- Mobile display for on-screen keyboard input (shown only on small screens) -->
+            <div id="mobile-input-display" class="mobile-input-display" aria-hidden="true"></div>
+            <!-- On-screen keyboard container (buttons injected by JS) -->
+            <div id="onscreen-keyboard" class="onscreen-keyboard" aria-hidden="true"></div>
         </div>
     </div>
 
@@ -46,7 +50,7 @@
         <!-- start screen -->
         <div id="start-screen">
             <h1>Pinyin</h1>
-            <p class="start-instructions">Type the Pinyin with tone numbers (use 1-4 for tones). Neutral tone can be 5, 0, or left blank.<br>
+            <p class="start-instructions">Type the Pinyin with tone numbers (use 1-4 for tones). Neutral tone can be left blank.<br>
                e.g., "你好" = <strong>ni3hao3</strong></p>
             <p class="start-instructions">If you don't know a word, type <strong>bzd</strong> or <strong>buzhidao</strong> to skip it.</p>
 

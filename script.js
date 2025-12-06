@@ -1,16 +1,16 @@
 const vocabList = [
     { char: "你好", pinyin: "ni3hao3" },
-    { char: "谢谢", pinyin: "xie4xie5" },
-    { char: "爸爸", pinyin: "ba4ba5" },
-    { char: "妈妈", pinyin: "ma1ma5" },
+    { char: "谢谢", pinyin: "xie4xie" },
+    { char: "爸爸", pinyin: "ba4ba" },
+    { char: "妈妈", pinyin: "ma1ma" },
     { char: "喜欢", pinyin: "xi3huan1" },
     { char: "中国", pinyin: "zhong1guo2" },
     { char: "再见", pinyin: "zai4jian4" },
     { char: "名字", pinyin: "ming2zi4" },
-    { char: "什么", pinyin: "shen2me5" },
+    { char: "什么", pinyin: "shen2me" },
     { char: "高兴", pinyin: "gao1xing4" },
     { char: "是", pinyin: "shi4" },
-    { char: "的", pinyin: "de5" },
+    { char: "的", pinyin: "de" },
     { char: "和", pinyin: "he2" },
     { char: "一", pinyin: "yi1" },
     { char: "个", pinyin: "ge4" },
@@ -33,10 +33,10 @@ const vocabList = [
     { char: "冷", pinyin: "leng3" },
     { char: "男", pinyin: "nan2" },
     { char: "女", pinyin: "nv3" },
-    { char: "孩子", pinyin: "hai2zi5" },
+    { char: "孩子", pinyin: "hai2zi" },
     { char: "学生", pinyin: "xue2sheng1" },
     { char: "老师", pinyin: "lao3shi1" },
-    { char: "朋友", pinyin: "peng2you5" },
+    { char: "朋友", pinyin: "peng2you" },
     { char: "家", pinyin: "jia1" },
     { char: "学校", pinyin: "xue2xiao4" },
     { char: "医院", pinyin: "yi1yuan4" },
@@ -69,21 +69,21 @@ const vocabList = [
     { char: "要", pinyin: "yao4" },
     { char: "想", pinyin: "xiang3" },
     { char: "知道", pinyin: "zhi1dao4" },
-    { char: "认识", pinyin: "ren4shi5" },
+    { char: "认识", pinyin: "ren4shi" },
     { char: "会", pinyin: "hui4" },
     { char: "能", pinyin: "neng2" },
     { char: "可以", pinyin: "ke3yi3" },
     { char: "应该", pinyin: "ying1gai1" },
     { char: "开始", pinyin: "kai1shi3" },
-    { char: "结束", pinyin: "jie1shu5" },
+    { char: "结束", pinyin: "jie1shu" },
     { char: "今天", pinyin: "jin1tian1" },
     { char: "明天", pinyin: "ming2tian1" },
     { char: "昨天", pinyin: "zuo2tian1" },
-    { char: "早上", pinyin: "zao3shang5" },
+    { char: "早上", pinyin: "zao3shang" },
     { char: "中午", pinyin: "zhong1wu3" },
-    { char: "晚上", pinyin: "wan3shang5" },
+    { char: "晚上", pinyin: "wan3shang" },
     { char: "现在", pinyin: "xian4zai4" },
-    { char: "时候", pinyin: "shi2hou5" },
+    { char: "时候", pinyin: "shi2hou" },
     { char: "月", pinyin: "yue4" },
     { char: "年", pinyin: "nian2" },
     { char: "天", pinyin: "tian1" },
@@ -94,20 +94,20 @@ const vocabList = [
     { char: "多少钱", pinyin: "duo1shao3qian2" },
     { char: "对", pinyin: "dui4" },
     { char: "错", pinyin: "cuo4" },
-    { char: "是的", pinyin: "shi4de5" },
+    { char: "是的", pinyin: "shi4de" },
     { char: "不是", pinyin: "bu4shi4" }
 ];
 
 // HSK Level 2 vocabulary (expanded list)
 const vocabListHSK2 = [
-    { char: "哥哥", pinyin: "ge1ge5" },
-    { char: "姐姐", pinyin: "jie3jie5" },
-    { char: "弟弟", pinyin: "di4di5" },
-    { char: "妹妹", pinyin: "mei4mei5" },
-    { char: "儿子", pinyin: "er2zi5" },
+    { char: "哥哥", pinyin: "ge1ge" },
+    { char: "姐姐", pinyin: "jie3jie" },
+    { char: "弟弟", pinyin: "di4di" },
+    { char: "妹妹", pinyin: "mei4mei" },
+    { char: "儿子", pinyin: "er2zi" },
     { char: "女儿", pinyin: "nv3er2" },
     { char: "生日", pinyin: "sheng1ri4" },
-    { char: "快乐", pinyin: "kuai4le5" },
+    { char: "快乐", pinyin: "kuai4le" },
     { char: "礼物", pinyin: "li3wu4" },
     { char: "礼貌", pinyin: "li3mao4" },
     { char: "电影", pinyin: "dian4ying3" },
@@ -123,18 +123,18 @@ const vocabListHSK2 = [
     { char: "回答", pinyin: "hui2da2" },
     { char: "准备", pinyin: "zhun3bei4" },
     { char: "帮助", pinyin: "bang1zhu4" },
-    { char: "觉得", pinyin: "jue2de5" },
+    { char: "觉得", pinyin: "jue2de" },
     { char: "想要", pinyin: "xiang3yao4" },
     { char: "需要", pinyin: "xu1yao4" },
     { char: "可以", pinyin: "ke3yi3" },
     { char: "应该", pinyin: "ying1gai1" },
     { char: "知道", pinyin: "zhi1dao4" },
-    { char: "认识", pinyin: "ren4shi5" },
+    { char: "认识", pinyin: "ren4shi" },
     { char: "喜欢", pinyin: "xi3huan1" },
     { char: "爱", pinyin: "ai4" },
     { char: "听说", pinyin: "ting1shuo1" },
     { char: "看见", pinyin: "kan4jian4" },
-    { char: "觉得", pinyin: "jue2de5" },
+    { char: "觉得", pinyin: "jue2de" },
     { char: "运动", pinyin: "yun4dong4" },
     { char: "跑步", pinyin: "pao3bu4" },
     { char: "游泳", pinyin: "you2yong3" },
@@ -146,7 +146,7 @@ const vocabListHSK2 = [
     { char: "公司", pinyin: "gong1si1" },
     { char: "同事", pinyin: "tong2shi4" },
     { char: "经理", pinyin: "jing1li3" },
-    { char: "休息", pinyin: "xiu1xi5" },
+    { char: "休息", pinyin: "xiu1xi" },
     { char: "旅行", pinyin: "lv3xing2" },
     { char: "酒店", pinyin: "jiu3dian4" },
     { char: "飞机", pinyin: "fei1ji1" },
@@ -175,7 +175,7 @@ const vocabListHSK2 = [
     { char: "西瓜", pinyin: "xi1gua1" },
     { char: "米饭", pinyin: "mi3fan4" },
     { char: "面条", pinyin: "mian4tiao2" },
-    { char: "包子", pinyin: "bao1zi5" },
+    { char: "包子", pinyin: "bao1zi" },
     { char: "鸡蛋", pinyin: "ji1dan4" },
     { char: "牛奶", pinyin: "niu2nai3" },
     { char: "茶", pinyin: "cha2" },
@@ -188,7 +188,7 @@ const vocabListHSK2 = [
     { char: "饿", pinyin: "e4" },
     { char: "渴", pinyin: "ke3" },
     { char: "忙", pinyin: "mang2" },
-    { char: "觉得", pinyin: "jue2de5" }
+    { char: "觉得", pinyin: "jue2de" }
 ];
 
 // activeVocab points to the current vocabulary list (HSK1 or HSK2)
@@ -270,6 +270,13 @@ const multText = document.getElementById('mult-text');
 const overlay = document.getElementById('overlay');
 const startBtn = document.getElementById('start-btn');
 const vocabSelect = document.getElementById('vocab-select');
+const mobileDisplay = document.getElementById('mobile-input-display');
+const onscreenKeyboard = document.getElementById('onscreen-keyboard');
+let mobileInputValue = '';
+
+function isSmallScreen() {
+    return window.matchMedia('(max-width: 800px)').matches;
+}
 
 // NEW DOM refs for total timer + end screen
 const totalTimerEl = document.getElementById('total-timer');
@@ -312,7 +319,11 @@ function startGame() {
     overlay.classList.add('hidden');
 
     inputField.value = '';
-    inputField.focus();
+    // reset mobile input as well
+    mobileInputValue = '';
+    updateMobileDisplay();
+    // focus native input only on larger screens (prevent mobile keyboard)
+    if (!isSmallScreen()) inputField.focus();
     isGameActive = true;
     nextWord();
 
@@ -424,9 +435,75 @@ function nextWord() {
 
 inputField.addEventListener('input', (e) => {
     if(!isGameActive || isTransitioning) return;
+    if (isSmallScreen()) return; // ignore physical/virtual keyboard input on small screens
     const val = e.target.value.toLowerCase().replace(/\s/g, '');
     checkAnswer(val);
 });
+
+// Build the on-screen keyboard buttons (if the container exists)
+function buildOnscreenKeyboard() {
+    if (!onscreenKeyboard) return;
+    // clear existing
+    onscreenKeyboard.innerHTML = '';
+
+    // build rows explicitly so background and layout fit correctly
+    const rowNums = ['1','2','3','4','bzd'];
+    const row1 = ['q','w','e','r','t','y','u','i','o','p'];
+    const row2 = ['a','s','d','f','g','h','j','k','l'];
+    // last row: delete at left, letters, enter at right
+    const row3 = ['⌫','z','x','c','v','b','n','m','✅'];
+
+    function makeRow(keys, cls) {
+        const row = document.createElement('div');
+        row.className = 'row ' + cls;
+        keys.forEach(k => {
+            const btn = document.createElement('div');
+            btn.className = 'key';
+            if (k === '⌫' || k === 'BZD') btn.classList.add('special');
+            if (k === '✅') btn.classList.add('enter');
+            btn.textContent = k;
+            btn.dataset.key = k;
+            btn.addEventListener('click', () => handleOnscreenKey(k));
+            row.appendChild(btn);
+        });
+        return row;
+    }
+
+    onscreenKeyboard.appendChild(makeRow(rowNums, 'numbers'));
+    onscreenKeyboard.appendChild(makeRow(row1, 'q1'));
+    onscreenKeyboard.appendChild(makeRow(row2, 'q2'));
+    onscreenKeyboard.appendChild(makeRow(row3, 'q3'));
+}
+
+function updateMobileDisplay() {
+    if (!mobileDisplay) return;
+    mobileDisplay.textContent = mobileInputValue || 'tap to type pinyin...';
+}
+
+function handleOnscreenKey(k) {
+    if (!isGameActive || isTransitioning) return;
+    if (k === '⌫') {
+        mobileInputValue = mobileInputValue.slice(0, -1);
+        updateMobileDisplay();
+        return;
+    }
+    if (k === 'BZD') {
+        // trigger skip
+        skipWord();
+        return;
+    }
+    if (k === 'Enter') {
+        const val = mobileInputValue.toLowerCase().replace(/\s/g, '');
+        checkAnswer(val);
+        return;
+    }
+    // append character
+    mobileInputValue += k;
+    updateMobileDisplay();
+    // mimic input event behaviour: check after each input
+    const val = mobileInputValue.toLowerCase().replace(/\s/g, '');
+    checkAnswer(val);
+}
 
 function checkAnswer(input) {
     // allow skipping: 'bzd' or 'buzhidao' (buzhidao = I don't know)
@@ -436,7 +513,7 @@ function checkAnswer(input) {
     }
 
     const targetPinyin = activeVocab[currentWordIndex].pinyin;
-    const cleanInput = input.replace(/[05]/g, '');
+    const cleanInput = input.replace(/\s/g, '');
 
     // Support multiple pinyin variants. The `pinyin` field may be:
     // - a single string ("chang2")
@@ -447,7 +524,7 @@ function checkAnswer(input) {
         : String(targetPinyin).split('|').map(s => s.trim());
 
     for (const t of targets) {
-        const cleanTarget = String(t).replace(/[05]/g, '');
+        const cleanTarget = String(t);
         if (cleanInput === cleanTarget) {
             handleCorrect();
             return;
@@ -485,6 +562,9 @@ function handleCorrect() {
     });
 
     inputField.value = '';
+    // clear mobile input as well (for on-screen keyboard)
+    mobileInputValue = '';
+    updateMobileDisplay();
     score += 10 * multiplier;
     streakInLevel++;
 
@@ -559,7 +639,9 @@ function handleIncorrect(isTimeout = false) {
     } catch (e) {
         // ignore if elements not present
     }
-    
+    // clear mobile input too
+    mobileInputValue = '';
+    updateMobileDisplay();
     setTimeout(() => {
         inputField.value = '';
         nextWord();
@@ -731,5 +813,31 @@ function createPhysParticle(x, y, colors, forcedAngle, minVel, maxVel, gravity, 
 }
 
 document.body.addEventListener('click', () => {
-    if(isGameActive) inputField.focus();
+    if(isGameActive && !isSmallScreen()) inputField.focus();
 });
+
+// build keyboard once
+buildOnscreenKeyboard();
+// ensure mobile display is initialized
+updateMobileDisplay();
+
+// handle resize to keep mobile display text in sync
+window.addEventListener('resize', () => {
+    updateMobileDisplay();
+});
+
+// Ensure mobile UI visibility matches current screen size (fixes cases where CSS
+// media queries don't match device behavior). This explicitly shows/hides the
+// on-screen keyboard and mobile display at runtime.
+function updateMobileUIVisibility() {
+    if (mobileDisplay) {
+        mobileDisplay.style.display = isSmallScreen() ? 'block' : 'none';
+    }
+    if (onscreenKeyboard) {
+        onscreenKeyboard.style.display = isSmallScreen() ? 'grid' : 'none';
+    }
+}
+
+// run once and on resize
+updateMobileUIVisibility();
+window.addEventListener('resize', updateMobileUIVisibility);

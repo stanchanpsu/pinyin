@@ -118,10 +118,12 @@ body {
     }
 
     #streak-container {
-        width: min(840px, calc(100% - 96px));
+        width: min(420px, calc(100% - 48px));
+        max-width: 420px;
         height: 18px;
         border-radius: 12px;
         display: block;
+        margin: 0 auto;
     }
 
     #streak-inner {
@@ -156,8 +158,13 @@ body {
         justify-content: center;
     }
 
-    /* ensure game area content doesn't sit under the streak */
-    #game-area { margin-top: 26px; }
+    /* ensure game area content doesn't sit under the streak and fits mobile width */
+    #game-area {
+        margin: 26px auto 0;
+        width: calc(100% - 24px);
+        max-width: 420px;
+        box-sizing: border-box;
+    }
 
     .majong-tile {
         width: 72px;
@@ -169,6 +176,64 @@ body {
     .input-wrapper { width: calc(100% - 40px); max-width: 420px; }
 
     input { padding: 12px; font-size: 1.2rem; }
+
+    /* Hide native input on small screens to prevent the virtual keyboard from covering the game */
+    input#pinyin-input { display: none; }
+
+    /* Mobile on-screen keyboard display */
+    .mobile-input-display {
+        width: calc(100% - 24px);
+        max-width: 420px;
+        background: rgba(0,0,0,0.6);
+        color: #fff;
+        padding: 12px 16px;
+        border-radius: 12px;
+        text-align: center;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 1.25rem;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.5);
+        margin: 6px 0 10px 0;
+    }
+
+
+    .onscreen-keyboard {
+        width: calc(100%);
+        max-width: auto;
+        margin: 0 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 10px;
+        box-sizing: border-box;
+        background: linear-gradient(180deg, rgba(0,0,0,0.38), rgba(0,0,0,0.22));
+        border-radius: 14px;
+        margin-top: 8px;
+        overflow: au;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .onscreen-keyboard .row { display: grid; gap: 4px; }
+    .onscreen-keyboard .row.numbers { grid-template-columns: repeat(6, minmax(32px, 1fr)); }
+    .onscreen-keyboard .row.q1 { grid-template-columns: repeat(10, minmax(26px, 1fr)); }
+    .onscreen-keyboard .row.q2 { grid-template-columns: repeat(10, minmax(26px, 1fr)); }
+    .onscreen-keyboard .row.q3 { grid-template-columns: repeat(9, minmax(26px, 1fr)); }
+
+    .onscreen-keyboard .key {
+        background: rgba(255,255,255,0.06);
+        color: #fff;
+        border-radius: 8px;
+        padding: 8px 6px;
+        text-align: center;
+        font-size: 0.98rem;
+        cursor: pointer;
+        user-select: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    }
+
+    /* Slightly smaller delete/enter keys for better fit */
+    .onscreen-keyboard .key.special { background: rgba(255,90,120,0.18); font-size: 0.88rem; padding: 7px 6px; }
+    .onscreen-keyboard .key.enter { background: linear-gradient(90deg, #9bf495, #71e59c); font-size: 0.88rem; padding: 7px 6px; }
+    /* no wide-span keys by default; keep sizing consistent */
 
     #ui-layer { left: 12px; right: 12px; top: 12px; }
 
@@ -404,3 +469,12 @@ button:hover { transform: scale(1.1); }
 #end-screen p {
     max-width: 640px;
 }
+
+/* By default hide mobile-only UI; media query will enable on small screens */
+.mobile-input-display,
+.onscreen-keyboard {
+    display: none;
+}
+
+/* Prevent horizontal overflow on small devices */
+html, body { max-width: 100%; overflow-x: hidden; }
