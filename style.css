@@ -112,9 +112,12 @@ body {
         gap: 12px;
         z-index: 9; /* keep below top UI (which is z-index:10) */
         pointer-events: none;
-        width: 100%;
+        width: calc(100% - 24px);
+        max-width: 420px;
         display: flex;
         justify-content: center;
+        box-sizing: border-box;
+        padding: 0 12px;
     }
 
     #streak-container {
@@ -145,9 +148,14 @@ body {
     }
 
     .multiplier-text {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
         font-weight: 800;
         white-space: nowrap;
+        min-width: 40px;
+        max-width: 72px;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     /* Make input and tiles smaller and allow wrapping */
@@ -212,11 +220,18 @@ body {
         -webkit-overflow-scrolling: touch;
     }
 
-    .onscreen-keyboard .row { display: grid; gap: 4px; }
-    .onscreen-keyboard .row.numbers { grid-template-columns: repeat(6, minmax(32px, 1fr)); }
-    .onscreen-keyboard .row.q1 { grid-template-columns: repeat(10, minmax(26px, 1fr)); }
-    .onscreen-keyboard .row.q2 { grid-template-columns: repeat(10, minmax(26px, 1fr)); }
-    .onscreen-keyboard .row.q3 { grid-template-columns: repeat(9, minmax(26px, 1fr)); }
+    /* center keys in each row by using auto-sized columns and centering the grid */
+    .onscreen-keyboard .row {
+        display: grid;
+        gap: 4px;
+        justify-content: center; /* center the whole grid within the keyboard */
+        justify-items: center;   /* center items inside each grid cell */
+        grid-auto-flow: column;
+    }
+    .onscreen-keyboard .row.numbers { grid-template-columns: repeat(6, auto); }
+    .onscreen-keyboard .row.q1 { grid-template-columns: repeat(10, auto); }
+    .onscreen-keyboard .row.q2 { grid-template-columns: repeat(10, auto); }
+    .onscreen-keyboard .row.q3 { grid-template-columns: repeat(9, auto); }
 
     .onscreen-keyboard .key {
         background: rgba(255,255,255,0.06);
@@ -228,11 +243,13 @@ body {
         cursor: pointer;
         user-select: none;
         box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+        min-width: 26px; 
+        box-sizing: border-box;
     }
 
     /* Slightly smaller delete/enter keys for better fit */
     .onscreen-keyboard .key.special { background: rgba(255,90,120,0.18); font-size: 0.88rem; padding: 7px 6px; }
-    .onscreen-keyboard .key.enter { background: linear-gradient(90deg, #9bf495, #71e59c); font-size: 0.88rem; padding: 7px 6px; }
+    .onscreen-keyboard .key.enter { background:  #9bf495; font-size: 0.88rem; padding: 7px 6px; }
     /* no wide-span keys by default; keep sizing consistent */
 
     #ui-layer { left: 12px; right: 12px; top: 12px; }
