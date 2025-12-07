@@ -458,7 +458,7 @@ const UI = {
 // ==============================
 const Game = {
   config: {
-    totalTime: 1200, // 2 minutes
+    totalTime: 120000, // 2 minutes
     wordTime: 15000,
     itemsPerLevel: 5,
   },
