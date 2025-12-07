@@ -193,7 +193,9 @@ input#pinyin-input:focus {
     width: 100%;
     height: 15px;
     background: #1a1a1a;
+    display: none;
 }
+
 
 #timer-bar {
     width: 100%;
@@ -212,7 +214,7 @@ input#pinyin-input:focus {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 100;
+    z-index: 2000;
     backdrop-filter: blur(5px);
 }
 
@@ -262,12 +264,18 @@ p { color: #e8e8e8; font-size: 1.1rem; line-height: 1.6; margin: 0; }
 .mobile-input-display, .onscreen-keyboard { display: none; }
 
 @media (max-width: 800px) {
-    h1 { font-size: 2.2rem; }
+    /* 1. Global Layout */
+    body {
+        align-items: flex-start;
+    }
+    h1 { font-size: 1.8rem; }
     
-    /* Streak bar moves to top */
+    /* 2. Top UI & Streak */
+    #ui-layer { top: 10px; left: 10px; right: 10px; }
+
     #streak-wrapper {
         position: absolute;
-        top: 60px;
+        top: 50px;
         left: 50%;
         transform: translateX(-50%);
         width: 90%;
@@ -275,88 +283,135 @@ p { color: #e8e8e8; font-size: 1.1rem; line-height: 1.6; margin: 0; }
         flex-direction: row;
         justify-content: center;
         gap: 10px;
+        z-index: 20;
     }
-    #streak-container {
-        width: 100%;
-        height: 20px;
-        border-radius: 10px;
-    }
-    #streak-fill {
-        width: 0%;
-        height: 100%;
-        left: 0;
-        top: 0;
-        transition: width 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.18s ease;
-    }
-    .multiplier-text { font-size: 1.2rem; width: 50px; text-align: right;}
 
-    /* Game Area adjustments */
+    #streak-container { width: 100%; height: 16px; border-radius: 8px; }
+    #streak-fill { width: 0%; height: 100%; left: 0; top: 0; }
+    .multiplier-text { font-size: 1.2rem; width: 40px; text-align: right; }
+
+    /* 3. Game Area & TILES (Made Bigger) */
     #game-area {
-        margin-top: 60px;
-        padding-bottom: var(--mobile-kb-height);
+        position: absolute;
+        top: 75px; 
+        left: 0;
         width: 100%;
+        /* Adjusted height to stop before the timer */
+        height: calc(55vh - 85px); 
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center; 
+        align-items: center;
+        z-index: 5;
     }
+
     #tiles-wrapper {
-        flex-wrap: wrap;
+        margin-bottom: 5px;
+        flex-wrap: wrap; /* Allows wrapping if 4 big tiles don't fit perfectly */
         justify-content: center;
     }
+
     .majong-tile {
-        width: 70px;
-        height: 90px;
-        font-size: 3rem;
-        margin: 5px;
+        /* BIGGER TILES */
+        width: 82px;  
+        height: 110px;
+        font-size: 3.8rem; 
+        margin: 4px;
+        box-shadow: 1px 1px 0 #ccc, 2px 2px 0 #ccc, 3px 3px 0 var(--felt-dark);
     }
 
-    /* Input handling */
+    .input-wrapper { width: 92%; }
+
+    /* Hide native input */
     input#pinyin-input { display: none; }
     
     .mobile-input-display {
         display: block;
-        background: rgba(0,0,0,0.6);
+        background: rgba(0,0,0,0.4);
+        border: 2px solid rgba(255,255,255,0.15);
         color: #fff;
-        padding: 12px;
-        border-radius: 12px;
+        padding: 6px;
+        border-radius: 8px;
         text-align: center;
         font-family: 'Roboto Mono', monospace;
-        font-size: 1.25rem;
-        margin-top: 20px;
+        font-size: 1.3rem; /* Larger text */
         min-height: 1.5em;
+        width: 100%;
+        box-sizing: border-box;
     }
 
-    /* On-Screen Keyboard */
+    /* 4. TIMER BAR (Moved above keyboard) */
+    #timer-container {
+        bottom: 45vh; /* Sit exactly on top of the keyboard */
+        height: 12px; /* Slightly thinner */
+        z-index: 101; /* Ensure it stays above keyboard layer */
+        background: #111; /* Dark background for contrast */
+    }
+
+    /* 5. MASSIVE KEYBOARD */
     .onscreen-keyboard {
         display: flex;
         flex-direction: column;
-        gap: 5px;
         position: fixed;
-        bottom: 20px;
+        bottom: 0;
         left: 0;
-        width: 100%;
-        background: rgba(0,0,0,0.85);
-        padding: 10px 0;
-        border-top-left-radius: 15px;
-        border-top-right-radius: 15px;
-        z-index: 60;
+        width: 100vw;
+        height: 45vh; /* 45% height */
+        background: rgba(10, 20, 15, 0.98);
+        border-top: none; /* Removed border as timer acts as separator */
+        padding: 4px;
+        box-sizing: border-box;
+        z-index: 100;
+        padding-bottom: max(5px, env(safe-area-inset-bottom));
     }
-    
+
     .onscreen-keyboard .row {
         display: flex;
-        justify-content: center;
+        width: 100%;
+        flex: 1;
         gap: 4px;
+        margin-bottom: 4px;
     }
     
     .onscreen-keyboard .key {
-        background: rgba(255,255,255,0.1);
+        flex: 1;
+        background: rgba(255,255,255,0.08);
         color: white;
         border-radius: 6px;
-        padding: 10px 0;
-        width: 32px;
-        text-align: center;
-        font-size: 1rem;
+        font-size: 1.4rem;
+        font-weight: bold;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         cursor: pointer;
         user-select: none;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+        -webkit-tap-highlight-color: transparent;
     }
-    .onscreen-keyboard .key.special { background: rgba(255, 90, 120, 0.3); font-size: 0.9rem; width: 40px; }
-    .onscreen-keyboard .row.numbers .key { width: 40px; background: rgba(255,255,255,0.05); }
+
+    .onscreen-keyboard .key:active {
+        transform: translateY(4px);
+        box-shadow: 0 0 0 rgba(0,0,0,0);
+        background: rgba(255,255,255,0.2);
+    }
+
+    .onscreen-keyboard .key.special { 
+        background: rgba(255, 90, 120, 0.25); 
+        font-size: 1.1rem; 
+        flex: 1.5; 
+    }
+    
+    .onscreen-keyboard .row.r0 .key {
+        background: rgba(255, 215, 0, 0.15); 
+        color: var(--neon-gold);
+    }
+    
+    .onscreen-keyboard .row.r0 .key:last-child {
+        background: rgba(0, 243, 255, 0.2);
+        color: var(--neon-blue);
+        flex: 1.5;
+        font-size: 1rem;
+    }
 }
