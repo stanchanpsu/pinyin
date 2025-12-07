@@ -1,23 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@700&family=Roboto+Mono:wght@500&family=Rubik:wght@700&display=swap');
 
 :root {
+    /* Colors */
     --felt-green: #0d5f38;
     --felt-dark: #062f1b;
     --tile-face: #fdf6e3;
-    --tile-back: #2e8b57; /* Mahjong Green */
-    
-    /* Multiplier Colors */
-    --c-1: #444; 
-    --c-2: #ff4500; 
-    --c-3: #00f3ff; 
-    --c-4: #ff0055; 
-    --c-5: #ffd700; 
+    --tile-back: #2e8b57;
     
     --neon-blue: #00f3ff;
     --neon-pink: #ff0055;
     --neon-gold: #ffd700;
+    --neon-orange: #ff4500;
+    
+    /* Layout */
+    --mobile-kb-height: 260px;
 }
 
+/* --- Base --- */
 body {
     margin: 0;
     overflow: hidden;
@@ -29,9 +28,27 @@ body {
     font-family: 'Rubik', sans-serif;
     color: white;
     perspective: 1000px;
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* UI Overlay */
+button {
+    padding: 15px 40px; 
+    font-size: 1.5rem; 
+    background: var(--neon-pink); 
+    border: none; 
+    color: white;
+    border-radius: 5px; 
+    cursor: pointer; 
+    text-transform: uppercase; 
+    font-weight: bold;
+    box-shadow: 0 0 20px var(--neon-pink); 
+    transition: transform 0.2s;
+}
+button:hover { transform: scale(1.1); }
+
+.hidden { display: none !important; }
+
+/* --- UI Overlay --- */
 #ui-layer {
     position: absolute;
     top: 20px;
@@ -43,20 +60,13 @@ body {
     z-index: 10;
 }
 
-.timer-box {
+.score-box, .timer-box {
     font-size: 1.2rem;
-    align-self: center;
-    pointer-events: none;
-    color: #fff;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
-}
-
-.score-box {
-    font-size: 1.5rem;
     text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
+.score-box span, .timer-box span { font-family: 'Roboto Mono', monospace; }
 
-/* --- STREAK BAR CONTAINER --- */
+/* --- Streak Bar --- */
 #streak-wrapper {
     position: absolute;
     left: 50px;
@@ -66,6 +76,7 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 10px;
+    z-index: 8;
 }
 
 #streak-container {
@@ -77,7 +88,7 @@ body {
     box-shadow: 0 0 15px rgba(0,0,0,0.5);
     overflow: visible; 
     position: relative;
-    transition: background 0.3s, border-color 0.25s ease, box-shadow 0.25s ease;
+    transition: all 0.3s ease;
 }
 
 #streak-inner {
@@ -86,8 +97,8 @@ body {
     border-radius: 10px;
     overflow: hidden;
     position: relative;
-    background-color: var(--c-1);
-    transition: background-color 0.3s, box-shadow 0.25s ease;
+    background-color: rgba(0,0,0,0.35);
+    transition: background-color 0.3s;
 }
 
 #streak-fill {
@@ -99,176 +110,6 @@ body {
     transition: height 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.18s ease;
 }
 
-/* Responsive: mobile layout adjustments */
-@media (max-width: 800px) {
-    /* move streak to top center and convert to compact horizontal bar */
-    #streak-wrapper {
-        position: absolute;
-        left: 50%;
-        top: 56px; /* sit just below top UI */
-        transform: translateX(-50%);
-        flex-direction: row;
-        align-items: center;
-        gap: 12px;
-        z-index: 9; /* keep below top UI (which is z-index:10) */
-        pointer-events: none;
-        width: calc(100% - 24px);
-        max-width: 420px;
-        display: flex;
-        justify-content: center;
-        box-sizing: border-box;
-        padding: 0 12px;
-    }
-
-    #streak-container {
-        width: min(420px, calc(100% - 48px));
-        max-width: 420px;
-        height: 18px;
-        border-radius: 12px;
-        display: block;
-        margin: 0 auto;
-    }
-
-    #streak-inner {
-        width: 100%;
-        height: 100%;
-        border-radius: 12px;
-        overflow: hidden;
-        position: relative;
-    }
-
-    /* On mobile the fill grows left->right (width) instead of bottom->top (height) */
-    #streak-fill {
-        left: 0;
-        bottom: 0;
-        top: 0;
-        width: 0%;
-        height: 100%;
-        transition: width 0.18s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.18s ease;
-    }
-
-    .multiplier-text {
-        font-size: 1.2rem;
-        font-weight: 800;
-        white-space: nowrap;
-        min-width: 40px;
-        max-width: 72px;
-        text-align: center;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    /* Make input and tiles smaller and allow wrapping */
-    #tiles-wrapper {
-        gap: 10px;
-        padding: 6px 12px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    /* ensure game area content doesn't sit under the streak and fits mobile width */
-    #game-area {
-        margin: 26px auto 0;
-        width: calc(100% - 24px);
-        max-width: 420px;
-        box-sizing: border-box;
-        padding-bottom: 260px; /* reserve space for fixed keyboard */
-    }
-
-    .majong-tile {
-        width: 72px;
-        height: 94px;
-        font-size: 3rem;
-        margin: 4px;
-    }
-
-    .input-wrapper { width: calc(100% - 40px); max-width: 420px; }
-
-    input { padding: 12px; font-size: 1.2rem; }
-
-    /* Hide native input on small screens to prevent the virtual keyboard from covering the game */
-    input#pinyin-input { display: none; }
-
-    /* Mobile on-screen keyboard display */
-    .mobile-input-display {
-        width: calc(100% - 24px);
-        max-width: 420px;
-        background: rgba(0,0,0,0.6);
-        color: #fff;
-        padding: 12px 16px;
-        border-radius: 12px;
-        text-align: center;
-        font-family: 'Roboto Mono', monospace;
-        font-size: 1.25rem;
-        box-shadow: 0 4px 18px rgba(0,0,0,0.5);
-        margin: 0px 0 10px 0;
-    }
-
-
-    .onscreen-keyboard {
-        /* fixed full-width keyboard anchored to screen bottom */
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 22px;
-        width: 100vw;
-        max-width: 100vw;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        padding: 12px 10px;
-        box-sizing: border-box;
-        background: linear-gradient(180deg, rgba(0,0,0,0.92), rgba(0,0,0,0.72));
-        border-radius: 12px 12px 0 0;
-        -webkit-overflow-scrolling: touch;
-        z-index: 60;
-    }
-
-    /* center keys in each row by using auto-sized columns and centering the grid */
-    .onscreen-keyboard .row {
-        display: grid;
-        gap: 6px;
-        justify-content: center; /* center the whole grid within the keyboard */
-        justify-items: center;   /* center items inside each grid cell */
-        grid-auto-flow: column;
-    }
-    .onscreen-keyboard .row.numbers { grid-template-columns: repeat(6, auto); }
-    .onscreen-keyboard .row.q1 { grid-template-columns: repeat(10, auto); }
-    .onscreen-keyboard .row.q2 { grid-template-columns: repeat(10, auto); }
-    .onscreen-keyboard .row.q3 { grid-template-columns: repeat(9, auto); }
-
-    .onscreen-keyboard .key {
-        background: rgba(255,255,255,0.06);
-        color: #fff;
-        border-radius: 8px;
-        padding: 8px 6px;
-        text-align: center;
-        font-size: 0.98rem;
-        cursor: pointer;
-        user-select: none;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.35);
-        min-width: 34px;
-        min-height: 42px;
-        box-sizing: border-box;
-    }
-
-    /* Slightly smaller delete/enter keys for better fit */
-    .onscreen-keyboard .key.special { background: rgba(255,90,120,0.18); font-size: 0.88rem; padding: 7px 6px; }
-    /* no wide-span keys by default; keep sizing consistent */
-
-    #ui-layer { left: 12px; right: 12px; top: 12px; }
-
-    h1 { font-size: 2.2rem; }
-}
-
-/* Extra small screens */
-@media (max-width: 420px) {
-    #streak-container { width: calc(100% - 100px); }
-    .majong-tile { width: 60px; height: 80px; font-size: 2.4rem; }
-    .multiplier-text { font-size: 1.1rem; }
-}
-
 .multiplier-text {
     font-size: 2rem;
     font-weight: 800;
@@ -277,37 +118,7 @@ body {
     font-family: 'Roboto Mono', monospace;
 }
 
-/* --- SHAKE ANIMATIONS --- */
-@keyframes shake-1 { 
-    0% { transform: translate(0,0); } 
-    25% { transform: translate(1px, 1px); } 
-    50% { transform: translate(-1px, 0); } 
-    75% { transform: translate(0, -1px); } 
-    100% { transform: translate(0,0); } 
-}
-
-@keyframes shake-2 { 
-    0% { transform: translate(0,0); } 
-    25% { transform: translate(-2px, 1px); } 
-    75% { transform: translate(2px, -1px); } 
-    100% { transform: translate(0,0); } 
-}
-
-@keyframes shake-3 { 
-    0% { transform: translate(0,0); } 
-    10% { transform: translate(-3px, -2px); } 
-    30% { transform: translate(3px, 2px); } 
-    50% { transform: translate(-3px, 2px); } 
-    70% { transform: translate(3px, -2px); } 
-    90% { transform: translate(-1px, 1px); } 
-    100% { transform: translate(0,0); } 
-}
-
-.shake-lvl-1 { animation: shake-1 0.2s infinite linear; }
-.shake-lvl-2 { animation: shake-2 0.1s infinite linear; }
-.shake-lvl-3 { animation: shake-3 0.05s infinite linear; }
-
-/* Game Container */
+/* --- Game Area --- */
 #game-area {
     display: flex;
     flex-direction: column;
@@ -318,7 +129,6 @@ body {
     transition: transform 0.1s;
 }
 
-/* Mahjong Tiles */
 #tiles-wrapper {
     display: flex;
     gap: 15px;
@@ -337,7 +147,6 @@ body {
     font-weight: 700;
     font-size: 4.5rem;
     color: #b00;
-    position: relative;
     box-shadow: 
         inset 0 0 10px rgba(0,0,0,0.1),
         1px 1px 0 #ccc, 2px 2px 0 #ccc, 3px 3px 0 #ccc,
@@ -345,41 +154,17 @@ body {
         7px 7px 0 var(--felt-dark),
         12px 12px 20px rgba(0,0,0,0.4);
     transform: rotateX(10deg);
-    transition: transform 0.1s;
-    cursor: default;
+    transition: transform 0.1s, opacity 0.3s;
     user-select: none;
-    transform-origin: center center;
 }
 
-@keyframes shake-error {
-    0%, 100% { transform: rotateX(10deg) translateX(0); }
-    25% { transform: rotateX(10deg) translateX(-10px); }
-    75% { transform: rotateX(10deg) translateX(10px); }
-}
-
-.shake-effect {
-    animation: shake-error 0.4s ease-in-out;
-    filter: grayscale(0.8);
-}
-
-/* Violent Pop */
-@keyframes shatter {
-    0% { transform: rotateX(10deg) scale(1); opacity: 1; filter: brightness(1); }
-    20% { transform: rotateX(0deg) scale(1.1); opacity: 1; filter: brightness(2); }
-    100% { transform: rotateX(-20deg) scale(0.8); opacity: 0; filter: brightness(0); }
-}
-
-.explode-effect {
-    animation: shatter 0.2s forwards ease-out;
-}
-
-/* Input Area */
+/* --- Input Area --- */
 .input-wrapper {
     position: relative;
     width: 320px;
 }
 
-input {
+input#pinyin-input {
     width: 100%;
     padding: 15px;
     font-size: 1.5rem;
@@ -391,16 +176,16 @@ input {
     font-family: 'Roboto Mono', monospace;
     outline: none;
     transition: all 0.2s;
-    text-transform: lowercase;
+    box-sizing: border-box;
 }
 
-input:focus {
+input#pinyin-input:focus {
     background: rgba(0,0,0,0.7);
     border-color: var(--neon-gold);
     box-shadow: 0 0 15px var(--neon-gold);
 }
 
-/* Timer Bar */
+/* --- Timers --- */
 #timer-container {
     position: fixed;
     bottom: 0;
@@ -418,14 +203,7 @@ input:focus {
     transform-origin: left;
 }
 
-/* --- PARTICLES --- */
-.particle {
-    position: absolute;
-    pointer-events: none;
-    z-index: 100;
-}
-
-/* Overlay */
+/* --- Overlays --- */
 #overlay {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -438,65 +216,147 @@ input:focus {
     backdrop-filter: blur(5px);
 }
 
-h1 { font-size: 3rem; color: var(--neon-gold); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 5px; }
-p { color: #ccc; font-size: 1.2rem; margin-bottom: 30px; text-align: center; line-height: 1.6; }
-
-.start-subtitle {
-    font-size: 1.1rem;
-    color: rgba(255,255,255,0.9);
-    letter-spacing: 2px;
-    margin-bottom: 6px;
-}
-
-.start-instructions { 
-    color: #e8e8e8;
-    font-size: 1rem;
-    max-width: 640px;
-    margin: 6px 0 12px 0;
-}
-
-/* make start button a bit larger & with a subtle gradient */
-#start-btn {
-    background: linear-gradient(135deg, var(--neon-pink), #ff7aa6);
-    padding: 16px 48px;
-    border-radius: 10px;
-    box-shadow: 0 6px 30px rgba(255, 20, 100, 0.18);
-}
-
-button {
-    padding: 15px 40px; font-size: 1.5rem; background: var(--neon-pink); border: none; color: white;
-    border-radius: 5px; cursor: pointer; text-transform: uppercase; font-weight: bold;
-    box-shadow: 0 0 20px var(--neon-pink); transition: transform 0.2s;
-}
-button:hover { transform: scale(1.1); }
-.hidden { display: none !important; }
-
-/* Center and constrain start/end screens inside the overlay */
-#start-screen,
-#end-screen {
+#start-screen, #end-screen {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    text-align: center;      /* ensure text is centered */
-    gap: 16px;
-    max-width: 720px;        /* keep lines from getting too long */
-    width: calc(100% - 40px);
-    padding: 0 20px;
-    box-sizing: border-box;
+    text-align: center;
+    max-width: 600px;
+    width: 90%;
+    gap: 20px;
 }
 
-/* Slightly reduce paragraph width for readability on large screens */
-#start-screen p,
-#end-screen p {
-    max-width: 640px;
+h1 { font-size: 3rem; color: var(--neon-gold); margin: 0; text-transform: uppercase; letter-spacing: 5px; }
+p { color: #e8e8e8; font-size: 1.1rem; line-height: 1.6; margin: 0; }
+
+#start-btn {
+    background: linear-gradient(135deg, var(--neon-pink), #ff7aa6);
+    margin-top: 10px;
 }
 
-/* By default hide mobile-only UI; media query will enable on small screens */
-.mobile-input-display,
-.onscreen-keyboard {
-    display: none;
-}
+/* --- Particles & Effects --- */
+.particle { position: absolute; pointer-events: none; z-index: 100; }
 
-/* Prevent horizontal overflow on small devices */
-html, body { max-width: 100%; overflow-x: hidden; }
+@keyframes shake-error {
+    0%, 100% { transform: rotateX(10deg) translateX(0); }
+    25% { transform: rotateX(10deg) translateX(-10px); }
+    75% { transform: rotateX(10deg) translateX(10px); }
+}
+.shake-effect { animation: shake-error 0.4s ease-in-out; filter: grayscale(0.8); }
+
+@keyframes shatter {
+    0% { transform: rotateX(10deg) scale(1); opacity: 1; filter: brightness(1); }
+    100% { transform: rotateX(-20deg) scale(0.8); opacity: 0; filter: brightness(0); }
+}
+.explode-effect { animation: shatter 0.2s forwards ease-out; }
+
+/* UI Shake Levels */
+@keyframes shake-1 { 0%, 100% {transform: translate(0,0);} 25% {transform: translate(1px, 1px);} 75% {transform: translate(-1px, -1px);} }
+@keyframes shake-2 { 0%, 100% {transform: translate(0,0);} 25% {transform: translate(-2px, 1px);} 75% {transform: translate(2px, -1px);} }
+@keyframes shake-3 { 0%, 100% {transform: translate(0,0);} 25% {transform: translate(3px, -2px);} 75% {transform: translate(-3px, 2px);} }
+.shake-lvl-1 { animation: shake-1 0.2s infinite linear; }
+.shake-lvl-2 { animation: shake-2 0.1s infinite linear; }
+.shake-lvl-3 { animation: shake-3 0.05s infinite linear; }
+
+/* --- Mobile / Responsive --- */
+.mobile-input-display, .onscreen-keyboard { display: none; }
+
+@media (max-width: 800px) {
+    h1 { font-size: 2.2rem; }
+    
+    /* Streak bar moves to top */
+    #streak-wrapper {
+        position: absolute;
+        top: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        height: auto;
+        flex-direction: row;
+        justify-content: center;
+        gap: 10px;
+    }
+    #streak-container {
+        width: 100%;
+        height: 20px;
+        border-radius: 10px;
+    }
+    #streak-fill {
+        width: 0%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        transition: width 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.18s ease;
+    }
+    .multiplier-text { font-size: 1.2rem; width: 50px; text-align: right;}
+
+    /* Game Area adjustments */
+    #game-area {
+        margin-top: 60px;
+        padding-bottom: var(--mobile-kb-height);
+        width: 100%;
+    }
+    #tiles-wrapper {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .majong-tile {
+        width: 70px;
+        height: 90px;
+        font-size: 3rem;
+        margin: 5px;
+    }
+
+    /* Input handling */
+    input#pinyin-input { display: none; }
+    
+    .mobile-input-display {
+        display: block;
+        background: rgba(0,0,0,0.6);
+        color: #fff;
+        padding: 12px;
+        border-radius: 12px;
+        text-align: center;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 1.25rem;
+        margin-top: 20px;
+        min-height: 1.5em;
+    }
+
+    /* On-Screen Keyboard */
+    .onscreen-keyboard {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        position: fixed;
+        bottom: 20px;
+        left: 0;
+        width: 100%;
+        background: rgba(0,0,0,0.85);
+        padding: 10px 0;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        z-index: 60;
+    }
+    
+    .onscreen-keyboard .row {
+        display: flex;
+        justify-content: center;
+        gap: 4px;
+    }
+    
+    .onscreen-keyboard .key {
+        background: rgba(255,255,255,0.1);
+        color: white;
+        border-radius: 6px;
+        padding: 10px 0;
+        width: 32px;
+        text-align: center;
+        font-size: 1rem;
+        cursor: pointer;
+        user-select: none;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .onscreen-keyboard .key.special { background: rgba(255, 90, 120, 0.3); font-size: 0.9rem; width: 40px; }
+    .onscreen-keyboard .row.numbers .key { width: 40px; background: rgba(255,255,255,0.05); }
+}
