@@ -11,9 +11,6 @@
   --neon-pink: #ff0055;
   --neon-gold: #ffd700;
   --neon-orange: #ff4500;
-
-  /* Layout */
-  --mobile-kb-height: 260px;
 }
 
 /* --- Base --- */
@@ -48,6 +45,7 @@ body {
   left: 0;
 }
 
+/* Generic Button (used for Play Again) */
 button {
   padding: 15px 40px;
   font-size: 1.5rem;
@@ -235,7 +233,6 @@ input#pinyin-input:focus {
   width: 100%;
   height: 100%;
 
-  /* REMOVED background here */
   background: transparent;
 
   /* Keep layout logic */
@@ -256,7 +253,6 @@ input#pinyin-input:focus {
   transition: opacity 0.3s ease;
 }
 
-/* Hide utility */
 .menu-view.hidden {
   display: none;
 }
@@ -269,6 +265,7 @@ input#pinyin-input:focus {
   margin-bottom: 5px;
 }
 
+/* --- Logo & Title --- */
 .logo-wrapper {
   display: flex;
   gap: 20px;
@@ -282,7 +279,6 @@ input#pinyin-input:focus {
   font-size: 3.5rem;
   transform: rotateX(10deg);
   animation: float 3s ease-in-out infinite;
-  /* Reuse majong-tile styles but override specifics */
   background: var(--tile-face);
   border-radius: 8px;
   display: flex;
@@ -320,7 +316,7 @@ input#pinyin-input:focus {
 /* --- Level Select: Majong Grid --- */
 .majong-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 Columns */
+  grid-template-columns: repeat(3, 1fr);
   gap: 15px;
   margin: 10px 0 20px 0;
 }
@@ -338,15 +334,11 @@ input#pinyin-input:focus {
   justify-content: center;
   align-items: center;
   padding: 0;
-
-  /* 3D Tile Shadow (Static) */
   box-shadow: 1px 1px 0 #ccc, 2px 2px 0 #ccc, 3px 3px 0 #ccc,
     4px 4px 0 var(--felt-dark), 8px 8px 15px rgba(0, 0, 0, 0.4);
-
   transition: transform 0.1s, box-shadow 0.1s;
 }
 
-/* Press Effect */
 .majong-btn:active:not(.disabled) {
   transform: translate(2px, 2px);
   box-shadow: 1px 1px 0 #ccc, 2px 2px 0 var(--felt-dark),
@@ -384,7 +376,7 @@ input#pinyin-input:focus {
 
 .majong-btn.disabled .m-label,
 .majong-btn.disabled .m-char {
-  color: #999; /* Greyed out text */
+  color: #999;
   opacity: 0.6;
 }
 
@@ -404,20 +396,16 @@ input#pinyin-input:focus {
 /* --- Back Button Styling --- */
 .back-btn {
   margin-top: 10px;
-  padding: 12px 50px; /* Wide, easy to tap */
-
-  /* Glassy look on the green felt */
+  padding: 12px 50px;
   background: rgba(0, 0, 0, 0.25);
   border: 2px solid rgba(255, 255, 255, 0.4);
   border-radius: 50px;
-
   color: white;
   font-family: "Rubik", sans-serif;
   font-weight: 700;
   font-size: 1.1rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
@@ -436,16 +424,7 @@ input#pinyin-input:focus {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Level Grid */
-.level-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  width: 100%;
-  max-width: 500px;
-  margin-top: 20px;
-}
-
+/* --- Main Menu Buttons (Vertical Stack) --- */
 .level-btn {
   width: 100%;
   display: flex;
@@ -470,62 +449,19 @@ input#pinyin-input:focus {
   box-shadow: 0 0 0 #c69500, inset 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.level-btn.secondary {
-  background: linear-gradient(145deg, #ffffff, #e6e6e6);
-  color: var(--felt-dark);
-
-  box-shadow: 0 6px 0 #bbb, 0 10px 10px rgba(0, 0, 0, 0.3);
-}
-
-.level-btn.secondary:active {
-  box-shadow: 0 0 0 #bbb, inset 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.text-btn {
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.6);
-  cursor: pointer;
-  margin-top: 10px;
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.text-btn:hover {
-  color: white;
-}
-
 .level-btn:hover {
   transform: translateY(-2px);
   background: white;
 }
 
-.lvl-title {
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: var(--felt-green);
-  font-family: "Roboto Mono", monospace;
+.level-btn.secondary {
+  background: linear-gradient(145deg, #ffffff, #e6e6e6);
+  color: var(--felt-dark);
+  box-shadow: 0 6px 0 #bbb, 0 10px 10px rgba(0, 0, 0, 0.3);
 }
 
-.lvl-desc {
-  font-size: 0.9rem;
-  color: #666;
-  margin-top: 4px;
-  font-weight: normal;
-}
-
-/* Disabled Button */
-.level-btn.disabled {
-  background: #ccc;
-  color: #888;
-  box-shadow: none;
-  cursor: not-allowed;
-  grid-column: span 2; /* Make it wide at the bottom */
-  opacity: 0.6;
-  transform: none !important;
-}
-.level-btn.disabled .lvl-title {
-  color: #666;
+.level-btn.secondary:active {
+  box-shadow: 0 0 0 #bbb, inset 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 /* --- Tutorial Modal --- */
@@ -610,7 +546,6 @@ input#pinyin-input:focus {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* New Class for the row of tiles */
 .mockup-tiles-row {
   display: flex;
   gap: 10px;
@@ -630,7 +565,6 @@ input#pinyin-input:focus {
   align-items: center;
   border-radius: 6px;
   box-shadow: 2px 2px 0 #ccc, 4px 4px 0 rgba(0, 0, 0, 0.5);
-  /* Tiny 3D rotation for flavor */
   transform: rotateX(10deg);
 }
 
@@ -669,16 +603,14 @@ input#pinyin-input:focus {
   font-style: italic;
 }
 
+/* --- Start/End Screen Layout --- */
 #start-screen,
 #end-screen {
-  /* Make them fill the entire overlay */
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-
-  /* Center content inside them */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -715,11 +647,6 @@ p {
   font-size: 1.1rem;
   line-height: 1.6;
   margin: 0;
-}
-
-#start-btn {
-  background: linear-gradient(135deg, var(--neon-pink), #ff7aa6);
-  margin-top: 10px;
 }
 
 /* --- Particles & Effects --- */
@@ -867,10 +794,7 @@ p {
     top: 75px;
     left: 0;
     width: 100%;
-
-    /* Use % relative to body, not dynamic viewport units */
     height: calc(55% - 85px);
-
     margin: 0;
     padding: 0;
     display: flex;
@@ -919,7 +843,7 @@ p {
   /* 4. Timer Bar: Sits at 45% mark */
   #timer-container {
     position: fixed;
-    bottom: 45%; /* Stable % */
+    bottom: 45%;
     height: 12px;
     z-index: 101;
     background: #111;
@@ -934,9 +858,7 @@ p {
     bottom: 0;
     left: 0;
     width: 100vw;
-
-    height: 45%; /* Stable % */
-
+    height: 45%;
     background: rgba(10, 20, 15, 0.98);
     padding: 4px;
     box-sizing: border-box;
@@ -944,7 +866,6 @@ p {
     padding-bottom: max(5px, env(safe-area-inset-bottom));
   }
 
-  /* ... keyboard row styles remain the same ... */
   .onscreen-keyboard .row {
     display: flex;
     width: 100%;
