@@ -390,7 +390,7 @@ const UI = {
     this.elm.mobileDisplay.textContent = val || "type pinyin...";
   },
 
-  populateResults(score, levelKey, vocabList, answeredIndices) {
+  populateResults(score, levelKey, vocabList, answeredIndices, shownIndices) {
     // 1. Update Header Stats
     this.elm.finalScore.innerText = score;
     const levelDisplay = levelKey.toUpperCase().replace("HSK", "HSK ");
@@ -404,6 +404,9 @@ const UI = {
 
     // 3. Generate Items
     vocabList.forEach((word, index) => {
+      // FIX: Only process words that were actually shown
+      if (!shownIndices.has(index)) return;
+
       const item = document.createElement("div");
       item.className = "word-item";
 
@@ -500,6 +503,7 @@ const Game = {
     vocabList: [],
     currentIndex: 0,
     answeredIndices: new Set(),
+    shownIndices: new Set(),
     mobileInput: "",
     holdingFull: false,
     currentLevel: "hsk1",
@@ -583,6 +587,7 @@ const Game = {
     this.state.streak = 0;
     this.state.mobileInput = "";
     this.state.answeredIndices.clear();
+    this.state.shownIndices.clear();
 
     this.state.isActive = true;
     this.state.isTransitioning = false;
@@ -622,7 +627,8 @@ const Game = {
       this.state.score,
       this.state.currentLevel,
       this.state.vocabList,
-      this.state.answeredIndices
+      this.state.answeredIndices,
+      this.state.shownIndices
     );
 
     UI.toggleGameUI(false);
@@ -654,6 +660,8 @@ const Game = {
 
     this.state.currentIndex =
       available[Math.floor(Math.random() * available.length)];
+    this.state.shownIndices.add(this.state.currentIndex);
+
     const wordObj = this.state.vocabList[this.state.currentIndex];
 
     UI.renderTiles(wordObj);
