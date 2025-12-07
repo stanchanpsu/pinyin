@@ -73,15 +73,46 @@
         <!-- View 2: Level Selection (Hidden by default) -->
         <div id="menu-levels" class="menu-view hidden">
           <p class="select-text">Select Difficulty</p>
-          <button class="level-btn" data-lvl="hsk1">
-            <span class="lvl-title">HSK 1</span>
-            <span class="lvl-desc">Beginner</span>
-          </button>
-          <button class="level-btn" data-lvl="hsk2">
-            <span class="lvl-title">HSK 2</span>
-            <span class="lvl-desc">Elementary</span>
-          </button>
-          <button id="btn-back-menu" class="text-btn">« Back</button>
+
+          <div class="majong-grid">
+            <!-- Row 1 -->
+            <button class="majong-btn" data-lvl="hsk1">
+              <span class="m-label">HSK</span>
+              <span class="m-char">1</span>
+            </button>
+
+            <button class="majong-btn" data-lvl="hsk2">
+              <span class="m-label">HSK</span>
+              <span class="m-char">2</span>
+            </button>
+
+            <button class="majong-btn disabled">
+              <span class="m-label">HSK</span>
+              <span class="m-char">3</span>
+              <span class="m-soon">Soon</span>
+            </button>
+
+            <!-- Row 2 -->
+            <button class="majong-btn disabled">
+              <span class="m-label">HSK</span>
+              <span class="m-char">4</span>
+              <span class="m-soon">Soon</span>
+            </button>
+
+            <button class="majong-btn disabled">
+              <span class="m-label">HSK</span>
+              <span class="m-char">5</span>
+              <span class="m-soon">Soon</span>
+            </button>
+
+            <button class="majong-btn disabled">
+              <span class="m-label">HSK</span>
+              <span class="m-char">6</span>
+              <span class="m-soon">Soon</span>
+            </button>
+          </div>
+
+          <button id="btn-back-menu" class="back-btn">« Back</button>
         </div>
 
         <!-- How to Play Overlay (Hidden by default) -->

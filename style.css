@@ -317,6 +317,125 @@ input#pinyin-input:focus {
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.5);
 }
 
+/* --- Level Select: Majong Grid --- */
+.majong-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 Columns */
+  gap: 15px;
+  margin: 10px 0 20px 0;
+}
+
+.majong-btn {
+  width: 80px;
+  height: 110px;
+  background: var(--tile-face);
+  border: none;
+  border-radius: 8px;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+
+  /* 3D Tile Shadow (Static) */
+  box-shadow: 1px 1px 0 #ccc, 2px 2px 0 #ccc, 3px 3px 0 #ccc,
+    4px 4px 0 var(--felt-dark), 8px 8px 15px rgba(0, 0, 0, 0.4);
+
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+/* Press Effect */
+.majong-btn:active:not(.disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #ccc, 2px 2px 0 var(--felt-dark),
+    inset 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.majong-btn:hover:not(.disabled) {
+  filter: brightness(1.05);
+}
+
+/* Text Styling: Felt Green */
+.m-label {
+  font-family: "Rubik", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--felt-green);
+  text-transform: uppercase;
+  margin-bottom: -5px;
+}
+
+.m-char {
+  font-family: "Noto Sans SC", sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--felt-green);
+  line-height: 1;
+}
+
+/* Disabled State */
+.majong-btn.disabled {
+  cursor: default;
+  background: #e0e0e0;
+  box-shadow: 1px 1px 0 #bbb, 2px 2px 0 #bbb, 3px 3px 0 #888;
+}
+
+.majong-btn.disabled .m-label,
+.majong-btn.disabled .m-char {
+  color: #999; /* Greyed out text */
+  opacity: 0.6;
+}
+
+.m-soon {
+  position: absolute;
+  bottom: 5px;
+  font-size: 0.6rem;
+  background: #666;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-family: sans-serif;
+  letter-spacing: 1px;
+}
+
+/* --- Back Button Styling --- */
+.back-btn {
+  margin-top: 10px;
+  padding: 12px 50px; /* Wide, easy to tap */
+
+  /* Glassy look on the green felt */
+  background: rgba(0, 0, 0, 0.25);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50px;
+
+  color: white;
+  font-family: "Rubik", sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.back-btn:active {
+  transform: translateY(1px);
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 /* Level Grid */
 .level-grid {
   display: grid;

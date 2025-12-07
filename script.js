@@ -515,7 +515,7 @@ const Game = {
       });
 
     // 3. Level Selection Logic (Actually starts the game)
-    document.querySelectorAll(".level-btn[data-lvl]").forEach((btn) => {
+    document.querySelectorAll(".majong-btn[data-lvl]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const level = btn.dataset.lvl;
         // Reset menus for next time
