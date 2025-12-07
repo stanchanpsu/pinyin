@@ -246,6 +246,29 @@ input#pinyin-input:focus {
   pointer-events: auto;
 }
 
+.menu-view {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-width: 320px;
+  align-items: center;
+  transition: opacity 0.3s ease;
+}
+
+/* Hide utility */
+.menu-view.hidden {
+  display: none;
+}
+
+.select-text {
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}
+
 .logo-wrapper {
   display: flex;
   gap: 20px;
@@ -305,24 +328,52 @@ input#pinyin-input:focus {
 }
 
 .level-btn {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  background: linear-gradient(145deg, #ffffff, #e6e6e6);
-  color: var(--felt-dark);
+  padding: 18px;
+  background: linear-gradient(145deg, #ffd700, #ffc107);
+  color: #4a3b00;
+  box-shadow: 0 6px 0 #c69500, 0 10px 10px rgba(0, 0, 0, 0.3);
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  box-shadow: 0 6px 0 #bbb, 0 10px 10px rgba(0, 0, 0, 0.3);
   transition: transform 0.1s, box-shadow 0.1s;
-  text-transform: none; /* Override generic button style */
+  font-family: "Rubik", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .level-btn:active {
   transform: translateY(6px);
+  box-shadow: 0 0 0 #c69500, inset 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.level-btn.secondary {
+  background: linear-gradient(145deg, #ffffff, #e6e6e6);
+  color: var(--felt-dark);
+
+  box-shadow: 0 6px 0 #bbb, 0 10px 10px rgba(0, 0, 0, 0.3);
+}
+
+.level-btn.secondary:active {
   box-shadow: 0 0 0 #bbb, inset 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.text-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.text-btn:hover {
+  color: white;
 }
 
 .level-btn:hover {
@@ -356,6 +407,147 @@ input#pinyin-input:focus {
 }
 .level-btn.disabled .lvl-title {
   color: #666;
+}
+
+/* --- Tutorial Modal --- */
+#tutorial-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(8px);
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+#tutorial-modal.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tutorial-content {
+  background: #1a1a1a;
+  border: 2px solid var(--neon-gold);
+  border-radius: 20px;
+  padding: 30px;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  color: #eee;
+}
+
+.close-x {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  box-shadow: none;
+}
+.close-x:hover {
+  color: white;
+  transform: none;
+}
+
+.tutorial-content h2 {
+  color: var(--neon-gold);
+  margin-bottom: 20px;
+  font-size: 2rem;
+}
+.tutorial-content h3 {
+  color: var(--neon-blue);
+  margin: 20px 0 10px;
+  font-size: 1.2rem;
+}
+.tutorial-content p {
+  color: #ccc;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 5px;
+}
+
+/* Mockup Visuals */
+.mockup-container {
+  background: radial-gradient(circle, var(--felt-green), var(--felt-dark));
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* New Class for the row of tiles */
+.mockup-tiles-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.mockup-tile {
+  width: 60px;
+  height: 80px;
+  background: var(--tile-face);
+  color: #b00;
+  font-family: "Noto Sans SC", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  box-shadow: 2px 2px 0 #ccc, 4px 4px 0 rgba(0, 0, 0, 0.5);
+  /* Tiny 3D rotation for flavor */
+  transform: rotateX(10deg);
+}
+
+.mockup-input {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--neon-gold);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-family: "Roboto Mono", monospace;
+  font-size: 1.1rem;
+}
+
+/* Tone Grid */
+.tone-grid {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 10px 0;
+}
+.tone-item {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+.tone-item span {
+  color: var(--neon-pink);
+  font-size: 1.2rem;
+  margin-right: 5px;
+}
+
+.sub-text {
+  font-size: 0.8rem !important;
+  opacity: 0.7;
+  font-style: italic;
 }
 
 #start-screen,

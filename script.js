@@ -484,23 +484,56 @@ const Game = {
   },
 
   init() {
-    // Event Listeners
-    document.querySelectorAll(".level-btn").forEach((btn) => {
-      if (btn.classList.contains("disabled")) return;
+    // 1. Navigation Elements
+    const mainMenu = document.getElementById("menu-main");
+    const levelMenu = document.getElementById("menu-levels");
+    const tutorialModal = document.getElementById("tutorial-modal");
 
+    // 2. Navigation Logic
+    // "Start" -> Show Levels
+    document.getElementById("btn-goto-levels").addEventListener("click", () => {
+      mainMenu.classList.add("hidden");
+      levelMenu.classList.remove("hidden");
+    });
+
+    // "Back" -> Show Main Menu
+    document.getElementById("btn-back-menu").addEventListener("click", () => {
+      levelMenu.classList.add("hidden");
+      mainMenu.classList.remove("hidden");
+    });
+
+    // "How to Play" -> Show Modal
+    document.getElementById("btn-tutorial").addEventListener("click", () => {
+      tutorialModal.classList.remove("hidden");
+    });
+
+    // "X" -> Close Modal
+    document
+      .getElementById("btn-close-tutorial")
+      .addEventListener("click", () => {
+        tutorialModal.classList.add("hidden");
+      });
+
+    // 3. Level Selection Logic (Actually starts the game)
+    document.querySelectorAll(".level-btn[data-lvl]").forEach((btn) => {
       btn.addEventListener("click", () => {
-        const level = btn.dataset.lvl; // Get 'hsk1' or 'hsk2'
+        const level = btn.dataset.lvl;
+        // Reset menus for next time
+        levelMenu.classList.add("hidden");
+        mainMenu.classList.remove("hidden");
+
         this.start(level);
       });
     });
+
+    // 4. Play Again Listener
     document.getElementById("play-again-btn").addEventListener("click", () => {
       UI.toggleScreen("end", false);
-      // Go back to start screen instead of restarting immediately
       UI.toggleScreen("start", true);
       UI.toggleScreen("overlay", true);
     });
 
-    // Desktop Input
+    // 5. Game Input Listeners
     UI.elm.input.addEventListener("input", (e) => {
       if (
         !this.state.isActive ||
@@ -511,12 +544,12 @@ const Game = {
       this.checkAnswer(e.target.value);
     });
 
-    // Mobile Input
     UI.buildKeyboard((key) => this.handleVirtualKey(key));
     window.addEventListener("resize", () => UI.handleResize());
 
     // Initial setup
     UI.handleResize();
+    UI.elm.overlay.classList.add("solid-bg"); // Ensure Start Screen BG is solid
   },
 
   start(levelKey = "hsk1") {

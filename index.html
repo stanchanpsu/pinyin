@@ -62,32 +62,67 @@
 
         <h1 class="game-title">PIN1YIN1</h1>
 
-        <p class="start-instructions">
-          Type the pinyin with tone numbers (1-4).<br />
-          For example: "你好" = <code>ni3hao3</code> <br />
-          <br />
-          Neutral tone can be typed without a number.<br />
-          Type <code>bzd</code> or <code>buzhidao</code> to skip.<br />
-          <br />
-          Select your HSK level to begin.
-        </p>
+        <!-- View 1: Main Menu -->
+        <div id="menu-main" class="menu-view">
+          <button id="btn-goto-levels" class="level-btn">Start Game</button>
+          <button id="btn-tutorial" class="level-btn secondary">
+            How to Play
+          </button>
+        </div>
 
-        <!-- Level Selection Buttons -->
-        <div class="level-grid">
+        <!-- View 2: Level Selection (Hidden by default) -->
+        <div id="menu-levels" class="menu-view hidden">
+          <p class="select-text">Select Difficulty</p>
           <button class="level-btn" data-lvl="hsk1">
             <span class="lvl-title">HSK 1</span>
             <span class="lvl-desc">Beginner</span>
           </button>
-
           <button class="level-btn" data-lvl="hsk2">
             <span class="lvl-title">HSK 2</span>
             <span class="lvl-desc">Elementary</span>
           </button>
+          <button id="btn-back-menu" class="text-btn">« Back</button>
+        </div>
 
-          <button class="level-btn disabled" disabled>
-            <span class="lvl-title">HSK 3+</span>
-            <span class="lvl-desc">Coming Soon</span>
-          </button>
+        <!-- How to Play Overlay (Hidden by default) -->
+        <div id="tutorial-modal" class="hidden">
+          <div class="tutorial-content">
+            <button id="btn-close-tutorial" class="close-x">×</button>
+            <h2>How to Play</h2>
+
+            <!-- Game Mockup -->
+            <div class="mockup-container">
+              <!-- New wrapper for side-by-side tiles -->
+              <div class="mockup-tiles-row">
+                <div class="mockup-tile">你</div>
+                <div class="mockup-tile">好</div>
+              </div>
+              <div class="mockup-input">ni3hao3</div>
+            </div>
+            <div class="tutorial-text">
+              <h3>Type Pinyin with Tone Numbers</h3>
+              <div class="tone-grid">
+                <div class="tone-item"><span>ā</span> 1</div>
+                <div class="tone-item"><span>á</span> 2</div>
+                <div class="tone-item"><span>ǎ</span> 3</div>
+                <div class="tone-item"><span>à</span> 4</div>
+              </div>
+              <p class="sub-text">
+                Neutral tone can be typed without a number.
+              </p>
+
+              <h3>Special Pinyin</h3>
+              <p>
+                The letter <strong>ü</strong> is typed as <strong>v</strong>.
+              </p>
+              <p>e.g. <em>nǚ</em> = <strong>nv3</strong></p>
+
+              <h3>Skip Word</h3>
+              <p>
+                Type <strong>bzd</strong> or <strong>buzhidao</strong> to skip.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
