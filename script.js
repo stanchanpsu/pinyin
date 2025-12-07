@@ -402,9 +402,13 @@ const UI = {
     correctList.innerHTML = "";
     missedList.innerHTML = "";
 
-    // 3. Generate Items
+    // 3. Initialize Counts
+    let correctCount = 0;
+    let missedCount = 0;
+
+    // 4. Generate Items
     vocabList.forEach((word, index) => {
-      // FIX: Only process words that were actually shown
+      // Only process words that were shown during the game
       if (!shownIndices.has(index)) return;
 
       const item = document.createElement("div");
@@ -419,12 +423,21 @@ const UI = {
 
       if (answeredIndices.has(index)) {
         correctList.appendChild(item);
+        correctCount++; // Count Correct
       } else {
         missedList.appendChild(item);
+        missedCount++; // Count Missed
       }
     });
-  },
 
+    // 5. Update Headers with the final counts
+    document.getElementById(
+      "header-correct"
+    ).innerText = `Correct (${correctCount})`;
+    document.getElementById(
+      "header-missed"
+    ).innerText = `Missed (${missedCount})`;
+  },
   buildKeyboard(callback) {
     this.elm.keyboard.innerHTML = "";
     const rows = [
