@@ -361,7 +361,7 @@ const UI = {
   },
 
   shakeTiles() {
-    const tiles = document.querySelectorAll(".majong-tile");
+    const tiles = this.elm.tilesWrapper.querySelectorAll(".majong-tile");
     tiles.forEach((t) => {
       t.classList.remove("shake-effect");
       void t.offsetWidth;
@@ -370,7 +370,7 @@ const UI = {
   },
 
   explodeTiles() {
-    const tiles = document.querySelectorAll(".majong-tile");
+    const tiles = this.elm.tilesWrapper.querySelectorAll(".majong-tile");
     tiles.forEach((tile) => {
       tile.classList.add("explode-effect");
       const rect = tile.getBoundingClientRect();
@@ -458,7 +458,7 @@ const UI = {
 // ==============================
 const Game = {
   config: {
-    totalTime: 120000, // 2 minutes
+    totalTime: 1200, // 2 minutes
     wordTime: 15000,
     itemsPerLevel: 5,
   },
