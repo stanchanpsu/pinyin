@@ -441,10 +441,10 @@ const UI = {
   buildKeyboard(callback) {
     this.elm.keyboard.innerHTML = "";
     const rows = [
-      ["1", "2", "3", "4", "BZD"],
+      ["1", "2", "3", "4", "⌫"],
       ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
       ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
-      ["⌫", "z", "x", "c", "v", "b", "n", "m"],
+      ["z", "x", "c", "v", "b", "n", "m", "bzd"],
     ];
 
     rows.forEach((keys, i) => {
@@ -453,7 +453,7 @@ const UI = {
       keys.forEach((k) => {
         const btn = document.createElement("div");
         btn.className = "key";
-        if (["⌫", "BZD"].includes(k)) btn.classList.add("special");
+        if (["⌫", "bzd"].includes(k)) btn.classList.add("special");
         btn.textContent = k;
 
         btn.addEventListener("touchstart", (e) => {
@@ -720,7 +720,7 @@ const Game = {
 
     if (key === "⌫") {
       this.state.mobileInput = this.state.mobileInput.slice(0, -1);
-    } else if (key === "BZD") {
+    } else if (key === "bzd") {
       this.skipWord();
       return;
     } else {
