@@ -159,8 +159,40 @@
 
       <!-- End Screen -->
       <div id="end-screen" class="hidden">
-        <h1>Game Over</h1>
-        <p>Your Score: <span id="final-score">0</span></p>
+        <div class="end-header">
+          <h1 class="game-title">GAME OVER</h1>
+          <div class="end-stats-row">
+            <div class="stat-badge">
+              <span class="stat-label">DIFFICULTY</span>
+              <span id="end-level-val" class="stat-val">HSK 1</span>
+            </div>
+            <div class="stat-badge">
+              <span class="stat-label">SCORE</span>
+              <span id="final-score" class="stat-val">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scrollable Results Area -->
+        <div class="results-container">
+          <!-- Correct Column -->
+          <div class="result-col col-correct">
+            <h3>Correct</h3>
+            <div id="list-correct" class="word-list">
+              <!-- JS will inject items here -->
+              <!-- Example: <div class="word-item"><span class="ch">你好</span><span class="py">ni3hao3</span></div> -->
+            </div>
+          </div>
+
+          <!-- Missed Column -->
+          <div class="result-col col-missed">
+            <h3>Missed / Skipped</h3>
+            <div id="list-missed" class="word-list">
+              <!-- JS will inject items here -->
+            </div>
+          </div>
+        </div>
+
         <button id="play-again-btn">Play Again</button>
       </div>
     </div>

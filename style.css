@@ -742,6 +742,134 @@ p {
   display: none;
 }
 
+/* --- End Screen Styles --- */
+
+/* Header Area */
+.end-header {
+  flex-shrink: 0; /* Don't shrink */
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.end-stats-row {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.stat-badge {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #aaa;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.stat-val {
+  font-family: "Roboto Mono", monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--neon-gold);
+}
+
+/* Results Grid */
+.results-container {
+  display: flex;
+  gap: 15px;
+  width: 90%;
+  max-width: 600px;
+  height: 50vh; /* Takes up half the screen height */
+  margin-bottom: 15px;
+}
+
+.result-col {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden; /* Contains the scrollable list */
+}
+
+.result-col h3 {
+  margin: 0;
+  padding: 12px;
+  text-align: center;
+  font-size: 1rem;
+  text-transform: uppercase;
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.col-correct h3 {
+  color: #00ff7f;
+}
+.col-missed h3 {
+  color: #ff4500;
+}
+
+.word-list {
+  flex: 1; /* Fills remaining height */
+  overflow-y: auto; /* Scrollable */
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  /* Custom Scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+/* Scrollbar Webkit */
+.word-list::-webkit-scrollbar {
+  width: 6px;
+}
+.word-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+/* Word Item */
+.word-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.col-correct .word-item {
+  border-left: 3px solid #00ff7f;
+}
+.col-missed .word-item {
+  border-left: 3px solid #ff4500;
+}
+
+.ch {
+  font-family: "Noto Sans SC", sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.py {
+  font-family: "Roboto Mono", monospace;
+  opacity: 0.8;
+}
+
 @media (max-width: 800px) {
   /* 1. Global Layout */
   body {
@@ -907,5 +1035,23 @@ p {
     color: var(--neon-blue);
     flex: 1.5;
     font-size: 1rem;
+  }
+
+  .results-container {
+    flex-direction: column; /* Stack columns on very narrow screens */
+    height: 55vh; /* Give a bit more height on mobile */
+  }
+  .stat-badge {
+    min-width: 60px;
+    padding: 5px 10px;
+  }
+  .stat-val {
+    font-size: 1.1rem;
+  }
+
+  /* Ensure footer button doesn't get squashed */
+  #end-screen button {
+    margin-bottom: 20px;
+    flex-shrink: 0;
   }
 }

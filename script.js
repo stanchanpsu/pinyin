@@ -1,6 +1,6 @@
 /**
  * PINYIN MAJHONG GAME
- * Refactored Modular Architecture
+ * Full Corrected Script
  */
 
 // ==============================
@@ -243,8 +243,8 @@ const UI = {
     startScreen: document.getElementById("start-screen"),
     endScreen: document.getElementById("end-screen"),
     finalScore: document.getElementById("final-score"),
-    vocabSelect: document.getElementById("vocab-select"),
     gameArea: document.getElementById("game-area"),
+    // Note: vocabSelect removed from here to prevent errors
   },
 
   isSmallScreen() {
@@ -252,14 +252,12 @@ const UI = {
   },
 
   toggleScreen(screen, show) {
-    // 1. Show/Hide the main overlay container
     if (screen === "overlay") {
       if (show) this.elm.overlay.classList.remove("hidden");
       else this.elm.overlay.classList.add("hidden");
       return;
     }
 
-    // 2. Show/Hide the specific child screen
     const element = this.elm[screen + "Screen"];
     if (element) {
       if (show) {
@@ -356,6 +354,7 @@ const UI = {
   },
 
   shakeGameArea() {
+    if (this.isSmallScreen()) return;
     this.elm.gameArea.style.transform = "scale(1.02)";
     setTimeout(() => (this.elm.gameArea.style.transform = "scale(1)"), 100);
   },
@@ -391,13 +390,45 @@ const UI = {
     this.elm.mobileDisplay.textContent = val || "type pinyin...";
   },
 
+  populateResults(score, levelKey, vocabList, answeredIndices) {
+    // 1. Update Header Stats
+    this.elm.finalScore.innerText = score;
+    const levelDisplay = levelKey.toUpperCase().replace("HSK", "HSK ");
+    document.getElementById("end-level-val").innerText = levelDisplay;
+
+    // 2. Clear Lists
+    const correctList = document.getElementById("list-correct");
+    const missedList = document.getElementById("list-missed");
+    correctList.innerHTML = "";
+    missedList.innerHTML = "";
+
+    // 3. Generate Items
+    vocabList.forEach((word, index) => {
+      const item = document.createElement("div");
+      item.className = "word-item";
+
+      const pinyinDisplay = word.pinyin.replace("|", " / ");
+
+      item.innerHTML = `
+            <span class="ch">${word.char}</span>
+            <span class="py">${pinyinDisplay}</span>
+        `;
+
+      if (answeredIndices.has(index)) {
+        correctList.appendChild(item);
+      } else {
+        missedList.appendChild(item);
+      }
+    });
+  },
+
   buildKeyboard(callback) {
     this.elm.keyboard.innerHTML = "";
     const rows = [
-      ["1", "2", "3", "4", "⌫"],
+      ["1", "2", "3", "4", "BZD"],
       ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
       ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
-      ["bzd", "z", "x", "c", "v", "b", "n", "m"],
+      ["⌫", "z", "x", "c", "v", "b", "n", "m"],
     ];
 
     rows.forEach((keys, i) => {
@@ -406,7 +437,7 @@ const UI = {
       keys.forEach((k) => {
         const btn = document.createElement("div");
         btn.className = "key";
-        if (["⌫", "bzd"].includes(k)) btn.classList.add("special");
+        if (["⌫", "BZD"].includes(k)) btn.classList.add("special");
         btn.textContent = k;
 
         btn.addEventListener("touchstart", (e) => {
@@ -425,12 +456,9 @@ const UI = {
   },
 
   toggleGameUI(active) {
-    // Show/Hide Timer
     if (this.elm.timerBar && this.elm.timerBar.parentElement) {
       this.elm.timerBar.parentElement.style.display = active ? "block" : "none";
     }
-
-    // Handle Mobile Keyboard Visibility based on active state + screen size
     this.handleResize();
   },
 
@@ -458,7 +486,7 @@ const UI = {
 // ==============================
 const Game = {
   config: {
-    totalTime: 120000, // 2 minutes
+    totalTime: 1200, // 2 mins
     wordTime: 15000,
     itemsPerLevel: 5,
   },
@@ -474,6 +502,7 @@ const Game = {
     answeredIndices: new Set(),
     mobileInput: "",
     holdingFull: false,
+    currentLevel: "hsk1",
   },
 
   timers: {
@@ -490,24 +519,20 @@ const Game = {
     const tutorialModal = document.getElementById("tutorial-modal");
 
     // 2. Navigation Logic
-    // "Start" -> Show Levels
     document.getElementById("btn-goto-levels").addEventListener("click", () => {
       mainMenu.classList.add("hidden");
       levelMenu.classList.remove("hidden");
     });
 
-    // "Back" -> Show Main Menu
     document.getElementById("btn-back-menu").addEventListener("click", () => {
       levelMenu.classList.add("hidden");
       mainMenu.classList.remove("hidden");
     });
 
-    // "How to Play" -> Show Modal
     document.getElementById("btn-tutorial").addEventListener("click", () => {
       tutorialModal.classList.remove("hidden");
     });
 
-    // "X" -> Close Modal
     document
       .getElementById("btn-close-tutorial")
       .addEventListener("click", () => {
@@ -518,7 +543,6 @@ const Game = {
     document.querySelectorAll(".majong-btn[data-lvl]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const level = btn.dataset.lvl;
-        // Reset menus for next time
         levelMenu.classList.add("hidden");
         mainMenu.classList.remove("hidden");
 
@@ -549,10 +573,11 @@ const Game = {
 
     // Initial setup
     UI.handleResize();
-    UI.elm.overlay.classList.add("solid-bg"); // Ensure Start Screen BG is solid
   },
 
   start(levelKey = "hsk1") {
+    this.state.currentLevel = levelKey;
+
     this.state.score = 0;
     this.state.multiplier = 1;
     this.state.streak = 0;
@@ -564,19 +589,16 @@ const Game = {
 
     this.stopAllTimers();
 
-    // LOAD VOCAB BASED ON CLICKED BUTTON
     this.state.vocabList = VocabData.getList(levelKey);
 
     UI.elm.input.value = "";
     UI.updateMobileInput("");
     UI.updateScore(0);
 
-    // Hide Screens
     UI.toggleScreen("start", false);
     UI.toggleScreen("end", false);
-    UI.toggleScreen("overlay", false); // Hides the opaque background
+    UI.toggleScreen("overlay", false);
 
-    // Show Game UI
     UI.toggleGameUI(true);
 
     if (!UI.isSmallScreen()) UI.elm.input.focus();
@@ -596,10 +618,13 @@ const Game = {
     this.state.isActive = false;
     this.stopAllTimers();
 
-    UI.elm.timerTotal.innerText = "00:00";
-    UI.elm.finalScore.innerText = this.state.score;
+    UI.populateResults(
+      this.state.score,
+      this.state.currentLevel,
+      this.state.vocabList,
+      this.state.answeredIndices
+    );
 
-    // FIX: Hide Timer and Keyboard so they don't cover the end screen
     UI.toggleGameUI(false);
 
     UI.toggleScreen("end", true);
@@ -674,7 +699,7 @@ const Game = {
 
     if (key === "⌫") {
       this.state.mobileInput = this.state.mobileInput.slice(0, -1);
-    } else if (key === "bzd") {
+    } else if (key === "BZD") {
       this.skipWord();
       return;
     } else {
