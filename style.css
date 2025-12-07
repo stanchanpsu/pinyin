@@ -17,12 +17,17 @@
 }
 
 /* --- Base --- */
+html {
+  height: 100%;
+  overflow: hidden; /* Strict scroll locking */
+}
+
 body {
   margin: 0;
+  width: 100%;
 
-  /* Fallback for older browsers */
+  /* Lock Body to Viewport */
   height: 100vh;
-  /* The Magic Unit: Fills visible space exactly */
   height: 100dvh;
 
   overflow: hidden;
@@ -36,7 +41,11 @@ body {
   align-items: center;
   font-family: "Rubik", sans-serif;
   color: white;
-  touch-action: none; /* Prevent scroll/zoom */
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  position: fixed; /* Fixes "bounce" on iOS */
+  top: 0;
+  left: 0;
 }
 
 button {
@@ -504,24 +513,6 @@ p {
     font-size: 1.8rem;
   }
 
-  /* Logo */
-  .logo-tile {
-    width: 60px;
-    height: 80px;
-    font-size: 2.5rem;
-  }
-  .level-grid {
-    grid-template-columns: 1fr;
-    max-width: 300px;
-  }
-  .level-btn.disabled {
-    grid-column: span 1;
-  }
-  .start-instructions {
-    font-size: 0.9rem;
-    max-width: 300px;
-  }
-
   /* 2. Top UI & Streak */
   #ui-layer {
     top: 10px;
@@ -559,14 +550,16 @@ p {
     text-align: right;
   }
 
-  /* 3. Game Area & TILES (Made Bigger) */
+  /* 3. Game Area: 55% of Body Height (Stable) */
   #game-area {
     position: absolute;
     top: 75px;
     left: 0;
     width: 100%;
-    /* Adjusted height to stop before the timer */
-    height: calc(55vh - 85px);
+
+    /* Use % relative to body, not dynamic viewport units */
+    height: calc(55% - 85px);
+
     margin: 0;
     padding: 0;
     display: flex;
@@ -578,12 +571,11 @@ p {
 
   #tiles-wrapper {
     margin-bottom: 5px;
-    flex-wrap: wrap; /* Allows wrapping if 4 big tiles don't fit perfectly */
+    flex-wrap: wrap;
     justify-content: center;
   }
 
   .majong-tile {
-    /* BIGGER TILES */
     width: 82px;
     height: 110px;
     font-size: 3.8rem;
@@ -594,8 +586,6 @@ p {
   .input-wrapper {
     width: 92%;
   }
-
-  /* Hide native input */
   input#pinyin-input {
     display: none;
   }
@@ -609,21 +599,23 @@ p {
     border-radius: 8px;
     text-align: center;
     font-family: "Roboto Mono", monospace;
-    font-size: 1.3rem; /* Larger text */
+    font-size: 1.3rem;
     min-height: 1.5em;
     width: 100%;
     box-sizing: border-box;
   }
 
-  /* 4. TIMER BAR (Moved above keyboard) */
+  /* 4. Timer Bar: Sits at 45% mark */
   #timer-container {
-    bottom: 45vh; /* Sit exactly on top of the keyboard */
-    height: 12px; /* Slightly thinner */
-    z-index: 101; /* Ensure it stays above keyboard layer */
-    background: #111; /* Dark background for contrast */
+    position: fixed;
+    bottom: 45%; /* Stable % */
+    height: 12px;
+    z-index: 101;
+    background: #111;
+    width: 100%;
   }
 
-  /* 5. MASSIVE KEYBOARD */
+  /* 5. Keyboard: Bottom 45% (Stable) */
   .onscreen-keyboard {
     display: flex;
     flex-direction: column;
@@ -631,15 +623,17 @@ p {
     bottom: 0;
     left: 0;
     width: 100vw;
-    height: 45vh; /* 45% height */
+
+    height: 45%; /* Stable % */
+
     background: rgba(10, 20, 15, 0.98);
-    border-top: none; /* Removed border as timer acts as separator */
     padding: 4px;
     box-sizing: border-box;
     z-index: 100;
     padding-bottom: max(5px, env(safe-area-inset-bottom));
   }
 
+  /* ... keyboard row styles remain the same ... */
   .onscreen-keyboard .row {
     display: flex;
     width: 100%;
@@ -647,7 +641,6 @@ p {
     gap: 4px;
     margin-bottom: 4px;
   }
-
   .onscreen-keyboard .key {
     flex: 1;
     background: rgba(255, 255, 255, 0.08);
@@ -663,24 +656,20 @@ p {
     box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
     -webkit-tap-highlight-color: transparent;
   }
-
   .onscreen-keyboard .key:active {
     transform: translateY(4px);
     box-shadow: 0 0 0 rgba(0, 0, 0, 0);
     background: rgba(255, 255, 255, 0.2);
   }
-
   .onscreen-keyboard .key.special {
     background: rgba(255, 90, 120, 0.25);
     font-size: 1.1rem;
     flex: 1.5;
   }
-
   .onscreen-keyboard .row.r0 .key {
     background: rgba(255, 215, 0, 0.15);
     color: var(--neon-gold);
   }
-
   .onscreen-keyboard .row.r0 .key:last-child {
     background: rgba(0, 243, 255, 0.2);
     color: var(--neon-blue);
