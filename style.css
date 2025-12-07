@@ -1,417 +1,686 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@700&family=Roboto+Mono:wght@500&family=Rubik:wght@700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@700&family=Roboto+Mono:wght@500&family=Rubik:wght@700&display=swap");
 
 :root {
-    /* Colors */
-    --felt-green: #0d5f38;
-    --felt-dark: #062f1b;
-    --tile-face: #fdf6e3;
-    --tile-back: #2e8b57;
-    
-    --neon-blue: #00f3ff;
-    --neon-pink: #ff0055;
-    --neon-gold: #ffd700;
-    --neon-orange: #ff4500;
-    
-    /* Layout */
-    --mobile-kb-height: 260px;
+  /* Colors */
+  --felt-green: #0d5f38;
+  --felt-dark: #062f1b;
+  --tile-face: #fdf6e3;
+  --tile-back: #2e8b57;
+
+  --neon-blue: #00f3ff;
+  --neon-pink: #ff0055;
+  --neon-gold: #ffd700;
+  --neon-orange: #ff4500;
+
+  /* Layout */
+  --mobile-kb-height: 260px;
 }
 
 /* --- Base --- */
 body {
-    margin: 0;
-    overflow: hidden;
-    background: radial-gradient(circle at center, var(--felt-green), var(--felt-dark));
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Rubik', sans-serif;
-    color: white;
-    perspective: 1000px;
-    -webkit-tap-highlight-color: transparent;
+  margin: 0;
+  overflow: hidden;
+  background: radial-gradient(
+    circle at center,
+    var(--felt-green),
+    var(--felt-dark)
+  );
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Rubik", sans-serif;
+  color: white;
+  perspective: 1000px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 button {
-    padding: 15px 40px; 
-    font-size: 1.5rem; 
-    background: var(--neon-pink); 
-    border: none; 
-    color: white;
-    border-radius: 5px; 
-    cursor: pointer; 
-    text-transform: uppercase; 
-    font-weight: bold;
-    box-shadow: 0 0 20px var(--neon-pink); 
-    transition: transform 0.2s;
+  padding: 15px 40px;
+  font-size: 1.5rem;
+  background: var(--neon-pink);
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: bold;
+  box-shadow: 0 0 20px var(--neon-pink);
+  transition: transform 0.2s;
 }
-button:hover { transform: scale(1.1); }
+button:hover {
+  transform: scale(1.1);
+}
 
-.hidden { display: none !important; }
+.hidden {
+  display: none !important;
+}
 
 /* --- UI Overlay --- */
 #ui-layer {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    right: 20px;
-    display: flex;
-    justify-content: space-between;
-    pointer-events: none;
-    z-index: 10;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 10;
 }
 
-.score-box, .timer-box {
-    font-size: 1.2rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+.score-box,
+.timer-box {
+  font-size: 1.2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
-.score-box span, .timer-box span { font-family: 'Roboto Mono', monospace; }
+.score-box span,
+.timer-box span {
+  font-family: "Roboto Mono", monospace;
+}
 
 /* --- Streak Bar --- */
 #streak-wrapper {
-    position: absolute;
-    left: 50px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    z-index: 8;
+  position: absolute;
+  left: 50px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  z-index: 8;
 }
 
 #streak-container {
-    width: 30px;
-    height: 300px;
-    background: rgba(0,0,0,0.4);
-    border-radius: 15px;
-    border: 3px solid rgba(255,255,255,0.2);
-    box-shadow: 0 0 15px rgba(0,0,0,0.5);
-    overflow: visible; 
-    position: relative;
-    transition: all 0.3s ease;
+  width: 30px;
+  height: 300px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 15px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  overflow: visible;
+  position: relative;
+  transition: all 0.3s ease;
 }
 
 #streak-inner {
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-    background-color: rgba(0,0,0,0.35);
-    transition: background-color 0.3s;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.35);
+  transition: background-color 0.3s;
 }
 
 #streak-fill {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 0%;
-    background: white;
-    transition: height 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.18s ease;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 0%;
+  background: white;
+  transition: height 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    background 0.18s ease;
 }
 
 .multiplier-text {
-    font-size: 2rem;
-    font-weight: 800;
-    color: white;
-    text-shadow: 0 0 10px rgba(0,0,0,0.8);
-    font-family: 'Roboto Mono', monospace;
+  font-size: 2rem;
+  font-weight: 800;
+  color: white;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+  font-family: "Roboto Mono", monospace;
 }
 
 /* --- Game Area --- */
 #game-area {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
-    z-index: 5;
-    transform-style: preserve-3d;
-    transition: transform 0.1s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  z-index: 5;
+  transform-style: preserve-3d;
+  transition: transform 0.1s;
 }
 
 #tiles-wrapper {
-    display: flex;
-    gap: 15px;
-    perspective: 800px;
+  display: flex;
+  gap: 15px;
+  perspective: 800px;
 }
 
 .majong-tile {
-    width: 100px;
-    height: 130px;
-    background: var(--tile-face);
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Noto Sans SC', sans-serif;
-    font-weight: 700;
-    font-size: 4.5rem;
-    color: #b00;
-    box-shadow: 
-        inset 0 0 10px rgba(0,0,0,0.1),
-        1px 1px 0 #ccc, 2px 2px 0 #ccc, 3px 3px 0 #ccc,
-        4px 4px 0 #ccc, 5px 5px 0 #ccc,
-        7px 7px 0 var(--felt-dark),
-        12px 12px 20px rgba(0,0,0,0.4);
-    transform: rotateX(10deg);
-    transition: transform 0.1s, opacity 0.3s;
-    user-select: none;
+  width: 100px;
+  height: 130px;
+  background: var(--tile-face);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Noto Sans SC", sans-serif;
+  font-weight: 700;
+  font-size: 4.5rem;
+  color: #b00;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1), 1px 1px 0 #ccc, 2px 2px 0 #ccc,
+    3px 3px 0 #ccc, 4px 4px 0 #ccc, 5px 5px 0 #ccc, 7px 7px 0 var(--felt-dark),
+    12px 12px 20px rgba(0, 0, 0, 0.4);
+  transform: rotateX(10deg);
+  transition: transform 0.1s, opacity 0.3s;
+  user-select: none;
 }
 
 /* --- Input Area --- */
 .input-wrapper {
-    position: relative;
-    width: 320px;
+  position: relative;
+  width: 320px;
 }
 
 input#pinyin-input {
-    width: 100%;
-    padding: 15px;
-    font-size: 1.5rem;
-    text-align: center;
-    background: rgba(0,0,0,0.5);
-    border: 2px solid rgba(255,255,255,0.3);
-    border-radius: 50px;
-    color: white;
-    font-family: 'Roboto Mono', monospace;
-    outline: none;
-    transition: all 0.2s;
-    box-sizing: border-box;
+  width: 100%;
+  padding: 15px;
+  font-size: 1.5rem;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50px;
+  color: white;
+  font-family: "Roboto Mono", monospace;
+  outline: none;
+  transition: all 0.2s;
+  box-sizing: border-box;
 }
 
 input#pinyin-input:focus {
-    background: rgba(0,0,0,0.7);
-    border-color: var(--neon-gold);
-    box-shadow: 0 0 15px var(--neon-gold);
+  background: rgba(0, 0, 0, 0.7);
+  border-color: var(--neon-gold);
+  box-shadow: 0 0 15px var(--neon-gold);
 }
 
 /* --- Timers --- */
 #timer-container {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 15px;
-    background: #1a1a1a;
-    display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 15px;
+  background: #1a1a1a;
+  display: none;
 }
 
-
 #timer-bar {
-    width: 100%;
-    height: 100%;
-    background: #006400;
-    box-shadow: 0 0 10px #006400; 
-    transform-origin: left;
+  width: 100%;
+  height: 100%;
+  background: #006400;
+  box-shadow: 0 0 10px #006400;
+  transform-origin: left;
 }
 
 /* --- Overlays --- */
 #overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  /* REMOVED background here */
+  background: transparent;
+
+  /* Keep layout logic */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  pointer-events: auto;
+}
+
+.logo-wrapper {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 10px;
+  justify-content: center;
+}
+
+.logo-tile {
+  width: 80px;
+  height: 110px;
+  font-size: 3.5rem;
+  transform: rotateX(10deg);
+  animation: float 3s ease-in-out infinite;
+  /* Reuse majong-tile styles but override specifics */
+  background: var(--tile-face);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Noto Sans SC", sans-serif;
+  font-weight: 700;
+  color: #b00;
+  box-shadow: 1px 1px 0 #ccc, 2px 2px 0 #ccc, 4px 4px 0 var(--felt-dark),
+    10px 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.logo-tile:nth-child(2) {
+  animation-delay: 1.5s; /* Offset float */
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotateX(10deg);
+  }
+  50% {
+    transform: translateY(-10px) rotateX(10deg);
+  }
+}
+
+.game-title {
+  font-size: 1.5rem;
+  letter-spacing: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 20px;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Level Grid */
+.level-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  width: 100%;
+  max-width: 500px;
+  margin-top: 20px;
+}
+
+.level-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(145deg, #ffffff, #e6e6e6);
+  color: var(--felt-dark);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 6px 0 #bbb, 0 10px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.1s, box-shadow 0.1s;
+  text-transform: none; /* Override generic button style */
+}
+
+.level-btn:active {
+  transform: translateY(6px);
+  box-shadow: 0 0 0 #bbb, inset 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.level-btn:hover {
+  transform: translateY(-2px);
+  background: white;
+}
+
+.lvl-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--felt-green);
+  font-family: "Roboto Mono", monospace;
+}
+
+.lvl-desc {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 4px;
+  font-weight: normal;
+}
+
+/* Disabled Button */
+.level-btn.disabled {
+  background: #ccc;
+  color: #888;
+  box-shadow: none;
+  cursor: not-allowed;
+  grid-column: span 2; /* Make it wide at the bottom */
+  opacity: 0.6;
+  transform: none !important;
+}
+.level-btn.disabled .lvl-title {
+  color: #666;
+}
+
+#start-screen,
+#end-screen {
+  /* Make them fill the entire overlay */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  /* Center content inside them */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* 1. Start Screen: Solid Felt Background */
+#start-screen {
+  background: radial-gradient(
+    circle at center,
+    var(--felt-green),
+    var(--felt-dark)
+  );
+  z-index: 2;
+}
+
+/* 2. End Screen: Translucent Black Background */
+#end-screen {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(5px);
+  z-index: 2;
+}
+
+h1 {
+  font-size: 3rem;
+  color: var(--neon-gold);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+}
+p {
+  color: #e8e8e8;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+#start-btn {
+  background: linear-gradient(135deg, var(--neon-pink), #ff7aa6);
+  margin-top: 10px;
+}
+
+/* --- Particles & Effects --- */
+.particle {
+  position: absolute;
+  pointer-events: none;
+  z-index: 100;
+}
+
+@keyframes shake-error {
+  0%,
+  100% {
+    transform: rotateX(10deg) translateX(0);
+  }
+  25% {
+    transform: rotateX(10deg) translateX(-10px);
+  }
+  75% {
+    transform: rotateX(10deg) translateX(10px);
+  }
+}
+.shake-effect {
+  animation: shake-error 0.4s ease-in-out;
+  filter: grayscale(0.8);
+}
+
+@keyframes shatter {
+  0% {
+    transform: rotateX(10deg) scale(1);
+    opacity: 1;
+    filter: brightness(1);
+  }
+  100% {
+    transform: rotateX(-20deg) scale(0.8);
+    opacity: 0;
+    filter: brightness(0);
+  }
+}
+.explode-effect {
+  animation: shatter 0.2s forwards ease-out;
+}
+
+/* UI Shake Levels */
+@keyframes shake-1 {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(1px, 1px);
+  }
+  75% {
+    transform: translate(-1px, -1px);
+  }
+}
+@keyframes shake-2 {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-2px, 1px);
+  }
+  75% {
+    transform: translate(2px, -1px);
+  }
+}
+@keyframes shake-3 {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(3px, -2px);
+  }
+  75% {
+    transform: translate(-3px, 2px);
+  }
+}
+.shake-lvl-1 {
+  animation: shake-1 0.2s infinite linear;
+}
+.shake-lvl-2 {
+  animation: shake-2 0.1s infinite linear;
+}
+.shake-lvl-3 {
+  animation: shake-3 0.05s infinite linear;
+}
+
+/* --- Mobile / Responsive --- */
+.mobile-input-display,
+.onscreen-keyboard {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  /* 1. Global Layout */
+  body {
+    align-items: flex-start;
+  }
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  /* Logo */
+  .logo-tile {
+    width: 60px;
+    height: 80px;
+    font-size: 2.5rem;
+  }
+  .level-grid {
+    grid-template-columns: 1fr;
+    max-width: 300px;
+  }
+  .level-btn.disabled {
+    grid-column: span 1;
+  }
+  .start-instructions {
+    font-size: 0.9rem;
+    max-width: 300px;
+  }
+
+  /* 2. Top UI & Streak */
+  #ui-layer {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+  }
+
+  #streak-wrapper {
     position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.85);
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: auto;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    z-index: 20;
+  }
+
+  #streak-container {
+    width: 100%;
+    height: 16px;
+    border-radius: 8px;
+  }
+  #streak-fill {
+    width: 0%;
+    height: 100%;
+    left: 0;
+    top: 0;
+  }
+  .multiplier-text {
+    font-size: 1.2rem;
+    width: 40px;
+    text-align: right;
+  }
+
+  /* 3. Game Area & TILES (Made Bigger) */
+  #game-area {
+    position: absolute;
+    top: 75px;
+    left: 0;
+    width: 100%;
+    /* Adjusted height to stop before the timer */
+    height: calc(55vh - 85px);
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 2000;
-    backdrop-filter: blur(5px);
-}
+    z-index: 5;
+  }
 
-#start-screen, #end-screen {
+  #tiles-wrapper {
+    margin-bottom: 5px;
+    flex-wrap: wrap; /* Allows wrapping if 4 big tiles don't fit perfectly */
+    justify-content: center;
+  }
+
+  .majong-tile {
+    /* BIGGER TILES */
+    width: 82px;
+    height: 110px;
+    font-size: 3.8rem;
+    margin: 4px;
+    box-shadow: 1px 1px 0 #ccc, 2px 2px 0 #ccc, 3px 3px 0 var(--felt-dark);
+  }
+
+  .input-wrapper {
+    width: 92%;
+  }
+
+  /* Hide native input */
+  input#pinyin-input {
+    display: none;
+  }
+
+  .mobile-input-display {
+    display: block;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    padding: 6px;
+    border-radius: 8px;
+    text-align: center;
+    font-family: "Roboto Mono", monospace;
+    font-size: 1.3rem; /* Larger text */
+    min-height: 1.5em;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* 4. TIMER BAR (Moved above keyboard) */
+  #timer-container {
+    bottom: 45vh; /* Sit exactly on top of the keyboard */
+    height: 12px; /* Slightly thinner */
+    z-index: 101; /* Ensure it stays above keyboard layer */
+    background: #111; /* Dark background for contrast */
+  }
+
+  /* 5. MASSIVE KEYBOARD */
+  .onscreen-keyboard {
     display: flex;
     flex-direction: column;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 45vh; /* 45% height */
+    background: rgba(10, 20, 15, 0.98);
+    border-top: none; /* Removed border as timer acts as separator */
+    padding: 4px;
+    box-sizing: border-box;
+    z-index: 100;
+    padding-bottom: max(5px, env(safe-area-inset-bottom));
+  }
+
+  .onscreen-keyboard .row {
+    display: flex;
+    width: 100%;
+    flex: 1;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  .onscreen-keyboard .key {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    text-align: center;
-    max-width: 600px;
-    width: 90%;
-    gap: 20px;
-}
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+    -webkit-tap-highlight-color: transparent;
+  }
 
-h1 { font-size: 3rem; color: var(--neon-gold); margin: 0; text-transform: uppercase; letter-spacing: 5px; }
-p { color: #e8e8e8; font-size: 1.1rem; line-height: 1.6; margin: 0; }
+  .onscreen-keyboard .key:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    background: rgba(255, 255, 255, 0.2);
+  }
 
-#start-btn {
-    background: linear-gradient(135deg, var(--neon-pink), #ff7aa6);
-    margin-top: 10px;
-}
+  .onscreen-keyboard .key.special {
+    background: rgba(255, 90, 120, 0.25);
+    font-size: 1.1rem;
+    flex: 1.5;
+  }
 
-/* --- Particles & Effects --- */
-.particle { position: absolute; pointer-events: none; z-index: 100; }
+  .onscreen-keyboard .row.r0 .key {
+    background: rgba(255, 215, 0, 0.15);
+    color: var(--neon-gold);
+  }
 
-@keyframes shake-error {
-    0%, 100% { transform: rotateX(10deg) translateX(0); }
-    25% { transform: rotateX(10deg) translateX(-10px); }
-    75% { transform: rotateX(10deg) translateX(10px); }
-}
-.shake-effect { animation: shake-error 0.4s ease-in-out; filter: grayscale(0.8); }
-
-@keyframes shatter {
-    0% { transform: rotateX(10deg) scale(1); opacity: 1; filter: brightness(1); }
-    100% { transform: rotateX(-20deg) scale(0.8); opacity: 0; filter: brightness(0); }
-}
-.explode-effect { animation: shatter 0.2s forwards ease-out; }
-
-/* UI Shake Levels */
-@keyframes shake-1 { 0%, 100% {transform: translate(0,0);} 25% {transform: translate(1px, 1px);} 75% {transform: translate(-1px, -1px);} }
-@keyframes shake-2 { 0%, 100% {transform: translate(0,0);} 25% {transform: translate(-2px, 1px);} 75% {transform: translate(2px, -1px);} }
-@keyframes shake-3 { 0%, 100% {transform: translate(0,0);} 25% {transform: translate(3px, -2px);} 75% {transform: translate(-3px, 2px);} }
-.shake-lvl-1 { animation: shake-1 0.2s infinite linear; }
-.shake-lvl-2 { animation: shake-2 0.1s infinite linear; }
-.shake-lvl-3 { animation: shake-3 0.05s infinite linear; }
-
-/* --- Mobile / Responsive --- */
-.mobile-input-display, .onscreen-keyboard { display: none; }
-
-@media (max-width: 800px) {
-    /* 1. Global Layout */
-    body {
-        align-items: flex-start;
-    }
-    h1 { font-size: 1.8rem; }
-    
-    /* 2. Top UI & Streak */
-    #ui-layer { top: 10px; left: 10px; right: 10px; }
-
-    #streak-wrapper {
-        position: absolute;
-        top: 50px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 90%;
-        height: auto;
-        flex-direction: row;
-        justify-content: center;
-        gap: 10px;
-        z-index: 20;
-    }
-
-    #streak-container { width: 100%; height: 16px; border-radius: 8px; }
-    #streak-fill { width: 0%; height: 100%; left: 0; top: 0; }
-    .multiplier-text { font-size: 1.2rem; width: 40px; text-align: right; }
-
-    /* 3. Game Area & TILES (Made Bigger) */
-    #game-area {
-        position: absolute;
-        top: 75px; 
-        left: 0;
-        width: 100%;
-        /* Adjusted height to stop before the timer */
-        height: calc(55vh - 85px); 
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center; 
-        align-items: center;
-        z-index: 5;
-    }
-
-    #tiles-wrapper {
-        margin-bottom: 5px;
-        flex-wrap: wrap; /* Allows wrapping if 4 big tiles don't fit perfectly */
-        justify-content: center;
-    }
-
-    .majong-tile {
-        /* BIGGER TILES */
-        width: 82px;  
-        height: 110px;
-        font-size: 3.8rem; 
-        margin: 4px;
-        box-shadow: 1px 1px 0 #ccc, 2px 2px 0 #ccc, 3px 3px 0 var(--felt-dark);
-    }
-
-    .input-wrapper { width: 92%; }
-
-    /* Hide native input */
-    input#pinyin-input { display: none; }
-    
-    .mobile-input-display {
-        display: block;
-        background: rgba(0,0,0,0.4);
-        border: 2px solid rgba(255,255,255,0.15);
-        color: #fff;
-        padding: 6px;
-        border-radius: 8px;
-        text-align: center;
-        font-family: 'Roboto Mono', monospace;
-        font-size: 1.3rem; /* Larger text */
-        min-height: 1.5em;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    /* 4. TIMER BAR (Moved above keyboard) */
-    #timer-container {
-        bottom: 45vh; /* Sit exactly on top of the keyboard */
-        height: 12px; /* Slightly thinner */
-        z-index: 101; /* Ensure it stays above keyboard layer */
-        background: #111; /* Dark background for contrast */
-    }
-
-    /* 5. MASSIVE KEYBOARD */
-    .onscreen-keyboard {
-        display: flex;
-        flex-direction: column;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100vw;
-        height: 45vh; /* 45% height */
-        background: rgba(10, 20, 15, 0.98);
-        border-top: none; /* Removed border as timer acts as separator */
-        padding: 4px;
-        box-sizing: border-box;
-        z-index: 100;
-        padding-bottom: max(5px, env(safe-area-inset-bottom));
-    }
-
-    .onscreen-keyboard .row {
-        display: flex;
-        width: 100%;
-        flex: 1;
-        gap: 4px;
-        margin-bottom: 4px;
-    }
-    
-    .onscreen-keyboard .key {
-        flex: 1;
-        background: rgba(255,255,255,0.08);
-        color: white;
-        border-radius: 6px;
-        font-size: 1.4rem;
-        font-weight: bold;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        user-select: none;
-        box-shadow: 0 4px 0 rgba(0,0,0,0.3);
-        -webkit-tap-highlight-color: transparent;
-    }
-
-    .onscreen-keyboard .key:active {
-        transform: translateY(4px);
-        box-shadow: 0 0 0 rgba(0,0,0,0);
-        background: rgba(255,255,255,0.2);
-    }
-
-    .onscreen-keyboard .key.special { 
-        background: rgba(255, 90, 120, 0.25); 
-        font-size: 1.1rem; 
-        flex: 1.5; 
-    }
-    
-    .onscreen-keyboard .row.r0 .key {
-        background: rgba(255, 215, 0, 0.15); 
-        color: var(--neon-gold);
-    }
-    
-    .onscreen-keyboard .row.r0 .key:last-child {
-        background: rgba(0, 243, 255, 0.2);
-        color: var(--neon-blue);
-        flex: 1.5;
-        font-size: 1rem;
-    }
+  .onscreen-keyboard .row.r0 .key:last-child {
+    background: rgba(0, 243, 255, 0.2);
+    color: var(--neon-blue);
+    flex: 1.5;
+    font-size: 1rem;
+  }
 }

@@ -54,24 +54,36 @@
     <div id="overlay">
       <!-- Start Screen -->
       <div id="start-screen">
-        <h1>Pinyin Master</h1>
-        <p class="start-instructions">
-          Type the Pinyin with tone numbers (1-4). Neutral tone is blank.<br />
-          e.g., "你好" = <strong>ni3hao3</strong>
-        </p>
-        <p class="start-instructions">
-          Type <strong>bzd</strong> to skip a word.
-        </p>
-
-        <div class="vocab-select-row">
-          <label for="vocab-select">Vocabulary:</label>
-          <select id="vocab-select">
-            <option value="hsk1">HSK Level 1</option>
-            <option value="hsk2">HSK Level 2</option>
-          </select>
+        <!-- Logo Section -->
+        <div class="logo-wrapper">
+          <div class="majong-tile logo-tile">拼</div>
+          <div class="majong-tile logo-tile">音</div>
         </div>
 
-        <button id="start-btn">Start Game</button>
+        <h1 class="game-title">PIN1YIN1</h1>
+
+        <p class="start-instructions">
+          Type the pinyin with tone numbers (1-4).<br />
+          e.g., "你好" = <strong>ni3hao3</strong>
+        </p>
+
+        <!-- Level Selection Buttons -->
+        <div class="level-grid">
+          <button class="level-btn" data-lvl="hsk1">
+            <span class="lvl-title">HSK 1</span>
+            <span class="lvl-desc">Beginner</span>
+          </button>
+
+          <button class="level-btn" data-lvl="hsk2">
+            <span class="lvl-title">HSK 2</span>
+            <span class="lvl-desc">Elementary</span>
+          </button>
+
+          <button class="level-btn disabled" disabled>
+            <span class="lvl-title">HSK 3+</span>
+            <span class="lvl-desc">Coming Soon</span>
+          </button>
+        </div>
       </div>
 
       <!-- End Screen -->

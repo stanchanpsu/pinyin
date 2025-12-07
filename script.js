@@ -251,15 +251,16 @@ const UI = {
     return window.matchMedia("(max-width: 800px)").matches;
   },
 
-  // FIXED: Properly toggles 'hidden' class to ensure display property works
   toggleScreen(screen, show) {
+    // 1. Show/Hide the main overlay container
     if (screen === "overlay") {
       if (show) this.elm.overlay.classList.remove("hidden");
       else this.elm.overlay.classList.add("hidden");
       return;
     }
 
-    const element = this.elm[screen + "Screen"]; // startScreen or endScreen
+    // 2. Show/Hide the specific child screen
+    const element = this.elm[screen + "Screen"];
     if (element) {
       if (show) {
         element.classList.remove("hidden");
@@ -484,12 +485,17 @@ const Game = {
 
   init() {
     // Event Listeners
-    document
-      .getElementById("start-btn")
-      .addEventListener("click", () => this.start());
+    document.querySelectorAll(".level-btn").forEach((btn) => {
+      if (btn.classList.contains("disabled")) return;
+
+      btn.addEventListener("click", () => {
+        const level = btn.dataset.lvl; // Get 'hsk1' or 'hsk2'
+        this.start(level);
+      });
+    });
     document.getElementById("play-again-btn").addEventListener("click", () => {
       UI.toggleScreen("end", false);
-      UI.toggleScreen("overlay", false);
+      // Go back to start screen instead of restarting immediately
       UI.toggleScreen("start", true);
       UI.toggleScreen("overlay", true);
     });
@@ -513,7 +519,7 @@ const Game = {
     UI.handleResize();
   },
 
-  start() {
+  start(levelKey = "hsk1") {
     this.state.score = 0;
     this.state.multiplier = 1;
     this.state.streak = 0;
@@ -525,19 +531,19 @@ const Game = {
 
     this.stopAllTimers();
 
-    const level = UI.elm.vocabSelect.value;
-    this.state.vocabList = VocabData.getList(level);
+    // LOAD VOCAB BASED ON CLICKED BUTTON
+    this.state.vocabList = VocabData.getList(levelKey);
 
     UI.elm.input.value = "";
     UI.updateMobileInput("");
     UI.updateScore(0);
 
-    // FIX: Remove 'hidden' classes for proper display
+    // Hide Screens
     UI.toggleScreen("start", false);
     UI.toggleScreen("end", false);
-    UI.toggleScreen("overlay", false);
+    UI.toggleScreen("overlay", false); // Hides the opaque background
 
-    // FIX: Show Timer and Keyboard
+    // Show Game UI
     UI.toggleGameUI(true);
 
     if (!UI.isSmallScreen()) UI.elm.input.focus();
