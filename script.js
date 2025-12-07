@@ -502,7 +502,7 @@ const UI = {
 // ==============================
 const Game = {
   config: {
-    totalTime: 1200, // 2 mins
+    totalTime: 120000, // 2 mins
     wordTime: 15000,
     itemsPerLevel: 5,
   },
