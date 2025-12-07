@@ -19,20 +19,24 @@
 /* --- Base --- */
 body {
   margin: 0;
+
+  /* Fallback for older browsers */
+  height: 100vh;
+  /* The Magic Unit: Fills visible space exactly */
+  height: 100dvh;
+
   overflow: hidden;
   background: radial-gradient(
     circle at center,
     var(--felt-green),
     var(--felt-dark)
   );
-  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: "Rubik", sans-serif;
   color: white;
-  perspective: 1000px;
-  -webkit-tap-highlight-color: transparent;
+  touch-action: none; /* Prevent scroll/zoom */
 }
 
 button {
