@@ -1,6 +1,6 @@
 /**
  * PINYIN MAJHONG GAME
- * Full Corrected Script
+ * Verified Script - Mobile Ready, Custom Keyboard, Ready Screen
  */
 
 // ==============================
@@ -97,13 +97,13 @@ const VocabData = {
 // ==============================
 const Visuals = {
   colors: [
-    "#ffd700", // 1 - gold
-    "#ff4500", // 2 - orange
-    "#00f3ff", // 3 - neon blue
-    "#ff0055", // 4 - neon pink
-    "#8a2be2", // 5 - purple
-    "#00ff7f", // 6 - spring green
-    "#ff69b4", // 7 - hot pink
+    "#ffd700",
+    "#ff4500",
+    "#00f3ff",
+    "#ff0055",
+    "#8a2be2",
+    "#00ff7f",
+    "#ff69b4",
   ],
 
   getLevelColor(level) {
@@ -136,25 +136,21 @@ const Visuals = {
 
   spawnParticles(x, y, multiplier, type = "fountain") {
     const count = type === "fountain" ? Math.min(multiplier, 5) : 20;
-
     let colorSet = ["#fff"];
     if (multiplier === 2) colorSet = ["#ff8c00", "#ffd700"];
     else if (multiplier === 3) colorSet = ["#00f3ff", "#fff"];
     else if (multiplier >= 4) colorSet = ["#ff0055", "#ffd700", "#00f3ff"];
 
     if (type === "explosion") {
-      // Shards
       for (let i = 0; i < 15; i++) {
         const isGreen = Math.random() > 0.5;
         const c = isGreen ? ["#2e8b57", "#062f1b"] : ["#fdf6e3", "#e0d6c1"];
         this.createPhysParticle(x, y, c, null, 50, 150, true, "shard");
       }
-      // Sparks
       for (let i = 0; i < 20; i++) {
         this.createPhysParticle(x, y, colorSet, null, 100, 200, false, "spark");
       }
     } else {
-      // Fountain
       for (let i = 0; i < count; i++) {
         this.createPhysParticle(
           x,
@@ -212,10 +208,7 @@ const Visuals = {
           opacity: 0,
         },
       ],
-      {
-        duration: duration,
-        easing: "cubic-bezier(0.25, 1, 0.5, 1)",
-      }
+      { duration: duration, easing: "cubic-bezier(0.25, 1, 0.5, 1)" }
     );
 
     animation.onfinish = () => p.remove();
@@ -244,7 +237,6 @@ const UI = {
     endScreen: document.getElementById("end-screen"),
     finalScore: document.getElementById("final-score"),
     gameArea: document.getElementById("game-area"),
-    // Note: vocabSelect removed from here to prevent errors
   },
 
   isSmallScreen() {
@@ -383,37 +375,33 @@ const UI = {
   },
 
   setWordTimer(percent) {
-    this.elm.timerBar.style.width = `${percent}%`;
+    if (this.elm.timerBar) this.elm.timerBar.style.width = `${percent}%`;
   },
 
   updateMobileInput(val) {
-    this.elm.mobileDisplay.textContent = val || "type pinyin...";
+    if (this.elm.mobileDisplay)
+      this.elm.mobileDisplay.textContent = val || "type pinyin...";
   },
 
   populateResults(score, levelKey, vocabList, answeredIndices, shownIndices) {
-    // 1. Update Header Stats
     this.elm.finalScore.innerText = score;
     const levelDisplay = levelKey.toUpperCase().replace("HSK", "HSK ");
-    document.getElementById("end-level-val").innerText = levelDisplay;
+    const lvlEl = document.getElementById("end-level-val");
+    if (lvlEl) lvlEl.innerText = levelDisplay;
 
-    // 2. Clear Lists
     const correctList = document.getElementById("list-correct");
     const missedList = document.getElementById("list-missed");
     correctList.innerHTML = "";
     missedList.innerHTML = "";
 
-    // 3. Initialize Counts
     let correctCount = 0;
     let missedCount = 0;
 
-    // 4. Generate Items
     vocabList.forEach((word, index) => {
-      // Only process words that were shown during the game
       if (!shownIndices.has(index)) return;
 
       const item = document.createElement("div");
       item.className = "word-item";
-
       const pinyinDisplay = word.pinyin.replace("|", " / ");
 
       item.innerHTML = `
@@ -423,23 +411,24 @@ const UI = {
 
       if (answeredIndices.has(index)) {
         correctList.appendChild(item);
-        correctCount++; // Count Correct
+        correctCount++;
       } else {
         missedList.appendChild(item);
-        missedCount++; // Count Missed
+        missedCount++;
       }
     });
 
-    // 5. Update Headers with the final counts
-    document.getElementById(
-      "header-correct"
-    ).innerText = `Correct (${correctCount})`;
-    document.getElementById(
-      "header-missed"
-    ).innerText = `Missed (${missedCount})`;
+    const hCorrect = document.getElementById("header-correct");
+    const hMissed = document.getElementById("header-missed");
+    if (hCorrect) hCorrect.innerText = `Correct (${correctCount})`;
+    if (hMissed) hMissed.innerText = `Missed (${missedCount})`;
   },
+
   buildKeyboard(callback) {
+    if (!this.elm.keyboard) return;
     this.elm.keyboard.innerHTML = "";
+
+    // CUSTOM LAYOUT PRESERVED
     const rows = [
       ["1", "2", "3", "4", "⌫"],
       ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
@@ -502,7 +491,7 @@ const UI = {
 // ==============================
 const Game = {
   config: {
-    totalTime: 120000, // 2 mins
+    totalTime: 120000,
     wordTime: 15000,
     itemsPerLevel: 5,
   },
@@ -533,7 +522,12 @@ const Game = {
     // 1. Navigation Elements
     const mainMenu = document.getElementById("menu-main");
     const levelMenu = document.getElementById("menu-levels");
-    const tutorialModal = document.getElementById("tutorial-modal");
+
+    // The new consolidated screen elements
+    const rulesOverlay = document.getElementById("rules-overlay");
+    const rulesTitle = document.getElementById("rules-title");
+    const btnClose = document.getElementById("btn-rules-close");
+    const btnStart = document.getElementById("btn-rules-start");
 
     // 2. Navigation Logic
     document.getElementById("btn-goto-levels").addEventListener("click", () => {
@@ -546,35 +540,67 @@ const Game = {
       mainMenu.classList.remove("hidden");
     });
 
+    // --- MODE A: HOW TO PLAY (From Main Menu) ---
     document.getElementById("btn-tutorial").addEventListener("click", () => {
-      tutorialModal.classList.remove("hidden");
+      // Configure UI
+      rulesTitle.innerText = "How to Play";
+      btnClose.classList.remove("hidden"); // Show X
+      btnStart.classList.add("hidden"); // Hide Start
+
+      // Show Overlay
+      rulesOverlay.classList.remove("hidden");
     });
 
-    document
-      .getElementById("btn-close-tutorial")
-      .addEventListener("click", () => {
-        tutorialModal.classList.add("hidden");
-      });
+    btnClose.addEventListener("click", () => {
+      rulesOverlay.classList.add("hidden");
+    });
 
-    // 3. Level Selection Logic (Actually starts the game)
+    // --- MODE B: READY SCREEN (After selecting level) ---
+    let pendingLevel = "hsk1";
+
     document.querySelectorAll(".majong-btn[data-lvl]").forEach((btn) => {
       btn.addEventListener("click", () => {
-        const level = btn.dataset.lvl;
-        levelMenu.classList.add("hidden");
-        mainMenu.classList.remove("hidden");
+        pendingLevel = btn.dataset.lvl;
 
-        this.start(level);
+        // 1. Hide Menus
+        levelMenu.classList.add("hidden");
+        mainMenu.classList.remove("hidden"); // Reset menu for later
+
+        // 2. Hide Start Screen & Background
+        UI.toggleScreen("start", false);
+        UI.elm.overlay.classList.remove("solid-bg");
+
+        // 3. Ensure Parent Overlay is Visible
+        UI.toggleScreen("overlay", true);
+
+        // 4. Show Game UI
+        UI.toggleGameUI(true);
+
+        // 5. Configure Rules Overlay as "Ready Screen"
+        rulesTitle.innerText = "Ready?";
+        btnClose.classList.add("hidden"); // Hide X
+        btnStart.classList.remove("hidden"); // Show Start
+
+        // Show Overlay
+        rulesOverlay.classList.remove("hidden");
       });
     });
 
-    // 4. Play Again Listener
+    // 4. REAL START LISTENER
+    btnStart.addEventListener("click", () => {
+      rulesOverlay.classList.add("hidden");
+      this.start(pendingLevel);
+    });
+
+    // 5. Play Again Listener
     document.getElementById("play-again-btn").addEventListener("click", () => {
       UI.toggleScreen("end", false);
       UI.toggleScreen("start", true);
       UI.toggleScreen("overlay", true);
+      UI.elm.overlay.classList.add("solid-bg");
     });
 
-    // 5. Game Input Listeners
+    // 6. Game Input Listeners
     UI.elm.input.addEventListener("input", (e) => {
       if (
         !this.state.isActive ||
@@ -590,18 +616,17 @@ const Game = {
 
     // Initial setup
     UI.handleResize();
+    UI.elm.overlay.classList.add("solid-bg");
   },
 
   start(levelKey = "hsk1") {
     this.state.currentLevel = levelKey;
-
     this.state.score = 0;
     this.state.multiplier = 1;
     this.state.streak = 0;
     this.state.mobileInput = "";
     this.state.answeredIndices.clear();
     this.state.shownIndices.clear();
-
     this.state.isActive = true;
     this.state.isTransitioning = false;
 
@@ -613,9 +638,10 @@ const Game = {
     UI.updateMobileInput("");
     UI.updateScore(0);
 
+    // Completely hide overlay wrapper (this hides ready screen container too)
+    UI.toggleScreen("overlay", false);
     UI.toggleScreen("start", false);
     UI.toggleScreen("end", false);
-    UI.toggleScreen("overlay", false);
 
     UI.toggleGameUI(true);
 

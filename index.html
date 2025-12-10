@@ -114,46 +114,50 @@
 
           <button id="btn-back-menu" class="back-btn">« Back</button>
         </div>
+      </div>
 
-        <!-- How to Play Overlay (Hidden by default) -->
-        <div id="tutorial-modal" class="hidden">
-          <div class="tutorial-content">
-            <button id="btn-close-tutorial" class="close-x">×</button>
-            <h2>How to Play</h2>
+      <!-- Consolidated Rules/Ready Screen -->
+      <div id="rules-overlay" class="hidden">
+        <div class="tutorial-content">
+          <!-- Mode A: Close Button -->
+          <button id="btn-rules-close" class="close-x hidden">×</button>
 
-            <!-- Game Mockup -->
-            <div class="mockup-container">
-              <!-- New wrapper for side-by-side tiles -->
-              <div class="mockup-tiles-row">
-                <div class="mockup-tile">你</div>
-                <div class="mockup-tile">好</div>
-              </div>
-              <div class="mockup-input">ni3hao3</div>
+          <!-- Dynamic Title -->
+          <h2 id="rules-title">How to Play</h2>
+
+          <!-- Shared Content -->
+          <div class="mockup-container">
+            <div class="mockup-tiles-row">
+              <div class="mockup-tile">你</div>
+              <div class="mockup-tile">好</div>
             </div>
-            <div class="tutorial-text">
-              <h3>Type Pinyin with Tone Numbers</h3>
-              <div class="tone-grid">
-                <div class="tone-item"><span>ā</span> 1</div>
-                <div class="tone-item"><span>á</span> 2</div>
-                <div class="tone-item"><span>ǎ</span> 3</div>
-                <div class="tone-item"><span>à</span> 4</div>
-              </div>
-              <p class="sub-text">
-                Neutral tone can be typed without a number.
-              </p>
-
-              <h3>Special Pinyin</h3>
-              <p>
-                The letter <strong>ü</strong> is typed as <strong>v</strong>.
-              </p>
-              <p>e.g. <em>nǚ</em> = <strong>nv3</strong></p>
-
-              <h3>Skip Word</h3>
-              <p>
-                Type <strong>bzd</strong> or <strong>buzhidao</strong> to skip.
-              </p>
-            </div>
+            <div class="mockup-input">ni3hao3</div>
           </div>
+
+          <div class="tutorial-text">
+            <h3>Type Pinyin with Tones</h3>
+            <div class="tone-grid">
+              <div class="tone-item"><span>ā</span> 1</div>
+              <div class="tone-item"><span>á</span> 2</div>
+              <div class="tone-item"><span>ǎ</span> 3</div>
+              <div class="tone-item"><span>à</span> 4</div>
+            </div>
+
+            <h3>Special Pinyin</h3>
+            <p>The letter <strong>ü</strong> is typed as <strong>v</strong>.</p>
+
+            <h3>Skip Word</h3>
+            <p>Type <strong>bzd</strong> for 'buzhidao' to skip.</p>
+          </div>
+
+          <!-- Mode B: Start Button -->
+          <button
+            id="btn-rules-start"
+            class="level-btn hidden"
+            style="margin-top: 20px"
+          >
+            START GAME
+          </button>
         </div>
       </div>
 
