@@ -1,13 +1,3 @@
-/**
- * PINYIN MAJHONG GAME
- * Final Script: Skips now reset streak/multiplier
- */
-
-// VocabData moved to `vocab-data.js`
-
-// ==============================
-// 2. VISUALS MODULE
-// ==============================
 const Visuals = {
   // 0: Grey-Green, 1: Gold, 2: Orange, 3: Neon Blue...
   colors: [
