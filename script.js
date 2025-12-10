@@ -1,6 +1,6 @@
 /**
  * PINYIN MAJHONG GAME
- * Verified Script - Mobile Ready, Custom Keyboard, Ready Screen
+ * Final Script: Consolidated Overlay + Streak Fixes + Custom Keyboard
  */
 
 // ==============================
@@ -96,14 +96,15 @@ const VocabData = {
 // 2. VISUALS MODULE
 // ==============================
 const Visuals = {
+  // 0: Grey-Green, 1: Gold, 2: Orange, 3: Neon Blue...
   colors: [
+    "#8fbc8f",
     "#ffd700",
     "#ff4500",
     "#00f3ff",
     "#ff0055",
     "#8a2be2",
     "#00ff7f",
-    "#ff69b4",
   ],
 
   getLevelColor(level) {
@@ -136,10 +137,12 @@ const Visuals = {
 
   spawnParticles(x, y, multiplier, type = "fountain") {
     const count = type === "fountain" ? Math.min(multiplier, 5) : 20;
+
+    // Update colors to match new palette
     let colorSet = ["#fff"];
-    if (multiplier === 2) colorSet = ["#ff8c00", "#ffd700"];
-    else if (multiplier === 3) colorSet = ["#00f3ff", "#fff"];
-    else if (multiplier >= 4) colorSet = ["#ff0055", "#ffd700", "#00f3ff"];
+    if (multiplier === 2) colorSet = ["#ffd700", "#fff"];
+    else if (multiplier === 3) colorSet = ["#ff4500", "#ffd700"];
+    else if (multiplier >= 4) colorSet = ["#00f3ff", "#ff0055", "#8a2be2"];
 
     if (type === "explosion") {
       for (let i = 0; i < 15; i++) {
@@ -228,6 +231,7 @@ const UI = {
     streakInner: document.getElementById("streak-inner"),
     streakFill: document.getElementById("streak-fill"),
     multText: document.getElementById("mult-text"),
+    streakCount: document.getElementById("streak-count"), // Matches HTML
     tilesWrapper: document.getElementById("tiles-wrapper"),
     input: document.getElementById("pinyin-input"),
     mobileDisplay: document.getElementById("mobile-input-display"),
@@ -250,7 +254,8 @@ const UI = {
       return;
     }
 
-    const element = this.elm[screen + "Screen"];
+    // Handle standard screens (Start, End)
+    let element = this.elm[screen + "Screen"];
     if (element) {
       if (show) {
         element.classList.remove("hidden");
@@ -274,9 +279,20 @@ const UI = {
   },
 
   updateStreak(multiplier, progressPct, holdingFull) {
+    // 1. Update Text & Colors
     this.elm.multText.innerText = multiplier + "x";
-    this.elm.multText.style.color = Visuals.getLevelColor(multiplier);
+    const currColor = Visuals.getLevelColor(multiplier);
+    this.elm.multText.style.color = currColor;
 
+    // Safety check for streak count element
+    if (this.elm.streakCount) {
+      const currentCount = Math.round(
+        (progressPct / 100) * Game.config.itemsPerLevel
+      );
+      this.elm.streakCount.innerText = `${currentCount}/${Game.config.itemsPerLevel}`;
+    }
+
+    // 2. Bar Fill Logic
     const useHorizontal = this.isSmallScreen();
     const fillProp = useHorizontal ? "width" : "height";
     const resetProp = useHorizontal ? "height" : "width";
@@ -284,15 +300,12 @@ const UI = {
     this.elm.streakFill.style[fillProp] = `${progressPct}%`;
     this.elm.streakFill.style[resetProp] = "100%";
 
-    const currColor = Visuals.getLevelColor(multiplier);
     const prevColor =
-      multiplier >= 2
-        ? Visuals.getLevelColor(multiplier - 1)
-        : "rgba(0,0,0,0.35)";
-
+      multiplier >= 3 ? Visuals.getLevelColor(multiplier) : "rgba(0,0,0,0.35)";
     this.elm.streakFill.style.background = currColor;
     this.elm.streakInner.style.backgroundColor = prevColor;
 
+    // 3. Glow Effects
     if (progressPct >= 100) {
       this.elm.streakContainer.style.boxShadow = `0 0 18px ${Visuals.colorToRgba(
         currColor,
@@ -313,16 +326,30 @@ const UI = {
       this.elm.streakContainer.style.borderColor = "";
     }
 
+    // 4. PROGRESSIVE SHAKE LOGIC
     this.elm.streakContainer.classList.remove(
       "shake-lvl-1",
       "shake-lvl-2",
-      "shake-lvl-3"
+      "shake-lvl-3",
+      "shake-lvl-4"
     );
-    if (multiplier >= 5) this.elm.streakContainer.classList.add("shake-lvl-3");
-    else if (multiplier >= 3)
-      this.elm.streakContainer.classList.add("shake-lvl-2");
-    else if (multiplier >= 2)
-      this.elm.streakContainer.classList.add("shake-lvl-1");
+
+    let shakeLevel = 0;
+
+    if (multiplier === 1) {
+      if (progressPct >= 100) shakeLevel = 3;
+      else if (progressPct >= 75) shakeLevel = 2;
+      else if (progressPct >= 50) shakeLevel = 1;
+    } else {
+      if (progressPct >= 100) shakeLevel = 4;
+      else if (progressPct >= 75) shakeLevel = 3;
+      else if (progressPct >= 50) shakeLevel = 2;
+      else shakeLevel = 1;
+    }
+
+    if (shakeLevel > 0) {
+      this.elm.streakContainer.classList.add(`shake-lvl-${shakeLevel}`);
+    }
   },
 
   renderTiles(word) {
@@ -427,8 +454,6 @@ const UI = {
   buildKeyboard(callback) {
     if (!this.elm.keyboard) return;
     this.elm.keyboard.innerHTML = "";
-
-    // CUSTOM LAYOUT PRESERVED
     const rows = [
       ["1", "2", "3", "4", "⌫"],
       ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
@@ -523,7 +548,7 @@ const Game = {
     const mainMenu = document.getElementById("menu-main");
     const levelMenu = document.getElementById("menu-levels");
 
-    // The new consolidated screen elements
+    // The consolidated overlay elements
     const rulesOverlay = document.getElementById("rules-overlay");
     const rulesTitle = document.getElementById("rules-title");
     const btnClose = document.getElementById("btn-rules-close");
@@ -542,57 +567,51 @@ const Game = {
 
     // --- MODE A: HOW TO PLAY (From Main Menu) ---
     document.getElementById("btn-tutorial").addEventListener("click", () => {
-      // Configure UI
       rulesTitle.innerText = "How to Play";
-      btnClose.classList.remove("hidden"); // Show X
-      btnStart.classList.add("hidden"); // Hide Start
-
-      // Show Overlay
-      rulesOverlay.classList.remove("hidden");
+      if (btnClose) btnClose.classList.remove("hidden");
+      if (btnStart) btnStart.classList.add("hidden");
+      if (rulesOverlay) rulesOverlay.classList.remove("hidden");
     });
 
-    btnClose.addEventListener("click", () => {
-      rulesOverlay.classList.add("hidden");
-    });
+    if (btnClose) {
+      btnClose.addEventListener("click", () => {
+        rulesOverlay.classList.add("hidden");
+      });
+    }
 
-    // --- MODE B: READY SCREEN (After selecting level) ---
     let pendingLevel = "hsk1";
 
+    // 3. Level Selection Logic (Trigger Ready Screen)
     document.querySelectorAll(".majong-btn[data-lvl]").forEach((btn) => {
       btn.addEventListener("click", () => {
         pendingLevel = btn.dataset.lvl;
 
-        // 1. Hide Menus
         levelMenu.classList.add("hidden");
-        mainMenu.classList.remove("hidden"); // Reset menu for later
+        mainMenu.classList.remove("hidden");
 
-        // 2. Hide Start Screen & Background
         UI.toggleScreen("start", false);
         UI.elm.overlay.classList.remove("solid-bg");
 
-        // 3. Ensure Parent Overlay is Visible
         UI.toggleScreen("overlay", true);
-
-        // 4. Show Game UI
         UI.toggleGameUI(true);
 
-        // 5. Configure Rules Overlay as "Ready Screen"
+        // --- MODE B: READY SCREEN ---
         rulesTitle.innerText = "Ready?";
-        btnClose.classList.add("hidden"); // Hide X
-        btnStart.classList.remove("hidden"); // Show Start
-
-        // Show Overlay
-        rulesOverlay.classList.remove("hidden");
+        if (btnClose) btnClose.classList.add("hidden");
+        if (btnStart) btnStart.classList.remove("hidden");
+        if (rulesOverlay) rulesOverlay.classList.remove("hidden");
       });
     });
 
-    // 4. REAL START LISTENER
-    btnStart.addEventListener("click", () => {
-      rulesOverlay.classList.add("hidden");
-      this.start(pendingLevel);
-    });
+    // 4. REAL START LISTENER (Inside Overlay)
+    if (btnStart) {
+      btnStart.addEventListener("click", () => {
+        rulesOverlay.classList.add("hidden");
+        this.start(pendingLevel);
+      });
+    }
 
-    // 5. Play Again Listener
+    // 5. Play Again
     document.getElementById("play-again-btn").addEventListener("click", () => {
       UI.toggleScreen("end", false);
       UI.toggleScreen("start", true);
@@ -600,7 +619,7 @@ const Game = {
       UI.elm.overlay.classList.add("solid-bg");
     });
 
-    // 6. Game Input Listeners
+    // 6. Game Input
     UI.elm.input.addEventListener("input", (e) => {
       if (
         !this.state.isActive ||
@@ -638,7 +657,8 @@ const Game = {
     UI.updateMobileInput("");
     UI.updateScore(0);
 
-    // Completely hide overlay wrapper (this hides ready screen container too)
+    // Hide Overlay Wrapper and sub-screens
+    // Note: 'rules-overlay' is hidden by the button click listener already
     UI.toggleScreen("overlay", false);
     UI.toggleScreen("start", false);
     UI.toggleScreen("end", false);
@@ -791,14 +811,15 @@ const Game = {
     if (this.state.streak >= this.config.itemsPerLevel) {
       this.state.holdingFull = true;
       this.state.streak = this.config.itemsPerLevel;
+
+      // Update with 100% to trigger max shake
       UI.updateStreak(this.state.multiplier, 100, true);
-      UI.elm.streakContainer.style.transform = "scale(1.3)";
 
       setTimeout(() => {
         this.state.multiplier++;
         this.state.streak = 0;
         this.state.holdingFull = false;
-        UI.elm.streakContainer.style.transform = "scale(1)";
+
         UI.updateStreak(this.state.multiplier, 0);
 
         setTimeout(() => this.nextWord(), 150);

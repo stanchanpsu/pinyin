@@ -98,7 +98,7 @@ button:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
   z-index: 8;
 }
 
@@ -111,7 +111,7 @@ button:hover {
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
   overflow: visible;
   position: relative;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease; /* Removed transform transition */
 }
 
 #streak-inner {
@@ -120,7 +120,7 @@ button:hover {
   border-radius: 10px;
   overflow: hidden;
   position: relative;
-  background-color: rgba(0, 0, 0, 0.35);
+  background-color: #00000059;
   transition: background-color 0.3s;
 }
 
@@ -137,9 +137,18 @@ button:hover {
 .multiplier-text {
   font-size: 2rem;
   font-weight: 800;
-  color: white;
+  color: white; /* Will be overridden by JS */
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
   font-family: "Roboto Mono", monospace;
+  margin-top: 5px;
+}
+
+/* NEW: Streak Counter Style */
+#streak-count {
+  font-family: "Roboto Mono", monospace;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: bold;
 }
 
 /* --- Game Area --- */
@@ -698,10 +707,10 @@ p {
   animation: shatter 0.2s forwards ease-out;
 }
 
-/* UI Shake Levels */
+/* --- Progressive Shake Animations --- */
+/* Level 1 (Subtle vibration) */
 @keyframes shake-1 {
-  0%,
-  100% {
+  0% {
     transform: translate(0, 0);
   }
   25% {
@@ -711,9 +720,10 @@ p {
     transform: translate(-1px, -1px);
   }
 }
+
+/* Level 2 (Noticeable shake) */
 @keyframes shake-2 {
-  0%,
-  100% {
+  0% {
     transform: translate(0, 0);
   }
   25% {
@@ -723,9 +733,10 @@ p {
     transform: translate(2px, -1px);
   }
 }
+
+/* Level 3 (Violent) */
 @keyframes shake-3 {
-  0%,
-  100% {
+  0% {
     transform: translate(0, 0);
   }
   25% {
@@ -735,6 +746,29 @@ p {
     transform: translate(-3px, 2px);
   }
 }
+
+/* Level 4 (Extreme) */
+@keyframes shake-4 {
+  0% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-4px, -3px);
+  }
+  30% {
+    transform: translate(4px, 3px);
+  }
+  50% {
+    transform: translate(-4px, 3px);
+  }
+  70% {
+    transform: translate(4px, -3px);
+  }
+  90% {
+    transform: translate(-2px, 2px);
+  }
+}
+
 .shake-lvl-1 {
   animation: shake-1 0.2s infinite linear;
 }
@@ -743,6 +777,9 @@ p {
 }
 .shake-lvl-3 {
   animation: shake-3 0.05s infinite linear;
+}
+.shake-lvl-4 {
+  animation: shake-4 0.05s infinite linear;
 }
 
 /* --- Mobile / Responsive --- */
@@ -902,27 +939,31 @@ p {
     transform: translateX(-50%);
     width: 90%;
     height: auto;
-    flex-direction: row;
+    flex-direction: column; /* Stack vertically: bar then numbers */
     justify-content: center;
-    gap: 10px;
+    gap: 4px;
     z-index: 20;
   }
 
+  /* Make container handle the bar */
   #streak-container {
     width: 100%;
     height: 16px;
     border-radius: 8px;
   }
-  #streak-fill {
-    width: 0%;
-    height: 100%;
-    left: 0;
-    top: 0;
-  }
+
+  /* Container for the text info below the bar */
   .multiplier-text {
     font-size: 1.2rem;
-    width: 40px;
-    text-align: right;
+    width: auto;
+    text-align: center;
+    margin: 0;
+    line-height: 1;
+  }
+
+  #streak-count {
+    font-size: 0.9rem;
+    line-height: 1;
   }
 
   /* 3. Game Area: 55% of Body Height (Stable) */
