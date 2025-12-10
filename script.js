@@ -1,3 +1,8 @@
+/**
+ * PINYIN MAJHONG GAME
+ * Final Script: Skips now reset streak/multiplier
+ */
+
 // ==============================
 // 1. DATA MODULE
 // ==============================
@@ -93,12 +98,13 @@ const VocabData = {
 const Visuals = {
   // 0: Grey-Green, 1: Gold, 2: Orange, 3: Neon Blue...
   colors: [
-    "#ebf99e", // 1x - light yellow
-    "#ff4500", // 3x - Orange
-    "#00f3ff", // 4x - Neon Blue
-    "#ff0055", // 5x - Neon Pink
-    "#8a2be2", // 6x - Purple
-    "#00ff7f", // 7x - Spring Green
+    "#8fbc8f",
+    "#ffd700",
+    "#ff4500",
+    "#00f3ff",
+    "#ff0055",
+    "#8a2be2",
+    "#00ff7f",
   ],
 
   getLevelColor(level) {
@@ -132,7 +138,6 @@ const Visuals = {
   spawnParticles(x, y, multiplier, type = "fountain") {
     const count = type === "fountain" ? Math.min(multiplier, 5) : 20;
 
-    // Update colors to match new palette
     let colorSet = ["#fff"];
     if (multiplier === 2) colorSet = ["#ffd700", "#fff"];
     else if (multiplier === 3) colorSet = ["#ff4500", "#ffd700"];
@@ -272,19 +277,15 @@ const UI = {
   },
 
   updateStreak(multiplier, progressPct, holdingFull) {
-    // 1. Determine Colors
     const currColor = Visuals.getLevelColor(multiplier);
-    // Prev Color is what sits behind the fill (creating the "fill over" effect)
     const prevColor =
       multiplier >= 2
         ? Visuals.getLevelColor(multiplier - 1)
         : "rgba(0,0,0,0.35)";
 
-    // 2. Update Text Colors (Matches Background/Previous Level)
     this.elm.multText.innerText = multiplier + "x";
     this.elm.multText.style.color = multiplier === 1 ? "#ffffff" : prevColor;
 
-    // Update Counter
     if (this.elm.streakCount) {
       const currentCount = Math.round(
         (progressPct / 100) * Game.config.itemsPerLevel
@@ -292,20 +293,16 @@ const UI = {
       this.elm.streakCount.innerText = `${currentCount}/${Game.config.itemsPerLevel}`;
     }
 
-    // 3. Handle Visual Transition Snap
-    // If we are resetting to 0% (level up), we want instant snap to background
+    // Reset visual transition if dropping to 0%
     const isLevelReset = progressPct === 0 && multiplier > 1;
-
     if (isLevelReset) {
       this.elm.streakFill.style.transition = "none";
       this.elm.streakInner.style.transition = "none";
     } else {
-      // Restore CSS defined transitions
       this.elm.streakFill.style.transition = "";
       this.elm.streakInner.style.transition = "";
     }
 
-    // 4. Apply Colors & Size
     const useHorizontal = this.isSmallScreen();
     const fillProp = useHorizontal ? "width" : "height";
     const resetProp = useHorizontal ? "height" : "width";
@@ -316,12 +313,8 @@ const UI = {
     this.elm.streakFill.style.background = currColor;
     this.elm.streakInner.style.backgroundColor = prevColor;
 
-    // Force Reflow if resetting
-    if (isLevelReset) {
-      void this.elm.streakFill.offsetWidth;
-    }
+    if (isLevelReset) void this.elm.streakFill.offsetWidth;
 
-    // 5. Glow Effects
     if (progressPct >= 100) {
       this.elm.streakContainer.style.boxShadow = `0 0 18px ${Visuals.colorToRgba(
         currColor,
@@ -342,14 +335,12 @@ const UI = {
       this.elm.streakContainer.style.borderColor = "";
     }
 
-    // 6. Progressive Shake
     this.elm.streakContainer.classList.remove(
       "shake-lvl-1",
       "shake-lvl-2",
       "shake-lvl-3",
       "shake-lvl-4"
     );
-
     let shakeLevel = 0;
     if (multiplier === 1) {
       if (progressPct >= 100) shakeLevel = 3;
@@ -361,10 +352,8 @@ const UI = {
       else if (progressPct >= 50) shakeLevel = 2;
       else shakeLevel = 1;
     }
-
-    if (shakeLevel > 0) {
+    if (shakeLevel > 0)
       this.elm.streakContainer.classList.add(`shake-lvl-${shakeLevel}`);
-    }
   },
 
   renderTiles(word) {
@@ -559,7 +548,6 @@ const Game = {
   },
 
   init() {
-    // 1. Navigation Elements
     const mainMenu = document.getElementById("menu-main");
     const levelMenu = document.getElementById("menu-levels");
 
@@ -573,12 +561,12 @@ const Game = {
     document.getElementById("btn-goto-levels").addEventListener("click", () => {
       mainMenu.classList.add("hidden");
       levelMenu.classList.remove("hidden");
-    });
+      });
 
     document.getElementById("btn-back-menu").addEventListener("click", () => {
       levelMenu.classList.add("hidden");
       mainMenu.classList.remove("hidden");
-    });
+      });
 
     // --- MODE A: HOW TO PLAY (From Main Menu) ---
     document.getElementById("btn-tutorial").addEventListener("click", () => {
@@ -628,11 +616,11 @@ const Game = {
 
     // 5. Play Again
     document.getElementById("play-again-btn").addEventListener("click", () => {
-      UI.toggleScreen("end", false);
-      UI.toggleScreen("start", true);
-      UI.toggleScreen("overlay", true);
-      UI.elm.overlay.classList.add("solid-bg");
-    });
+        UI.toggleScreen("end", false);
+        UI.toggleScreen("start", true);
+        UI.toggleScreen("overlay", true);
+        UI.elm.overlay.classList.add("solid-bg");
+      });
 
     // 6. Game Input
     UI.elm.input.addEventListener("input", (e) => {
@@ -797,6 +785,12 @@ const Game = {
     this.state.isTransitioning = true;
     clearInterval(this.timers.word);
 
+    // --- FIX: Reset Streak Logic on Skip ---
+    this.state.multiplier = 1;
+    this.state.streak = 0;
+    UI.updateStreak(1, 0);
+    // ---------------------------------------
+
     UI.elm.input.value = "";
     this.state.mobileInput = "";
     UI.updateMobileInput("");
@@ -827,7 +821,6 @@ const Game = {
       this.state.holdingFull = true;
       this.state.streak = this.config.itemsPerLevel;
 
-      // Update with 100% to trigger max shake
       UI.updateStreak(this.state.multiplier, 100, true);
 
       setTimeout(() => {
