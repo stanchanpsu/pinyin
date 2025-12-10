@@ -98,7 +98,7 @@ const VocabData = {
 const Visuals = {
   // 0: Grey-Green, 1: Gold, 2: Orange, 3: Neon Blue...
   colors: [
-    "#8fbc8f",
+    "#f0ffaf",
     "#ffd700",
     "#ff4500",
     "#00f3ff",
@@ -561,12 +561,12 @@ const Game = {
     document.getElementById("btn-goto-levels").addEventListener("click", () => {
       mainMenu.classList.add("hidden");
       levelMenu.classList.remove("hidden");
-      });
+    });
 
     document.getElementById("btn-back-menu").addEventListener("click", () => {
       levelMenu.classList.add("hidden");
       mainMenu.classList.remove("hidden");
-      });
+    });
 
     // --- MODE A: HOW TO PLAY (From Main Menu) ---
     document.getElementById("btn-tutorial").addEventListener("click", () => {
@@ -616,11 +616,11 @@ const Game = {
 
     // 5. Play Again
     document.getElementById("play-again-btn").addEventListener("click", () => {
-        UI.toggleScreen("end", false);
-        UI.toggleScreen("start", true);
-        UI.toggleScreen("overlay", true);
-        UI.elm.overlay.classList.add("solid-bg");
-      });
+      UI.toggleScreen("end", false);
+      UI.toggleScreen("start", true);
+      UI.toggleScreen("overlay", true);
+      UI.elm.overlay.classList.add("solid-bg");
+    });
 
     // 6. Game Input
     UI.elm.input.addEventListener("input", (e) => {
