@@ -1,8 +1,3 @@
-/**
- * PINYIN MAJHONG GAME
- * Final Script: Consolidated Overlay + Streak Fixes + Custom Keyboard
- */
-
 // ==============================
 // 1. DATA MODULE
 // ==============================
@@ -98,13 +93,12 @@ const VocabData = {
 const Visuals = {
   // 0: Grey-Green, 1: Gold, 2: Orange, 3: Neon Blue...
   colors: [
-    "#8fbc8f",
-    "#ffd700",
-    "#ff4500",
-    "#00f3ff",
-    "#ff0055",
-    "#8a2be2",
-    "#00ff7f",
+    "#ebf99e", // 1x - light yellow
+    "#ff4500", // 3x - Orange
+    "#00f3ff", // 4x - Neon Blue
+    "#ff0055", // 5x - Neon Pink
+    "#8a2be2", // 6x - Purple
+    "#00ff7f", // 7x - Spring Green
   ],
 
   getLevelColor(level) {
@@ -231,7 +225,7 @@ const UI = {
     streakInner: document.getElementById("streak-inner"),
     streakFill: document.getElementById("streak-fill"),
     multText: document.getElementById("mult-text"),
-    streakCount: document.getElementById("streak-count"), // Matches HTML
+    streakCount: document.getElementById("streak-count"),
     tilesWrapper: document.getElementById("tiles-wrapper"),
     input: document.getElementById("pinyin-input"),
     mobileDisplay: document.getElementById("mobile-input-display"),
@@ -254,8 +248,7 @@ const UI = {
       return;
     }
 
-    // Handle standard screens (Start, End)
-    let element = this.elm[screen + "Screen"];
+    const element = this.elm[screen + "Screen"];
     if (element) {
       if (show) {
         element.classList.remove("hidden");
@@ -279,12 +272,19 @@ const UI = {
   },
 
   updateStreak(multiplier, progressPct, holdingFull) {
-    // 1. Update Text & Colors
-    this.elm.multText.innerText = multiplier + "x";
+    // 1. Determine Colors
     const currColor = Visuals.getLevelColor(multiplier);
-    this.elm.multText.style.color = currColor;
+    // Prev Color is what sits behind the fill (creating the "fill over" effect)
+    const prevColor =
+      multiplier >= 2
+        ? Visuals.getLevelColor(multiplier - 1)
+        : "rgba(0,0,0,0.35)";
 
-    // Safety check for streak count element
+    // 2. Update Text Colors (Matches Background/Previous Level)
+    this.elm.multText.innerText = multiplier + "x";
+    this.elm.multText.style.color = multiplier === 1 ? "#ffffff" : prevColor;
+
+    // Update Counter
     if (this.elm.streakCount) {
       const currentCount = Math.round(
         (progressPct / 100) * Game.config.itemsPerLevel
@@ -292,7 +292,20 @@ const UI = {
       this.elm.streakCount.innerText = `${currentCount}/${Game.config.itemsPerLevel}`;
     }
 
-    // 2. Bar Fill Logic
+    // 3. Handle Visual Transition Snap
+    // If we are resetting to 0% (level up), we want instant snap to background
+    const isLevelReset = progressPct === 0 && multiplier > 1;
+
+    if (isLevelReset) {
+      this.elm.streakFill.style.transition = "none";
+      this.elm.streakInner.style.transition = "none";
+    } else {
+      // Restore CSS defined transitions
+      this.elm.streakFill.style.transition = "";
+      this.elm.streakInner.style.transition = "";
+    }
+
+    // 4. Apply Colors & Size
     const useHorizontal = this.isSmallScreen();
     const fillProp = useHorizontal ? "width" : "height";
     const resetProp = useHorizontal ? "height" : "width";
@@ -300,12 +313,15 @@ const UI = {
     this.elm.streakFill.style[fillProp] = `${progressPct}%`;
     this.elm.streakFill.style[resetProp] = "100%";
 
-    const prevColor =
-      multiplier >= 3 ? Visuals.getLevelColor(multiplier) : "rgba(0,0,0,0.35)";
     this.elm.streakFill.style.background = currColor;
     this.elm.streakInner.style.backgroundColor = prevColor;
 
-    // 3. Glow Effects
+    // Force Reflow if resetting
+    if (isLevelReset) {
+      void this.elm.streakFill.offsetWidth;
+    }
+
+    // 5. Glow Effects
     if (progressPct >= 100) {
       this.elm.streakContainer.style.boxShadow = `0 0 18px ${Visuals.colorToRgba(
         currColor,
@@ -326,7 +342,7 @@ const UI = {
       this.elm.streakContainer.style.borderColor = "";
     }
 
-    // 4. PROGRESSIVE SHAKE LOGIC
+    // 6. Progressive Shake
     this.elm.streakContainer.classList.remove(
       "shake-lvl-1",
       "shake-lvl-2",
@@ -335,7 +351,6 @@ const UI = {
     );
 
     let shakeLevel = 0;
-
     if (multiplier === 1) {
       if (progressPct >= 100) shakeLevel = 3;
       else if (progressPct >= 75) shakeLevel = 2;
