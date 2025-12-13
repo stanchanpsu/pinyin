@@ -608,6 +608,32 @@ const Game = {
       });
     });
 
+    // --- MODE C: ABOUT (From Main Menu) ---
+    const aboutOverlay = document.getElementById("about-overlay");
+    const btnAbout = document.getElementById("btn-about");
+    const btnAboutClose = document.getElementById("btn-about-close");
+
+    if (btnAbout) {
+      btnAbout.addEventListener("click", () => {
+        aboutOverlay.classList.remove("hidden");
+      });
+    }
+
+    if (btnAboutClose) {
+      btnAboutClose.addEventListener("click", () => {
+        aboutOverlay.classList.add("hidden");
+      });
+    }
+
+    // Optional: Close About when clicking outside the box
+    if (aboutOverlay) {
+      aboutOverlay.addEventListener("click", (e) => {
+        if (e.target === aboutOverlay) {
+          aboutOverlay.classList.add("hidden");
+        }
+      });
+    }
+
     // 4. REAL START LISTENER (Inside Overlay)
     if (btnStart) {
       btnStart.addEventListener("click", () => {

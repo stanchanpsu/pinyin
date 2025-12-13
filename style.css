@@ -615,6 +615,92 @@ input#pinyin-input:focus {
   pointer-events: none;
 }
 
+/* --- About Overlay Specifics --- */
+#about-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 55;
+  transition: opacity 0.3s;
+}
+
+#about-overlay.hidden {
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#about-overlay .tutorial-text {
+  text-align: left; /* 1. Left Align */
+  padding: 0 10px; /* Add a little breathing room on sides */
+}
+
+#about-overlay p {
+  font-weight: 400; /* 2. Less Bold (Regular) */
+  color: #e0e0e0; /* Slightly softer white for reading */
+  line-height: 1.6; /* Easier to read */
+}
+
+.about-actions {
+  display: flex;
+  flex-direction: row; /* Align side-by-side */
+  gap: 15px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.action-btn {
+  flex: 1; /* Both buttons take equal width */
+  padding: 10px 5px; /* Smaller padding */
+  border-radius: 8px;
+  text-decoration: none;
+  font-family: "Rubik", sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem; /* Smaller font */
+  text-transform: uppercase;
+  text-align: center;
+  transition: all 0.2s ease;
+
+  /* "Ghost" Style: Dark background, Colored Border */
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid transparent;
+  box-shadow: none; /* No heavy 3D shadow */
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.action-btn:active {
+  transform: translateY(1px);
+}
+
+/* Coffee: Gold Outline */
+.action-btn.coffee {
+  color: #ffd700;
+  border-color: #ffd700;
+}
+.action-btn.coffee:hover {
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
+}
+
+/* Feedback: Cyan Outline */
+.action-btn.feedback {
+  color: #00f3ff;
+  border-color: #00f3ff;
+}
+.action-btn.feedback:hover {
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
+}
+
 /* Ensure buttons hide correctly */
 .close-x.hidden,
 .start-screen-btn.hidden {
