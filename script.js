@@ -1,3 +1,80 @@
+const AudioEngine = {
+  ctx: null,
+
+  init() {
+    if (!this.ctx) {
+      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    } else if (this.ctx.state === "suspended") {
+      this.ctx.resume();
+    }
+  },
+
+  playCorrect() {
+    if (!this.ctx) this.init();
+
+    const t = this.ctx.currentTime;
+    const masterVol = 0.2; // Overall volume control
+
+    // --- SOUND 1: The "Cha" (Short, slightly lower) ---
+    const osc1 = this.ctx.createOscillator();
+    const gain1 = this.ctx.createGain();
+
+    osc1.type = "sine";
+    osc1.frequency.value = 1200; // First bell pitch
+
+    osc1.connect(gain1);
+    gain1.connect(this.ctx.destination);
+
+    // Envelope 1: Fast decay (The mechanical click/first ring)
+    gain1.gain.setValueAtTime(0, t);
+    gain1.gain.linearRampToValueAtTime(masterVol, t + 0.01);
+    gain1.gain.exponentialRampToValueAtTime(0.001, t + 0.1); // Stops quickly
+
+    osc1.start(t);
+    osc1.stop(t + 0.15);
+
+    // --- SOUND 2: The "Ching!" (Higher, long ring, delayed) ---
+    // We start this 80ms (0.08s) after the first one
+    const osc2 = this.ctx.createOscillator();
+    const gain2 = this.ctx.createGain();
+
+    osc2.type = "sine";
+    osc2.frequency.value = 2000; // Higher bell pitch
+
+    osc2.connect(gain2);
+    gain2.connect(this.ctx.destination);
+
+    // Envelope 2: Long metallic decay
+    gain2.gain.setValueAtTime(0, t + 0.08); // Start slightly later
+    gain2.gain.linearRampToValueAtTime(masterVol, t + 0.09);
+    gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.8); // Long ring out
+
+    osc2.start(t + 0.08);
+    osc2.stop(t + 0.85);
+  },
+
+  playIncorrect() {
+    if (!this.ctx) this.init();
+
+    const t = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    // Low "Thud"
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(120, t);
+    osc.frequency.linearRampToValueAtTime(80, t + 0.15);
+
+    gain.gain.setValueAtTime(0.2, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+
+    osc.start(t);
+    osc.stop(t + 0.25);
+  },
+};
 const Visuals = {
   // 0: Grey-Green, 1: Gold, 2: Orange, 3: Neon Blue...
   colors: [
@@ -512,6 +589,7 @@ const Game = {
     // 4. REAL START LISTENER (Inside Overlay)
     if (btnStart) {
       btnStart.addEventListener("click", () => {
+        AudioEngine.init();
         rulesOverlay.classList.add("hidden");
         this.start(pendingLevel);
       });
@@ -685,6 +763,7 @@ const Game = {
 
   skipWord() {
     if (this.state.isTransitioning) return;
+    AudioEngine.playIncorrect();
     this.state.isTransitioning = true;
     clearInterval(this.timers.word);
 
@@ -706,6 +785,8 @@ const Game = {
 
   handleCorrect() {
     clearInterval(this.timers.word);
+    AudioEngine.playCorrect();
+
     this.state.isTransitioning = true;
     this.state.answeredIndices.add(this.state.currentIndex);
 
@@ -744,6 +825,8 @@ const Game = {
 
   handleIncorrect() {
     if (!this.state.isActive) return;
+    AudioEngine.playIncorrect();
+
     this.state.isTransitioning = true;
     clearInterval(this.timers.word);
 
