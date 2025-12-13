@@ -434,7 +434,7 @@ input#pinyin-input:focus {
 }
 
 /* --- Main Menu Buttons (Vertical Stack) --- */
-.level-btn {
+.start-screen-btn {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -453,23 +453,23 @@ input#pinyin-input:focus {
   font-weight: 700;
 }
 
-.level-btn:active {
+.start-screen-btn:active {
   transform: translateY(6px);
   box-shadow: 0 0 0 #c69500, inset 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.level-btn:hover {
+.start-screen-btn:hover {
   transform: translateY(-2px);
   background: #ffe032;
 }
 
-.level-btn.secondary {
+.start-screen-btn.secondary {
   background: linear-gradient(145deg, #ffffff, #e6e6e6);
   color: var(--felt-dark);
   box-shadow: 0 6px 0 #bbb, 0 10px 10px rgba(0, 0, 0, 0.3);
 }
 
-.level-btn.secondary:active {
+.start-screen-btn.secondary:active {
   box-shadow: 0 0 0 #bbb, inset 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
@@ -617,7 +617,7 @@ input#pinyin-input:focus {
 
 /* Ensure buttons hide correctly */
 .close-x.hidden,
-.level-btn.hidden {
+.start-screen-btn.hidden {
   display: none !important;
 }
 
