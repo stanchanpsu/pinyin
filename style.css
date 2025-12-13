@@ -460,7 +460,7 @@ input#pinyin-input:focus {
 
 .level-btn:hover {
   transform: translateY(-2px);
-  background: white;
+  background: #ffe032;
 }
 
 .level-btn.secondary {
