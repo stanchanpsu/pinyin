@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@700&family=Roboto+Mono:wght@500&family=Rubik:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@700&family=Roboto+Mono:wght@500&family=Rubik:wght@400;700&display=swap");
 
 :root {
   /* Colors */
@@ -13,7 +13,9 @@
   --neon-orange: #ff4500;
 }
 
-/* --- Base --- */
+/* =========================================
+   1. BASE & LAYOUT
+   ========================================= */
 html {
   height: 100%;
   overflow: hidden; /* Strict scroll locking */
@@ -22,11 +24,8 @@ html {
 body {
   margin: 0;
   width: 100%;
-
-  /* Lock Body to Viewport */
   height: 100vh;
-  height: 100dvh;
-
+  height: 100dvh; /* Mobile viewport fix */
   overflow: hidden;
   background: radial-gradient(
     circle at center,
@@ -40,12 +39,16 @@ body {
   color: white;
   touch-action: none;
   -webkit-tap-highlight-color: transparent;
-  position: fixed; /* Fixes "bounce" on iOS */
+  position: fixed;
   top: 0;
   left: 0;
 }
 
-/* Generic Button (used for Play Again) */
+.hidden {
+  display: none !important;
+}
+
+/* Generic Button Defaults (Overridden by specific classes later) */
 button {
   padding: 15px 40px;
   font-size: 1.5rem;
@@ -59,15 +62,14 @@ button {
   box-shadow: 0 0 20px var(--neon-pink);
   transition: transform 0.2s;
 }
-button:hover {
+/* Only scale generic buttons, not pause buttons */
+button:not(.pause-btn):not(#pause-overlay button):hover {
   transform: scale(1.1);
 }
 
-.hidden {
-  display: none !important;
-}
-
-/* --- UI Overlay --- */
+/* =========================================
+   2. TOP UI LAYER (Score, Pause, Timer)
+   ========================================= */
 #ui-layer {
   position: absolute;
   top: 20px;
@@ -75,8 +77,13 @@ button:hover {
   right: 20px;
   display: flex;
   justify-content: space-between;
-  pointer-events: none;
+  align-items: center; /* Vertically center */
+  pointer-events: none; /* Let clicks pass through empty space */
   z-index: 10;
+}
+
+#ui-layer > * {
+  pointer-events: auto; /* Re-enable clicks on content */
 }
 
 .score-box,
@@ -89,7 +96,36 @@ button:hover {
   font-family: "Roboto Mono", monospace;
 }
 
-/* --- Streak Bar --- */
+/* Round Icon Button (Pause) */
+.icon-btn {
+  background: transparent;
+  border: transparent;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: white;
+  font-family: "Roboto Mono", monospace;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  box-shadow: 0 4px 6px transparent;
+  font-size: 1rem;
+}
+.icon-btn:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.2);
+}
+.icon-pause {
+  letter-spacing: -1px;
+  font-weight: 900;
+}
+
+/* =========================================
+   3. STREAK BAR
+   ========================================= */
 #streak-wrapper {
   position: absolute;
   left: 50px;
@@ -111,7 +147,7 @@ button:hover {
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
   overflow: visible;
   position: relative;
-  transition: border-color 0.3s ease; /* Removed transform transition */
+  transition: border-color 0.3s ease;
 }
 
 #streak-inner {
@@ -137,13 +173,12 @@ button:hover {
 .multiplier-text {
   font-size: 2rem;
   font-weight: 800;
-  color: white; /* Will be overridden by JS */
+  color: white;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
   font-family: "Roboto Mono", monospace;
   margin-top: 5px;
 }
 
-/* NEW: Streak Counter Style */
 #streak-count {
   font-family: "Roboto Mono", monospace;
   font-size: 1rem;
@@ -151,7 +186,9 @@ button:hover {
   font-weight: bold;
 }
 
-/* --- Game Area --- */
+/* =========================================
+   4. GAME AREA & TILES
+   ========================================= */
 #game-area {
   display: flex;
   flex-direction: column;
@@ -188,7 +225,7 @@ button:hover {
   user-select: none;
 }
 
-/* --- Input Area --- */
+/* Input Wrapper */
 .input-wrapper {
   position: relative;
   width: 320px;
@@ -215,7 +252,7 @@ input#pinyin-input:focus {
   box-shadow: 0 0 15px var(--neon-gold);
 }
 
-/* --- Timers --- */
+/* Timer Bar (Bottom) */
 #timer-container {
   position: fixed;
   bottom: 0;
@@ -234,17 +271,16 @@ input#pinyin-input:focus {
   transform-origin: left;
 }
 
-/* --- Overlays --- */
+/* =========================================
+   5. OVERLAYS (Start, Levels, Rules, About)
+   ========================================= */
 #overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-
   background: transparent;
-
-  /* Keep layout logic */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -262,178 +298,26 @@ input#pinyin-input:focus {
   transition: opacity 0.3s ease;
 }
 
-.menu-view.hidden {
-  display: none;
-}
-
-.select-text {
-  color: rgba(255, 255, 255, 0.7);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-size: 0.9rem;
-  margin-bottom: 5px;
-}
-
-/* --- Logo & Title --- */
-.logo-wrapper {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 10px;
-  justify-content: center;
-}
-
-.logo-tile {
-  width: 80px;
-  height: 110px;
-  font-size: 3.5rem;
-  transform: rotateX(10deg);
-  animation: float 3s ease-in-out infinite;
-  background: var(--tile-face);
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: "Noto Sans SC", sans-serif;
-  font-weight: 700;
-  color: #b00;
-  box-shadow: 1px 1px 0 #ccc, 2px 2px 0 #ccc, 4px 4px 0 var(--felt-dark),
-    10px 10px 20px rgba(0, 0, 0, 0.5);
-}
-
-.logo-tile:nth-child(2) {
-  animation-delay: 1.5s; /* Offset float */
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0) rotateX(10deg);
-  }
-  50% {
-    transform: translateY(-10px) rotateX(10deg);
-  }
-}
-
-.game-title {
-  font-size: 1.5rem;
-  letter-spacing: 8px;
-  color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 20px;
-  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.5);
-}
-
-/* --- Level Select: Majong Grid --- */
-.majong-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin: 10px 0 20px 0;
-}
-
-.majong-btn {
-  width: 80px;
-  height: 110px;
-  background: var(--tile-face);
-  border: none;
-  border-radius: 8px;
-  position: relative;
-  cursor: pointer;
+/* Start Screen Styles */
+#start-screen {
+  background: radial-gradient(
+    circle at center,
+    var(--felt-green),
+    var(--felt-dark)
+  );
+  z-index: 2;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding: 0;
-  box-shadow: 1px 1px 0 #ccc, 2px 2px 0 #ccc, 3px 3px 0 #ccc,
-    4px 4px 0 var(--felt-dark), 8px 8px 15px rgba(0, 0, 0, 0.4);
-  transition: transform 0.1s, box-shadow 0.1s;
+  justify-content: center;
+  gap: 20px;
 }
 
-.majong-btn:active:not(.disabled) {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0 #ccc, 2px 2px 0 var(--felt-dark),
-    inset 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.majong-btn:hover:not(.disabled) {
-  filter: brightness(1.05);
-}
-
-/* Text Styling: Felt Green */
-.m-label {
-  font-family: "Rubik", sans-serif;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--felt-green);
-  text-transform: uppercase;
-  margin-bottom: -5px;
-}
-
-.m-char {
-  font-family: "Noto Sans SC", sans-serif;
-  font-size: 3rem;
-  font-weight: 700;
-  color: var(--felt-green);
-  line-height: 1;
-}
-
-/* Disabled State */
-.majong-btn.disabled {
-  cursor: default;
-  background: #e0e0e0;
-  box-shadow: 1px 1px 0 #bbb, 2px 2px 0 #bbb, 3px 3px 0 #888;
-}
-
-.majong-btn.disabled .m-label,
-.majong-btn.disabled .m-char {
-  color: #999;
-  opacity: 0.6;
-}
-
-.m-soon {
-  position: absolute;
-  bottom: 5px;
-  font-size: 0.6rem;
-  background: #666;
-  color: white;
-  padding: 2px 6px;
-  border-radius: 4px;
-  text-transform: uppercase;
-  font-family: sans-serif;
-  letter-spacing: 1px;
-}
-
-/* --- Back Button Styling --- */
-.back-btn {
-  margin-top: 10px;
-  padding: 12px 50px;
-  background: rgba(0, 0, 0, 0.25);
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  border-radius: 50px;
-  color: white;
-  font-family: "Rubik", sans-serif;
-  font-weight: 700;
-  font-size: 1.1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-.back-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-}
-
-.back-btn:active {
-  transform: translateY(1px);
-  background: rgba(0, 0, 0, 0.4);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-/* --- Main Menu Buttons (Vertical Stack) --- */
 .start-screen-btn {
   width: 100%;
   display: flex;
@@ -452,12 +336,10 @@ input#pinyin-input:focus {
   font-size: 1.5rem;
   font-weight: 700;
 }
-
 .start-screen-btn:active {
   transform: translateY(6px);
   box-shadow: 0 0 0 #c69500, inset 0 2px 5px rgba(0, 0, 0, 0.2);
 }
-
 .start-screen-btn:hover {
   transform: translateY(-2px);
   background: #ffe032;
@@ -468,11 +350,152 @@ input#pinyin-input:focus {
   color: var(--felt-dark);
   box-shadow: 0 6px 0 #bbb, 0 10px 10px rgba(0, 0, 0, 0.3);
 }
-
 .start-screen-btn.secondary:active {
   box-shadow: 0 0 0 #bbb, inset 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
+/* Logo Animation */
+.logo-wrapper {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 10px;
+  justify-content: center;
+}
+.logo-tile {
+  width: 80px;
+  height: 110px;
+  font-size: 3.5rem;
+  transform: rotateX(10deg);
+  animation: float 3s ease-in-out infinite;
+  background: var(--tile-face);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Noto Sans SC", sans-serif;
+  font-weight: 700;
+  color: #b00;
+  box-shadow: 1px 1px 0 #ccc, 2px 2px 0 #ccc, 4px 4px 0 var(--felt-dark),
+    10px 10px 20px rgba(0, 0, 0, 0.5);
+}
+.logo-tile:nth-child(2) {
+  animation-delay: 1.5s;
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotateX(10deg);
+  }
+  50% {
+    transform: translateY(-10px) rotateX(10deg);
+  }
+}
+.game-title {
+  font-size: 1.5rem;
+  letter-spacing: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 20px;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Level Selection Grid */
+.majong-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin: 10px 0 20px 0;
+}
+.majong-btn {
+  width: 80px;
+  height: 110px;
+  background: var(--tile-face);
+  border: none;
+  border-radius: 8px;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  box-shadow: 1px 1px 0 #ccc, 2px 2px 0 #ccc, 3px 3px 0 #ccc,
+    4px 4px 0 var(--felt-dark), 8px 8px 15px rgba(0, 0, 0, 0.4);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.majong-btn:active:not(.disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #ccc, 2px 2px 0 var(--felt-dark),
+    inset 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.majong-btn:hover:not(.disabled) {
+  filter: brightness(1.05);
+}
+.majong-btn.disabled {
+  cursor: default;
+  background: #e0e0e0;
+  box-shadow: 1px 1px 0 #bbb, 2px 2px 0 #bbb, 3px 3px 0 #888;
+}
+.m-label {
+  font-family: "Rubik", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--felt-green);
+  text-transform: uppercase;
+  margin-bottom: -5px;
+}
+.m-char {
+  font-family: "Noto Sans SC", sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--felt-green);
+  line-height: 1;
+}
+.majong-btn.disabled .m-label,
+.majong-btn.disabled .m-char {
+  color: #999;
+  opacity: 0.6;
+}
+.m-soon {
+  position: absolute;
+  bottom: 5px;
+  font-size: 0.6rem;
+  background: #666;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-family: sans-serif;
+  letter-spacing: 1px;
+}
+.back-btn {
+  margin-top: 10px;
+  padding: 12px 50px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50px;
+  color: white;
+  font-family: "Rubik", sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+.back-btn:active {
+  transform: translateY(1px);
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Shared Modal/Overlay Content */
 .tutorial-content {
   background: #1a1a1a;
   border: 2px solid var(--neon-gold);
@@ -485,7 +508,22 @@ input#pinyin-input:focus {
   text-align: center;
   color: #eee;
 }
-
+.tutorial-content h2 {
+  color: var(--neon-gold);
+  margin-bottom: 20px;
+  font-size: 2rem;
+}
+.tutorial-content h3 {
+  color: var(--neon-blue);
+  margin: 20px 0 10px;
+  font-size: 1.2rem;
+}
+.tutorial-content p {
+  color: #ccc;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 5px;
+}
 .close-x {
   position: absolute;
   top: 15px;
@@ -504,24 +542,86 @@ input#pinyin-input:focus {
   transform: none;
 }
 
-.tutorial-content h2 {
-  color: var(--neon-gold);
-  margin-bottom: 20px;
-  font-size: 2rem;
+/* Rules & About Specifics */
+#rules-overlay,
+#about-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 55;
+  transition: opacity 0.3s;
 }
-.tutorial-content h3 {
-  color: var(--neon-blue);
-  margin: 20px 0 10px;
-  font-size: 1.2rem;
-}
-.tutorial-content p {
-  color: #ccc;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin-bottom: 5px;
+#rules-overlay.hidden,
+#about-overlay.hidden {
+  display: none;
+  opacity: 0;
+  pointer-events: none;
 }
 
-/* Mockup Visuals */
+/* About Text Alignment */
+#about-overlay .tutorial-text {
+  text-align: left;
+  padding: 0 10px;
+}
+#about-overlay p {
+  font-weight: 400;
+  color: #e0e0e0;
+  line-height: 1.6;
+}
+
+/* About Action Buttons */
+.about-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  width: 100%;
+  margin-top: 20px;
+}
+.action-btn {
+  flex: 1;
+  padding: 10px 5px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-family: "Rubik", sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  text-align: center;
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid transparent;
+  box-shadow: none;
+}
+.action-btn:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.15);
+}
+.action-btn:active {
+  transform: translateY(1px);
+}
+.action-btn.coffee {
+  color: #ffd700;
+  border-color: #ffd700;
+}
+.action-btn.coffee:hover {
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
+}
+.action-btn.feedback {
+  color: #00f3ff;
+  border-color: #00f3ff;
+}
+.action-btn.feedback:hover {
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
+}
+
+/* Mockups for Help */
 .mockup-container {
   background: radial-gradient(circle, var(--felt-green), var(--felt-dark));
   padding: 20px;
@@ -532,13 +632,11 @@ input#pinyin-input:focus {
   gap: 15px;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
-
 .mockup-tiles-row {
   display: flex;
   gap: 10px;
   justify-content: center;
 }
-
 .mockup-tile {
   width: 60px;
   height: 80px;
@@ -554,7 +652,6 @@ input#pinyin-input:focus {
   box-shadow: 2px 2px 0 #ccc, 4px 4px 0 rgba(0, 0, 0, 0.5);
   transform: rotateX(10deg);
 }
-
 .mockup-input {
   background: rgba(0, 0, 0, 0.5);
   border: 1px solid var(--neon-gold);
@@ -564,8 +661,6 @@ input#pinyin-input:focus {
   font-family: "Roboto Mono", monospace;
   font-size: 1.1rem;
 }
-
-/* Tone Grid */
 .tone-grid {
   display: flex;
   justify-content: center;
@@ -584,132 +679,85 @@ input#pinyin-input:focus {
   margin-right: 5px;
 }
 
-.sub-text {
-  font-size: 0.8rem !important;
-  opacity: 0.7;
-  font-style: italic;
-}
-
-/* --- Consolidated Rules Overlay --- */
-#rules-overlay {
+/* =========================================
+   6. PAUSE OVERLAY & BUTTONS
+   ========================================= */
+#pause-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-
-  /* Semi-transparent black */
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(5px);
-
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 50;
-  transition: opacity 0.3s;
+  z-index: 200;
 }
-
-#rules-overlay.hidden {
+#pause-overlay.hidden {
   display: none;
-  opacity: 0;
-  pointer-events: none;
 }
-
-/* --- About Overlay Specifics --- */
-#about-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(5px);
+.pause-menu-grid {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 55;
-  transition: opacity 0.3s;
-}
-
-#about-overlay.hidden {
-  display: none;
-  opacity: 0;
-  pointer-events: none;
-}
-
-#about-overlay .tutorial-text {
-  text-align: left; /* 1. Left Align */
-  padding: 0 10px; /* Add a little breathing room on sides */
-}
-
-#about-overlay p {
-  font-weight: 400; /* 2. Less Bold (Regular) */
-  color: #e0e0e0; /* Slightly softer white for reading */
-  line-height: 1.6; /* Easier to read */
-}
-
-.about-actions {
-  display: flex;
-  flex-direction: row; /* Align side-by-side */
-  gap: 15px;
+  flex-direction: column;
+  gap: 12px;
   width: 100%;
-  margin-top: 20px;
 }
 
-.action-btn {
-  flex: 1; /* Both buttons take equal width */
-  padding: 10px 5px; /* Smaller padding */
-  border-radius: 8px;
-  text-decoration: none;
+/* PAUSE BUTTON SPECIFICS */
+/* By targeting #pause-overlay button, we stop the scale animation */
+#pause-overlay button,
+.pause-btn {
+  /* Override the generic button animation */
+  transform: none !important;
+  transition: none !important;
+
+  /* Flat, non-glowing look */
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.5) !important;
+  border: none;
   font-family: "Rubik", sans-serif;
   font-weight: 700;
-  font-size: 0.85rem; /* Smaller font */
   text-transform: uppercase;
-  text-align: center;
-  transition: all 0.2s ease;
-
-  /* "Ghost" Style: Dark background, Colored Border */
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px solid transparent;
-  box-shadow: none; /* No heavy 3D shadow */
+  border-radius: 12px;
 }
 
-.action-btn:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.15);
+#pause-overlay button:hover,
+.pause-btn:hover {
+  /* Prevent growth */
+  transform: none !important;
+  filter: brightness(1.1); /* Subtle highlight only */
 }
 
-.action-btn:active {
-  transform: translateY(1px);
+#pause-overlay button:active,
+.pause-btn:active {
+  /* Physical press down effect */
+  box-shadow: none !important;
+  transform: translateY(4px) !important;
 }
 
-/* Coffee: Gold Outline */
-.action-btn.coffee {
-  color: #ffd700;
-  border-color: #ffd700;
+/* Specific button colors in pause menu */
+#pause-overlay #btn-resume {
+  background: var(--neon-blue);
+  color: #00444d;
+  filter: brightness(0.9);
 }
-.action-btn.coffee:hover {
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
+#pause-overlay #btn-exit {
+  background: #ff4500;
+  color: white;
+  margin-top: 10px;
+  filter: brightness(0.9);
 }
+/* Others (Sound, Help, Restart) inherit the generic pink or secondary gray 
+   but get the flat button physics applied above. */
 
-/* Feedback: Cyan Outline */
-.action-btn.feedback {
-  color: #00f3ff;
-  border-color: #00f3ff;
-}
-.action-btn.feedback:hover {
-  box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
-}
-
-/* Ensure buttons hide correctly */
-.close-x.hidden,
-.start-screen-btn.hidden {
-  display: none !important;
-}
-
-/* --- Start/End Screen Layout --- */
-#start-screen,
+/* =========================================
+   7. END SCREEN
+   ========================================= */
 #end-screen {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(5px);
+  z-index: 2;
   position: absolute;
   top: 0;
   left: 0;
@@ -721,39 +769,359 @@ input#pinyin-input:focus {
   justify-content: center;
   gap: 20px;
 }
-
-/* 1. Start Screen: Solid Felt Background */
-#start-screen {
-  background: radial-gradient(
-    circle at center,
-    var(--felt-green),
-    var(--felt-dark)
-  );
-  z-index: 2;
+.end-header {
+  flex-shrink: 0;
+  text-align: center;
+  margin-bottom: 10px;
 }
-
-/* 2. End Screen: Translucent Black Background */
-#end-screen {
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(5px);
-  z-index: 2;
+.end-stats-row {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 10px;
 }
-
-h1 {
-  font-size: 3rem;
-  color: var(--neon-gold);
-  margin: 0;
+.stat-badge {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+.stat-label {
+  font-size: 0.75rem;
+  color: #aaa;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  letter-spacing: 5px;
 }
-p {
-  color: #e8e8e8;
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin: 0;
+.stat-val {
+  font-family: "Roboto Mono", monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--neon-gold);
 }
 
-/* --- Particles & Effects --- */
+/* Results List */
+.results-container {
+  display: flex;
+  gap: 15px;
+  width: 90%;
+  max-width: 600px;
+  height: 50vh;
+  margin-bottom: 15px;
+}
+.result-col {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+.result-col h3 {
+  margin: 0;
+  padding: 12px;
+  text-align: center;
+  font-size: 1rem;
+  text-transform: uppercase;
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.col-correct h3 {
+  color: #00ff7f;
+}
+.col-missed h3 {
+  color: #ff4500;
+}
+.word-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+.word-list::-webkit-scrollbar {
+  width: 6px;
+}
+.word-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+.word-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+.col-correct .word-item {
+  border-left: 3px solid #00ff7f;
+}
+.col-missed .word-item {
+  border-left: 3px solid #ff4500;
+}
+.ch {
+  font-family: "Noto Sans SC", sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.py {
+  font-family: "Roboto Mono", monospace;
+  opacity: 0.8;
+}
+
+/* =========================================
+   8. MOBILE KEYBOARD & INPUT
+   ========================================= */
+.mobile-input-display,
+.onscreen-keyboard {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  body {
+    align-items: flex-start;
+  }
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  /* Adjust header for mobile */
+  #ui-layer {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+  }
+
+  /* Streak vertical stack */
+  #streak-wrapper {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: auto;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    z-index: 20;
+  }
+  #streak-container {
+    width: 100%;
+    height: 16px;
+    border-radius: 8px;
+  }
+  .multiplier-text {
+    font-size: 1.2rem;
+    width: auto;
+    text-align: center;
+    margin: 0;
+    line-height: 1;
+  }
+  #streak-count {
+    font-size: 0.9rem;
+    line-height: 1;
+  }
+
+  /* Game Area Placement */
+  #game-area {
+    position: absolute;
+    top: 75px;
+    left: 0;
+    width: 100%;
+    height: calc(55% - 85px);
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+  }
+  #tiles-wrapper {
+    margin-bottom: 5px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .majong-tile {
+    width: 82px;
+    height: 110px;
+    font-size: 3.8rem;
+    margin: 4px;
+    box-shadow: 1px 1px 0 #ccc, 2px 2px 0 #ccc, 3px 3px 0 var(--felt-dark);
+  }
+  .input-wrapper {
+    width: 92%;
+  }
+  input#pinyin-input {
+    display: none;
+  }
+
+  /* Mobile Display Box */
+  .mobile-input-display {
+    display: block;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    padding: 6px;
+    border-radius: 8px;
+    text-align: center;
+    font-family: "Roboto Mono", monospace;
+    font-size: 1.3rem;
+    min-height: 1.5em;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Keyboard */
+  .onscreen-keyboard {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 45%;
+    background: rgba(10, 20, 15, 0.98);
+    padding: 4px;
+    box-sizing: border-box;
+    z-index: 100;
+    padding-bottom: max(5px, env(safe-area-inset-bottom));
+  }
+  .onscreen-keyboard .row {
+    display: flex;
+    width: 100%;
+    flex: 1;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+  .onscreen-keyboard .key {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 6px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    box-shadow: 0 5px 0 rgba(0, 0, 0, 0.5);
+    transition: all 0.05s ease;
+    top: 0;
+    -webkit-tap-highlight-color: transparent;
+    /* Prevent shrinking */
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      sans-serif;
+  }
+
+  /* Key Pressed State (via JS class) */
+  .onscreen-keyboard .key.pressed {
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    top: 5px;
+    transform: scale(0.98);
+  }
+  .onscreen-keyboard .row.r0 .key.pressed {
+    background: rgba(255, 215, 0, 0.3);
+  }
+  .onscreen-keyboard .key.special {
+    background: rgba(255, 90, 120, 0.25);
+    font-size: 1.1rem;
+    flex: 1.5;
+    min-width: 45px;
+  }
+  .onscreen-keyboard .key.special.pressed {
+    background: rgba(255, 90, 120, 0.4);
+  }
+  .onscreen-keyboard .row.r0 .key {
+    background: rgba(255, 215, 0, 0.15);
+    color: var(--neon-gold);
+  }
+  .onscreen-keyboard .row.r0 .key:last-child {
+    background: rgba(0, 243, 255, 0.2);
+    color: var(--neon-blue);
+    flex: 1.5;
+    font-size: 1rem;
+  }
+  .onscreen-keyboard .row.r0 .key:last-child.pressed {
+    background: rgba(0, 243, 255, 0.35);
+  }
+
+  /* Result container adjustments */
+  .results-container {
+    flex-direction: column;
+    height: 55vh;
+  }
+  .stat-badge {
+    min-width: 60px;
+    padding: 5px 10px;
+  }
+  .stat-val {
+    font-size: 1.1rem;
+  }
+  #end-screen button {
+    margin-bottom: 20px;
+    flex-shrink: 0;
+  }
+}
+
+/* =========================================
+   9. COMPACT MODE (iPhone SE, Mini)
+   ========================================= */
+@media screen and (max-height: 750px), screen and (max-width: 380px) {
+  #game-area {
+    top: 60px !important;
+    height: calc(50% - 60px) !important;
+    gap: 15px !important;
+  }
+  .majong-tile {
+    width: 60px !important;
+    height: 80px !important;
+    font-size: 2.8rem !important;
+    border-radius: 6px !important;
+    box-shadow: 1px 1px 0 #ccc, 2px 2px 0 #ccc, 3px 3px 0 var(--felt-dark) !important;
+  }
+  .mobile-input-display {
+    padding: 4px !important;
+    font-size: 1.1rem !important;
+    min-height: 1.4em !important;
+  }
+  .onscreen-keyboard {
+    height: 42% !important;
+    padding-bottom: 2px !important;
+  }
+  .onscreen-keyboard .key {
+    border-radius: 4px !important;
+    font-size: 1.2rem !important;
+    margin-bottom: 2px !important;
+  }
+  #ui-layer {
+    top: 5px !important;
+    left: 10px !important;
+    right: 10px !important;
+  }
+  .score-box,
+  .timer-box {
+    font-size: 1rem !important;
+  }
+  #streak-wrapper {
+    top: 40px !important;
+    transform: translateX(-50%) scale(0.8) !important;
+  }
+}
+
+/* =========================================
+   10. ANIMATIONS
+   ========================================= */
 .particle {
   position: absolute;
   pointer-events: none;
@@ -793,8 +1161,7 @@ p {
   animation: shatter 0.2s forwards ease-out;
 }
 
-/* --- Progressive Shake Animations --- */
-/* Level 1 (Subtle vibration) */
+/* Progressive Shake Levels */
 @keyframes shake-1 {
   0% {
     transform: translate(0, 0);
@@ -806,8 +1173,6 @@ p {
     transform: translate(-1px, -1px);
   }
 }
-
-/* Level 2 (Noticeable shake) */
 @keyframes shake-2 {
   0% {
     transform: translate(0, 0);
@@ -819,8 +1184,6 @@ p {
     transform: translate(2px, -1px);
   }
 }
-
-/* Level 3 (Violent) */
 @keyframes shake-3 {
   0% {
     transform: translate(0, 0);
@@ -832,8 +1195,6 @@ p {
     transform: translate(-3px, 2px);
   }
 }
-
-/* Level 4 (Extreme) */
 @keyframes shake-4 {
   0% {
     transform: translate(0, 0);
@@ -854,7 +1215,6 @@ p {
     transform: translate(-2px, 2px);
   }
 }
-
 .shake-lvl-1 {
   animation: shake-1 0.2s infinite linear;
 }
@@ -866,426 +1226,4 @@ p {
 }
 .shake-lvl-4 {
   animation: shake-4 0.05s infinite linear;
-}
-
-/* --- Mobile / Responsive --- */
-.mobile-input-display,
-.onscreen-keyboard {
-  display: none;
-}
-
-/* --- End Screen Styles --- */
-
-/* Header Area */
-.end-header {
-  flex-shrink: 0; /* Don't shrink */
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.end-stats-row {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  margin-top: 10px;
-}
-
-.stat-badge {
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 8px 16px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 80px;
-}
-
-.stat-label {
-  font-size: 0.75rem;
-  color: #aaa;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.stat-val {
-  font-family: "Roboto Mono", monospace;
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--neon-gold);
-}
-
-/* Results Grid */
-.results-container {
-  display: flex;
-  gap: 15px;
-  width: 90%;
-  max-width: 600px;
-  height: 50vh; /* Takes up half the screen height */
-  margin-bottom: 15px;
-}
-
-.result-col {
-  flex: 1;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  overflow: hidden; /* Contains the scrollable list */
-}
-
-.result-col h3 {
-  margin: 0;
-  padding: 12px;
-  text-align: center;
-  font-size: 1rem;
-  text-transform: uppercase;
-  background: rgba(0, 0, 0, 0.4);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.col-correct h3 {
-  color: #00ff7f;
-}
-.col-missed h3 {
-  color: #ff4500;
-}
-
-.word-list {
-  flex: 1; /* Fills remaining height */
-  overflow-y: auto; /* Scrollable */
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  /* Custom Scrollbar */
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
-}
-
-/* Scrollbar Webkit */
-.word-list::-webkit-scrollbar {
-  width: 6px;
-}
-.word-list::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
-}
-
-/* Word Item */
-.word-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  font-size: 0.9rem;
-}
-
-.col-correct .word-item {
-  border-left: 3px solid #00ff7f;
-}
-.col-missed .word-item {
-  border-left: 3px solid #ff4500;
-}
-
-.ch {
-  font-family: "Noto Sans SC", sans-serif;
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-.py {
-  font-family: "Roboto Mono", monospace;
-  opacity: 0.8;
-}
-
-@media (max-width: 800px) {
-  /* 1. Global Layout */
-  body {
-    align-items: flex-start;
-  }
-  h1 {
-    font-size: 1.8rem;
-  }
-
-  /* 2. Top UI & Streak */
-  #ui-layer {
-    top: 10px;
-    left: 10px;
-    right: 10px;
-  }
-
-  #streak-wrapper {
-    position: absolute;
-    top: 50px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    height: auto;
-    flex-direction: column; /* Stack vertically: bar then numbers */
-    justify-content: center;
-    gap: 4px;
-    z-index: 20;
-  }
-
-  /* Make container handle the bar */
-  #streak-container {
-    width: 100%;
-    height: 16px;
-    border-radius: 8px;
-  }
-
-  /* Container for the text info below the bar */
-  .multiplier-text {
-    font-size: 1.2rem;
-    width: auto;
-    text-align: center;
-    margin: 0;
-    line-height: 1;
-  }
-
-  #streak-count {
-    font-size: 0.9rem;
-    line-height: 1;
-  }
-
-  /* 3. Game Area: 55% of Body Height (Stable) */
-  #game-area {
-    position: absolute;
-    top: 75px;
-    left: 0;
-    width: 100%;
-    height: calc(55% - 85px);
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 5;
-  }
-
-  #tiles-wrapper {
-    margin-bottom: 5px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .majong-tile {
-    width: 82px;
-    height: 110px;
-    font-size: 3.8rem;
-    margin: 4px;
-    box-shadow: 1px 1px 0 #ccc, 2px 2px 0 #ccc, 3px 3px 0 var(--felt-dark);
-  }
-
-  .input-wrapper {
-    width: 92%;
-  }
-  input#pinyin-input {
-    display: none;
-  }
-
-  .mobile-input-display {
-    display: block;
-    background: rgba(0, 0, 0, 0.4);
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    color: #fff;
-    padding: 6px;
-    border-radius: 8px;
-    text-align: center;
-    font-family: "Roboto Mono", monospace;
-    font-size: 1.3rem;
-    min-height: 1.5em;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  /* 4. Timer Bar: Sits at 45% mark */
-  #timer-container {
-    position: fixed;
-    bottom: 45%;
-    height: 12px;
-    z-index: 101;
-    background: #111;
-    width: 100%;
-  }
-
-  /* 5. Keyboard: Bottom 45% (Stable) */
-  .onscreen-keyboard {
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100vw;
-    height: 45%;
-    background: rgba(10, 20, 15, 0.98);
-    padding: 4px;
-    box-sizing: border-box;
-    z-index: 100;
-    padding-bottom: max(5px, env(safe-area-inset-bottom));
-  }
-
-  .onscreen-keyboard .row {
-    display: flex;
-    width: 100%;
-    flex: 1;
-    gap: 4px;
-    margin-bottom: 4px;
-  }
-  .onscreen-keyboard .key {
-    flex: 1;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border-radius: 6px;
-    font-size: 1.4rem;
-    font-weight: bold;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
-
-    /* 3D Button Style */
-    position: relative;
-    box-shadow: 0 5px 0 rgba(0, 0, 0, 0.5); /* The "height" of the key */
-    transition: all 0.05s ease; /* Fast snappy animation */
-    top: 0;
-
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  /* This class will be added by JS */
-  .onscreen-keyboard .key.pressed {
-    background: rgba(255, 255, 255, 0.25);
-    box-shadow: 0 0 0 rgba(0, 0, 0, 0); /* Shadow disappears (pressed in) */
-    top: 5px; /* Moves down by the shadow height */
-    transform: scale(0.98); /* Slight shrink for juice */
-  }
-  .onscreen-keyboard .row.r0 .key.pressed {
-    background: rgba(255, 215, 0, 0.3); /* Gold pressed */
-  }
-  .onscreen-keyboard .key.special {
-    background: rgba(255, 90, 120, 0.25);
-    font-size: 1.1rem;
-    flex: 1.5;
-  }
-  .onscreen-keyboard .key.special.pressed {
-    background: rgba(255, 90, 120, 0.4);
-  }
-  .onscreen-keyboard .row.r0 .key {
-    background: rgba(255, 215, 0, 0.15);
-    color: var(--neon-gold);
-  }
-  .onscreen-keyboard .row.r0 .key:last-child {
-    background: rgba(0, 243, 255, 0.2);
-    color: var(--neon-blue);
-    flex: 1.5;
-    font-size: 1rem;
-  }
-  .onscreen-keyboard .row.r0 .key:last-child.pressed {
-    background: rgba(0, 243, 255, 0.35);
-  }
-
-  .results-container {
-    flex-direction: column; /* Stack columns on very narrow screens */
-    height: 55vh; /* Give a bit more height on mobile */
-  }
-  .stat-badge {
-    min-width: 60px;
-    padding: 5px 10px;
-  }
-  .stat-val {
-    font-size: 1.1rem;
-  }
-
-  /* Ensure footer button doesn't get squashed */
-  #end-screen button {
-    margin-bottom: 20px;
-    flex-shrink: 0;
-  }
-}
-
-/* --- COMPACT MODE: iPhone SE, 12/13 Mini, and small Androids --- */
-@media screen and (max-height: 750px), screen and (max-width: 380px) {
-  /* 1. TIGHTER GAME AREA */
-  /* Pull the game area up to make room for keyboard */
-  #game-area {
-    top: 60px !important;
-    height: calc(50% - 60px) !important; /* Give slightly less space to game */
-    gap: 15px !important; /* Reduce gap between tiles and input */
-  }
-
-  /* 2. SHRINK TILES */
-  /* These are too big for small screens, causing overlap */
-  .majong-tile {
-    width: 60px !important;
-    height: 80px !important;
-    font-size: 2.8rem !important;
-    border-radius: 6px !important;
-    /* Adjust shadow for smaller size */
-    box-shadow: 1px 1px 0 #ccc, 2px 2px 0 #ccc, 3px 3px 0 var(--felt-dark) !important;
-  }
-
-  /* 3. SMALLER INPUT DISPLAY */
-  .mobile-input-display {
-    padding: 4px !important;
-    font-size: 1.1rem !important;
-    min-height: 1.4em !important;
-  }
-
-  /* 4. KEYBOARD ADJUSTMENTS */
-  /* Reduce height slightly to save vertical space */
-  .onscreen-keyboard {
-    height: 42% !important; /* Was 45% */
-    padding-bottom: 2px !important;
-  }
-
-  .onscreen-keyboard .key {
-    border-radius: 4px !important;
-    font-size: 1.2rem !important; /* Slightly smaller text */
-    margin-bottom: 2px !important; /* Tighter rows */
-  }
-
-  /* 5. UI HEADER COMPACTING */
-  #ui-layer {
-    top: 5px !important;
-    left: 10px !important;
-    right: 10px !important;
-  }
-  .score-box,
-  .timer-box {
-    font-size: 1rem !important;
-  }
-
-  /* Streak bar positioning for short screens */
-  #streak-wrapper {
-    top: 40px !important;
-    transform: translateX(-50%) scale(0.8) !important; /* Shrink the whole bar assembly */
-  }
-}
-
-/* --- FIX: DELETE BUTTON SHRINKING --- */
-/* This applies to ALL mobile screens to prevent the glyph from getting crushed */
-.onscreen-keyboard .key {
-  /* Prevent flexbox from squashing the key width to zero */
-  flex-shrink: 0;
-  /* Prevent text wrapping if it gets tight */
-  white-space: nowrap;
-  /* Use system font for special chars to ensure Delete glyph renders reliably */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
-
-/* Specific fix for the Delete key (which has class .special) */
-.onscreen-keyboard .key.special {
-  min-width: 45px; /* Force a minimum width */
-  font-size: 1.2rem; /* Keep the glyph size consistent */
-  line-height: 1; /* Center vertically */
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }

@@ -1,5 +1,6 @@
 const AudioEngine = {
   ctx: null,
+  muted: false,
 
   init() {
     if (!this.ctx) {
@@ -9,7 +10,13 @@ const AudioEngine = {
     }
   },
 
+  toggleMute() {
+    this.muted = !this.muted;
+    return this.muted;
+  },
+
   playCorrect() {
+    if (this.muted) return;
     if (!this.ctx) this.init();
 
     const t = this.ctx.currentTime;
@@ -54,6 +61,7 @@ const AudioEngine = {
   },
 
   playIncorrect() {
+    if (this.muted) return;
     if (!this.ctx) this.init();
 
     const t = this.ctx.currentTime;
@@ -75,6 +83,7 @@ const AudioEngine = {
     osc.stop(t + 0.25);
   },
 };
+
 const Visuals = {
   // 0: Grey-Green, 1: Gold, 2: Orange, 3: Neon Blue...
   colors: [
@@ -233,6 +242,13 @@ const UI = {
       return;
     }
 
+    if (screen === "pause") {
+      const el = document.getElementById("pause-overlay");
+      if (show) el.classList.remove("hidden");
+      else el.classList.add("hidden");
+      return;
+    }
+
     const element = this.elm[screen + "Screen"];
     if (element) {
       if (show) {
@@ -268,7 +284,8 @@ const UI = {
 
     if (this.elm.streakCount) {
       // Display the total running streak instead of "0/5"
-      this.elm.streakCount.innerText = `Streak: ${totalStreak}`;
+      const displayVal = totalStreak !== undefined ? totalStreak : 0;
+      this.elm.streakCount.innerText = `Streak: ${displayVal}`;
     }
 
     // Reset visual transition if dropping to 0%
@@ -450,7 +467,7 @@ const UI = {
       ["1", "2", "3", "4", "⌫"],
       ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
       ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
-      ["z", "x", "c", "v", "b", "n", "m", "bzd"],
+      ["z", "x", "c", "v", "b", "n", "m"],
     ];
 
     rows.forEach((keys, i) => {
@@ -527,6 +544,7 @@ const Game = {
 
   state: {
     isActive: false,
+    isPaused: false,
     isTransitioning: false,
     score: 0,
     multiplier: 1,
@@ -540,6 +558,67 @@ const Game = {
     mobileInput: "",
     holdingFull: false,
     currentLevel: "hsk1",
+    timeLeftGame: 0,
+    wordTimeRemaining: 0,
+  },
+
+  togglePause() {
+    if (this.state.isPaused) {
+      this.resumeGame();
+    } else {
+      this.pauseGame();
+    }
+  },
+
+  pauseGame() {
+    if (!this.state.isActive || this.state.isPaused) return;
+
+    this.state.isPaused = true;
+
+    // 1. Stop Intervals
+    clearInterval(this.timers.gameInterval);
+    clearInterval(this.timers.word);
+    clearInterval(this.timers.particles);
+
+    // 2. Calculate remaining time
+    this.state.timeLeftGame = Math.max(0, this.endTime - Date.now());
+
+    // 3. Show UI
+    UI.toggleScreen("overlay", true); // Unhide the wrapper
+    UI.toggleScreen("pause", true); // Show the menu
+  },
+
+  resumeGame() {
+    if (!this.state.isActive || !this.state.isPaused) return;
+
+    this.state.isPaused = false;
+    UI.toggleScreen("pause", false);
+    UI.toggleScreen("overlay", false); // Hide the wrapper
+
+    // Restore Game Timer
+    this.endTime = Date.now() + this.state.timeLeftGame;
+
+    this.timers.gameInterval = setInterval(() => {
+      const left = Math.max(0, this.endTime - Date.now());
+      UI.updateTimerDisplay(left);
+      if (left <= 0) this.endGame();
+    }, 250);
+
+    // Restart Particle/Word timers
+    this.timers.particles = setInterval(() => this.emitParticles(), 100);
+
+    // Resume word timer logic
+    this.lastWordTick = Date.now();
+    this.timers.word = setInterval(() => {
+      if (!this.state.isActive || this.state.isTransitioning) return;
+      const now = Date.now();
+      // Resume from where we left off
+      this.wordTimeRemaining -= now - this.lastWordTick;
+      this.lastWordTick = now;
+
+      UI.setWordTimer((this.wordTimeRemaining / this.config.wordTime) * 100);
+      if (this.wordTimeRemaining <= 0) this.handleIncorrect();
+    }, 16);
   },
 
   timers: {
@@ -558,6 +637,65 @@ const Game = {
     const rulesTitle = document.getElementById("rules-title");
     const btnClose = document.getElementById("btn-rules-close");
     const btnStart = document.getElementById("btn-rules-start");
+
+    // Pause Button
+    document.getElementById("btn-pause-game").addEventListener("click", () => {
+      if (this.state.isActive && !this.state.isTransitioning) {
+        this.togglePause();
+      }
+    });
+
+    // Pause Menu: Resume
+    document.getElementById("btn-resume").addEventListener("click", () => {
+      this.resumeGame();
+    });
+
+    // Pause Menu: Restart
+    document.getElementById("btn-restart").addEventListener("click", () => {
+      UI.toggleScreen("pause", false);
+      this.start(this.state.currentLevel);
+    });
+
+    // Pause Menu: Exit
+    document.getElementById("btn-exit").addEventListener("click", () => {
+      UI.toggleScreen("pause", false);
+      this.state.isActive = false;
+      this.stopAllTimers();
+      UI.toggleGameUI(false);
+      UI.toggleScreen("start", true);
+      UI.toggleScreen("overlay", true);
+      UI.elm.overlay.classList.add("solid-bg");
+    });
+
+    // Pause Menu: Audio Toggle
+    const btnAudio = document.getElementById("btn-toggle-audio");
+    btnAudio.addEventListener("click", () => {
+      const isMuted = AudioEngine.toggleMute();
+      btnAudio.innerText = isMuted ? "Sound: OFF 🔇" : "Sound: ON 🔊";
+    });
+
+    // Pause Menu: How to Play
+    document.getElementById("btn-pause-help").addEventListener("click", () => {
+      document.getElementById("pause-overlay").classList.add("hidden");
+      // Open rules
+      document.getElementById("rules-overlay").classList.remove("hidden");
+      document.getElementById("rules-title").innerText = "How to Play";
+      document.getElementById("btn-rules-close").classList.remove("hidden");
+      document.getElementById("btn-rules-start").classList.add("hidden");
+
+      // We need a one-time listener to re-open pause menu when rules are closed
+      const restorePause = () => {
+        if (this.state.isPaused) {
+          document.getElementById("pause-overlay").classList.remove("hidden");
+        }
+        document
+          .getElementById("btn-rules-close")
+          .removeEventListener("click", restorePause);
+      };
+      document
+        .getElementById("btn-rules-close")
+        .addEventListener("click", restorePause);
+    });
 
     // 2. Navigation Logic
     document.getElementById("btn-goto-levels").addEventListener("click", () => {
@@ -681,6 +819,7 @@ const Game = {
     this.state.answeredIndices.clear();
     this.state.shownIndices.clear();
     this.state.isActive = true;
+    this.state.isPaused = false;
     this.state.isTransitioning = false;
 
     this.stopAllTimers();
@@ -692,18 +831,20 @@ const Game = {
     UI.updateScore(0);
 
     // Hide Overlay Wrapper and sub-screens
-    // Note: 'rules-overlay' is hidden by the button click listener already
     UI.toggleScreen("overlay", false);
     UI.toggleScreen("start", false);
     UI.toggleScreen("end", false);
+    UI.toggleScreen("pause", false);
 
     UI.toggleGameUI(true);
 
     if (!UI.isSmallScreen()) UI.elm.input.focus();
 
-    const endTime = Date.now() + this.config.totalTime;
+    // Fix: Use 'this.endTime' instead of 'endTime'
+    this.endTime = Date.now() + this.config.totalTime;
+
     this.timers.gameInterval = setInterval(() => {
-      const left = Math.max(0, endTime - Date.now());
+      const left = Math.max(0, this.endTime - Date.now());
       UI.updateTimerDisplay(left);
       if (left <= 0) this.endGame();
     }, 250);
@@ -760,21 +901,23 @@ const Game = {
 
     UI.renderTiles(wordObj);
 
-    let timeLeft = this.config.wordTime;
+    // Store remaining time for pause logic
+    this.wordTimeRemaining = this.config.wordTime;
     UI.setWordTimer(100);
 
     clearInterval(this.timers.word);
-    let lastTime = Date.now();
+    this.lastWordTick = Date.now();
 
     this.timers.word = setInterval(() => {
       if (!this.state.isActive || this.state.isTransitioning) return;
       const now = Date.now();
-      timeLeft -= now - lastTime;
-      lastTime = now;
 
-      UI.setWordTimer((timeLeft / this.config.wordTime) * 100);
+      this.wordTimeRemaining -= now - this.lastWordTick;
+      this.lastWordTick = now;
 
-      if (timeLeft <= 0) this.handleIncorrect();
+      UI.setWordTimer((this.wordTimeRemaining / this.config.wordTime) * 100);
+
+      if (this.wordTimeRemaining <= 0) this.handleIncorrect();
     }, 16);
   },
 
@@ -822,7 +965,6 @@ const Game = {
     this.state.streak = 0;
     this.state.currentStreak = 0;
     UI.updateStreak(1, 0, 0);
-    // ---------------------------------------
 
     UI.elm.input.value = "";
     this.state.mobileInput = "";
@@ -842,13 +984,13 @@ const Game = {
     this.state.answeredIndices.add(this.state.currentIndex);
 
     this.state.score += 10 * this.state.multiplier;
-    this.state.streak++;
-    this.state.currentStreak++;
+    this.state.streak++; // Internal (0-5)
+    this.state.currentStreak++; // Display
 
-    this.state.maxStreak = Math.max(
-      this.state.maxStreak,
-      this.state.currentStreak
-    );
+    // Check High Score
+    if (this.state.currentStreak > this.state.maxStreak) {
+      this.state.maxStreak = this.state.currentStreak;
+    }
 
     UI.updateScore(this.state.score);
     UI.shakeGameArea();

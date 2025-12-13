@@ -41,9 +41,10 @@
     <!-- UI Layer: Score and Timer -->
     <div id="ui-layer">
       <div class="score-box">SCORE: <span id="score-val">0</span></div>
-      <div class="timer-box">
-        TIME LEFT: <span id="total-timer">02:00</span>
-      </div>
+      <button id="btn-pause-game" class="icon-btn">
+        <span class="icon-pause">||</span>
+      </button>
+      <div class="timer-box">TIME: <span id="total-timer">02:00</span></div>
     </div>
 
     <!-- Streak/Multiplier Bar -->
@@ -230,6 +231,48 @@
             >
               Buy me a coffee ☕
             </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pause Menu Overlay -->
+      <div id="pause-overlay" class="hidden">
+        <div class="tutorial-content" style="max-width: 300px">
+          <h2 style="color: white; margin-bottom: 20px">PAUSED</h2>
+
+          <div class="pause-menu-grid">
+            <!-- Resume -->
+            <button
+              id="btn-resume"
+              class="level-btn"
+              style="background: var(--neon-blue); color: #00444d"
+            >
+              Resume
+            </button>
+
+            <!-- Restart -->
+            <button id="btn-restart" class="level-btn secondary">
+              Restart
+            </button>
+
+            <!-- Audio Toggle -->
+            <button id="btn-toggle-audio" class="level-btn secondary">
+              Sound: ON 🔊
+            </button>
+
+            <!-- How to Play -->
+            <button id="btn-pause-help" class="level-btn secondary">
+              How to Play
+            </button>
+
+            <!-- Exit -->
+            <button
+              id="btn-exit"
+              class="level-btn"
+              style="background: #ff4500; color: white; margin-top: 10px"
+            >
+              Exit to Menu
+            </button>
           </div>
         </div>
       </div>
