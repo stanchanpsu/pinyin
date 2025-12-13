@@ -977,6 +977,17 @@ input#pinyin-input:focus {
     box-sizing: border-box;
   }
 
+  #timer-container {
+    position: fixed;
+    bottom: 45%; /* Matches the keyboard height */
+    left: 0;
+    width: 100%;
+    height: 12px; /* Thin bar */
+    background: #111;
+    z-index: 105; /* IMPORTANT: Must be higher than keyboard (100) */
+    display: none; /* JS toggles this to block */
+  }
+
   /* Keyboard */
   .onscreen-keyboard {
     display: flex;
@@ -1094,6 +1105,9 @@ input#pinyin-input:focus {
     padding: 4px !important;
     font-size: 1.1rem !important;
     min-height: 1.4em !important;
+  }
+  #timer-container {
+    bottom: 42% !important; /* Matches the compact keyboard height */
   }
   .onscreen-keyboard {
     height: 42% !important;
