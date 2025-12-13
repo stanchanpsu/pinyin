@@ -256,7 +256,7 @@ const UI = {
     this.elm.timerTotal.innerText = `${mm}:${ss}`;
   },
 
-  updateStreak(multiplier, progressPct, holdingFull) {
+  updateStreak(multiplier, progressPct, totalStreak) {
     const currColor = Visuals.getLevelColor(multiplier);
     const prevColor =
       multiplier >= 2
@@ -267,10 +267,8 @@ const UI = {
     this.elm.multText.style.color = multiplier === 1 ? "#ffffff" : prevColor;
 
     if (this.elm.streakCount) {
-      const currentCount = Math.round(
-        (progressPct / 100) * Game.config.itemsPerLevel
-      );
-      this.elm.streakCount.innerText = `${currentCount}/${Game.config.itemsPerLevel}`;
+      // Display the total running streak instead of "0/5"
+      this.elm.streakCount.innerText = `Streak: ${totalStreak}`;
     }
 
     // Reset visual transition if dropping to 0%
@@ -394,8 +392,17 @@ const UI = {
       this.elm.mobileDisplay.textContent = val || "type pinyin...";
   },
 
-  populateResults(score, levelKey, vocabList, answeredIndices, shownIndices) {
+  populateResults(
+    score,
+    levelKey,
+    vocabList,
+    answeredIndices,
+    shownIndices,
+    maxStreak
+  ) {
     this.elm.finalScore.innerText = score;
+    const bestEl = document.getElementById("end-best-streak");
+    if (bestEl) bestEl.innerText = maxStreak;
     const levelDisplay = levelKey.toUpperCase().replace("HSK", "HSK ");
     const lvlEl = document.getElementById("end-level-val");
     if (lvlEl) lvlEl.innerText = levelDisplay;
@@ -491,7 +498,7 @@ const UI = {
 
     if (Game.state) {
       const pct = (Game.state.streak / Game.config.itemsPerLevel) * 100;
-      this.updateStreak(Game.state.multiplier, pct);
+      this.updateStreak(Game.state.multiplier, pct, Game.state.currentStreak);
     }
   },
 };
@@ -501,7 +508,7 @@ const UI = {
 // ==============================
 const Game = {
   config: {
-    totalTime: 120000,
+    totalTime: 10000,
     wordTime: 15000,
     itemsPerLevel: 5,
   },
@@ -512,6 +519,8 @@ const Game = {
     score: 0,
     multiplier: 1,
     streak: 0,
+    currentStreak: 0,
+    maxStreak: 0,
     vocabList: [],
     currentIndex: 0,
     answeredIndices: new Set(),
@@ -628,6 +637,8 @@ const Game = {
     this.state.score = 0;
     this.state.multiplier = 1;
     this.state.streak = 0;
+    this.state.currentStreak = 0;
+    this.state.maxStreak = 0;
     this.state.mobileInput = "";
     this.state.answeredIndices.clear();
     this.state.shownIndices.clear();
@@ -672,7 +683,8 @@ const Game = {
       this.state.currentLevel,
       this.state.vocabList,
       this.state.answeredIndices,
-      this.state.shownIndices
+      this.state.shownIndices,
+      this.state.maxStreak
     );
 
     UI.toggleGameUI(false);
@@ -768,10 +780,10 @@ const Game = {
     this.state.isTransitioning = true;
     clearInterval(this.timers.word);
 
-    // --- FIX: Reset Streak Logic on Skip ---
     this.state.multiplier = 1;
     this.state.streak = 0;
-    UI.updateStreak(1, 0);
+    this.state.currentStreak = 0;
+    UI.updateStreak(1, 0, 0);
     // ---------------------------------------
 
     UI.elm.input.value = "";
@@ -793,6 +805,12 @@ const Game = {
 
     this.state.score += 10 * this.state.multiplier;
     this.state.streak++;
+    this.state.currentStreak++;
+
+    this.state.maxStreak = Math.max(
+      this.state.maxStreak,
+      this.state.currentStreak
+    );
 
     UI.updateScore(this.state.score);
     UI.shakeGameArea();
@@ -803,23 +821,21 @@ const Game = {
     UI.updateMobileInput("");
 
     if (this.state.streak >= this.config.itemsPerLevel) {
-      this.state.holdingFull = true;
       this.state.streak = this.config.itemsPerLevel;
 
-      UI.updateStreak(this.state.multiplier, 100, true);
+      UI.updateStreak(this.state.multiplier, 100, this.state.currentStreak);
 
       setTimeout(() => {
         this.state.multiplier++;
         this.state.streak = 0;
-        this.state.holdingFull = false;
 
-        UI.updateStreak(this.state.multiplier, 0);
+        UI.updateStreak(this.state.multiplier, 0, this.state.currentStreak);
 
         setTimeout(() => this.nextWord(), 150);
       }, 400);
     } else {
       const pct = (this.state.streak / this.config.itemsPerLevel) * 100;
-      UI.updateStreak(this.state.multiplier, pct);
+      UI.updateStreak(this.state.multiplier, pct, this.state.currentStreak);
       setTimeout(() => this.nextWord(), 300);
     }
   },
@@ -835,7 +851,8 @@ const Game = {
 
     this.state.multiplier = 1;
     this.state.streak = 0;
-    UI.updateStreak(1, 0);
+    this.state.currentStreak = 0;
+    UI.updateStreak(1, 0, 0);
 
     this.state.mobileInput = "";
     UI.updateMobileInput("");
