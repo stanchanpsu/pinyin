@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="48" height="48"><svg id="SvgjsSvg1001" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 48 48">
+  <!-- Generator: Adobe Illustrator 30.0.0, SVG Export Plug-In . SVG Version: 2.1.1 Build 123)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #fcf6e4;
+      }
+
+      .st1 {
+        font-family: KozGoPr6N-Regular-83pv-RKSJ-H, 'Kozuka Gothic Pr6N';
+        font-size: 38px;
+      }
+
+      .st1, .st2 {
+        fill: #ba2025;
+        stroke: #ba2025;
+        stroke-miterlimit: 10;
+        stroke-width: .05px;
+      }
+    </style>
+  </defs>
+  <rect class="st0" width="48" height="48"></rect>
+  <path class="st2" d="M18.15,23.18l.34,2.24-3.69,1.37v11.7c0,3.04-1.75,3.15-6.69,3.15-.11-.65-.46-1.71-.84-2.39.99.04,1.9.04,2.66.04,2.09,0,2.32,0,2.32-.8v-10.79c-1.71.61-3.23,1.18-4.45,1.6,0,.3-.23.53-.49.61l-1.03-2.96c1.63-.46,3.69-1.1,5.97-1.82v-8.51h-5.62v-2.39h5.62v-7.87l3.27.19c-.04.3-.23.46-.72.53v7.14h3.46v2.39h-3.46v7.68l3.34-1.1ZM41.71,25.65v2.43h-6v13.56h-2.51v-13.56h-6.84c-.42,4.71-1.98,9.95-7.41,13.64-.34-.53-1.18-1.41-1.71-1.86,4.9-3.04,6.27-7.71,6.61-11.78h-5.58v-2.43h5.7v-8.06h-4.64v-2.43h21.05v2.43h-4.67v8.06h6ZM23.66,6.47c1.6,2.24,3.15,5.24,3.69,7.18l-2.28,1.1c-.53-1.98-2.01-5.05-3.53-7.37l2.13-.91ZM26.47,25.65h6.73v-8.06h-6.73v8.06ZM39.08,7.64c-.15.23-.46.34-.84.34-1.03,1.98-2.74,4.9-4.1,6.76-.04,0-1.9-.99-1.9-.99,1.33-1.98,2.96-5.21,3.91-7.48l2.93,1.37Z"></path>
+  <text class="st1" transform="translate(89.43 35.26)"><tspan x="0" y="0">拼</tspan></text>
+</svg><style>@media (prefers-color-scheme: light) { :root { filter: none; } }
+@media (prefers-color-scheme: dark) { :root { filter: none; } }
+</style></svg>
