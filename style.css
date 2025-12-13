@@ -1053,7 +1053,7 @@ p {
   }
   .onscreen-keyboard .key {
     flex: 1;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.1);
     color: white;
     border-radius: 6px;
     font-size: 1.4rem;
@@ -1063,18 +1063,33 @@ p {
     align-items: center;
     cursor: pointer;
     user-select: none;
-    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+
+    /* 3D Button Style */
+    position: relative;
+    box-shadow: 0 5px 0 rgba(0, 0, 0, 0.5); /* The "height" of the key */
+    transition: all 0.05s ease; /* Fast snappy animation */
+    top: 0;
+
     -webkit-tap-highlight-color: transparent;
   }
-  .onscreen-keyboard .key:active {
-    transform: translateY(4px);
-    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-    background: rgba(255, 255, 255, 0.2);
+
+  /* This class will be added by JS */
+  .onscreen-keyboard .key.pressed {
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0); /* Shadow disappears (pressed in) */
+    top: 5px; /* Moves down by the shadow height */
+    transform: scale(0.98); /* Slight shrink for juice */
+  }
+  .onscreen-keyboard .row.r0 .key.pressed {
+    background: rgba(255, 215, 0, 0.3); /* Gold pressed */
   }
   .onscreen-keyboard .key.special {
     background: rgba(255, 90, 120, 0.25);
     font-size: 1.1rem;
     flex: 1.5;
+  }
+  .onscreen-keyboard .key.special.pressed {
+    background: rgba(255, 90, 120, 0.4);
   }
   .onscreen-keyboard .row.r0 .key {
     background: rgba(255, 215, 0, 0.15);
@@ -1085,6 +1100,9 @@ p {
     color: var(--neon-blue);
     flex: 1.5;
     font-size: 1rem;
+  }
+  .onscreen-keyboard .row.r0 .key:last-child.pressed {
+    background: rgba(0, 243, 255, 0.35);
   }
 
   .results-container {

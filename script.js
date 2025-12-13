@@ -462,14 +462,26 @@ const UI = {
         if (["⌫", "bzd"].includes(k)) btn.classList.add("special");
         btn.textContent = k;
 
-        btn.addEventListener("touchstart", (e) => {
-          e.preventDefault();
+        const handlePress = (e) => {
+          if (e.cancelable) e.preventDefault(); // Stop scroll/zoom
+
+          // 1. Visual Feedback
+          btn.classList.add("pressed");
+
+          // 2. Game Logic
           callback(k);
-        });
-        btn.addEventListener("mousedown", (e) => {
-          e.preventDefault();
-          callback(k);
-        });
+
+          // 3. Remove "pressed" look after a short delay
+          // This ensures the animation is visible even on fast taps
+          setTimeout(() => {
+            btn.classList.remove("pressed");
+          }, 100);
+        };
+
+        // Attach to both Touch (Mobile) and Mouse (Desktop testing)
+        btn.addEventListener("touchstart", handlePress, { passive: false });
+        btn.addEventListener("mousedown", handlePress);
+        // ---------------------------
 
         rowDiv.appendChild(btn);
       });
@@ -508,7 +520,7 @@ const UI = {
 // ==============================
 const Game = {
   config: {
-    totalTime: 10000,
+    totalTime: 120000,
     wordTime: 15000,
     itemsPerLevel: 5,
   },
