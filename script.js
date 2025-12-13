@@ -408,8 +408,8 @@ const UI = {
     let correctCount = 0;
     let missedCount = 0;
 
-    vocabList.forEach((word, index) => {
-      if (!shownIndices.has(index)) return;
+    shownIndices.forEach((index) => {
+      const word = vocabList[index];
 
       const item = document.createElement("div");
       item.className = "word-item";
@@ -428,6 +428,7 @@ const UI = {
         missedCount++;
       }
     });
+    // --------------------------
 
     const hCorrect = document.getElementById("header-correct");
     const hMissed = document.getElementById("header-missed");
