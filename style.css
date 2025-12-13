@@ -1209,3 +1209,83 @@ p {
     flex-shrink: 0;
   }
 }
+
+/* --- COMPACT MODE: iPhone SE, 12/13 Mini, and small Androids --- */
+@media screen and (max-height: 750px), screen and (max-width: 380px) {
+  /* 1. TIGHTER GAME AREA */
+  /* Pull the game area up to make room for keyboard */
+  #game-area {
+    top: 60px !important;
+    height: calc(50% - 60px) !important; /* Give slightly less space to game */
+    gap: 15px !important; /* Reduce gap between tiles and input */
+  }
+
+  /* 2. SHRINK TILES */
+  /* These are too big for small screens, causing overlap */
+  .majong-tile {
+    width: 60px !important;
+    height: 80px !important;
+    font-size: 2.8rem !important;
+    border-radius: 6px !important;
+    /* Adjust shadow for smaller size */
+    box-shadow: 1px 1px 0 #ccc, 2px 2px 0 #ccc, 3px 3px 0 var(--felt-dark) !important;
+  }
+
+  /* 3. SMALLER INPUT DISPLAY */
+  .mobile-input-display {
+    padding: 4px !important;
+    font-size: 1.1rem !important;
+    min-height: 1.4em !important;
+  }
+
+  /* 4. KEYBOARD ADJUSTMENTS */
+  /* Reduce height slightly to save vertical space */
+  .onscreen-keyboard {
+    height: 42% !important; /* Was 45% */
+    padding-bottom: 2px !important;
+  }
+
+  .onscreen-keyboard .key {
+    border-radius: 4px !important;
+    font-size: 1.2rem !important; /* Slightly smaller text */
+    margin-bottom: 2px !important; /* Tighter rows */
+  }
+
+  /* 5. UI HEADER COMPACTING */
+  #ui-layer {
+    top: 5px !important;
+    left: 10px !important;
+    right: 10px !important;
+  }
+  .score-box,
+  .timer-box {
+    font-size: 1rem !important;
+  }
+
+  /* Streak bar positioning for short screens */
+  #streak-wrapper {
+    top: 40px !important;
+    transform: translateX(-50%) scale(0.8) !important; /* Shrink the whole bar assembly */
+  }
+}
+
+/* --- FIX: DELETE BUTTON SHRINKING --- */
+/* This applies to ALL mobile screens to prevent the glyph from getting crushed */
+.onscreen-keyboard .key {
+  /* Prevent flexbox from squashing the key width to zero */
+  flex-shrink: 0;
+  /* Prevent text wrapping if it gets tight */
+  white-space: nowrap;
+  /* Use system font for special chars to ensure Delete glyph renders reliably */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Specific fix for the Delete key (which has class .special) */
+.onscreen-keyboard .key.special {
+  min-width: 45px; /* Force a minimum width */
+  font-size: 1.2rem; /* Keep the glyph size consistent */
+  line-height: 1; /* Center vertically */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
